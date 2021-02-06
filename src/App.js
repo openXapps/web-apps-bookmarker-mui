@@ -1,26 +1,20 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-// import spacing from '@material-ui/system/sizing';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { context } from './context/store';
+import getTheme from './themes/themer';
+import Header from './components/Header';
 
 const App = () => {
+  const [state] = React.useContext(context);
+  const appTheme = createMuiTheme(getTheme(state.theme.isDark));
+
   return (
-    <Container maxWidth="sm">
-      <Typography
-        variant="h4"
-        // component="div"
-        align="center"
-      >The all new BookMARKER</Typography>
-      <Box
-        // className="m-3"
-        // style={{ backgroundColor: "blue" }}
-        fontSize={{ xs: 'h6.fontSize', sm: 'h4.fontSize', md: 'h3.fontSize' }}
-        p={{ xs: 2, sm: 3, md: 4 }}
-        mx="auto"
-        align="center"
-      >The all new BookMARKER</Box>
-    </Container>
+    <ThemeProvider theme={appTheme}>
+      <CssBaseline />
+      <Header />
+    </ThemeProvider>
   );
 };
 

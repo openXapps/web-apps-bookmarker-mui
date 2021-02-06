@@ -3,9 +3,9 @@
  * @param {any} state Current state
  * @param {any} action Reducer action type and payload
  */
-export const BookmarkReducer = (state, action) => {
-  // console.log('BookmarkReducer: action type......', action.type);
-  // console.log('BookmarkReducer: action payload...', action.payload);
+export const reducer = (state, action) => {
+  // console.log('reducer: action type......', action.type);
+  // console.log('reducer: action payload...', action.payload);
   switch (action.type) {
     case 'BM_LOADING':
       return {
@@ -32,7 +32,13 @@ export const BookmarkReducer = (state, action) => {
         isEmpty: false,
         bookmarks: action.payload
       };
+    case 'THEME_SWITCH':
+      return {
+        ...state,
+        theme: action.payload
+      };
     default:
       throw new Error(`Reducer action type not defined: ${action.type}`);
   }
 };
+
