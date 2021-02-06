@@ -2,10 +2,10 @@ const dark = {
   palette: {
     type: 'dark',
     primary: {
-      main: '#3b3b50',
+      main: '#3f4469',
     },
     secondary: {
-      main: '#f50057',
+      main: '#d89d38',
     },
   },
 };
