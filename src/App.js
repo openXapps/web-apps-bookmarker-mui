@@ -7,7 +7,6 @@ import { ThemeProvider } from '@material-ui/core/styles';import {
 import { context } from './context/store';
 import dark from './themes/dark';
 import light from './themes/light';
-// import getTheme from './themes/themer';
 import Header from './components/Header';
 import Content from './components/Content';
 

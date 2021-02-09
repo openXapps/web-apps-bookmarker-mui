@@ -8,7 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+// import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -63,12 +63,12 @@ const Header = () => {
   return (
     <div className={classes.root}>
       <AppBar
-        position="fixed"
+        position='fixed'
       ><Toolbar>
           <IconButton
-            color="inherit"
+            color='inherit'
             onClick={() => setDrawerState(!drawerState)}
-            edge="start"
+            edge='start'
             className={classes.menuButton}
           ><MenuIcon /></IconButton>
           <Typography
@@ -83,7 +83,7 @@ const Header = () => {
                   onChange={handleTheme}
                 />
               }
-              label="Dark Mode"
+              label='Dark Mode'
             />
           </FormGroup>
         </Toolbar>
@@ -91,20 +91,18 @@ const Header = () => {
       <Toolbar />
       <Drawer
         className={classes.drawer}
-        // variant="persistent"
-        anchor="left"
         open={drawerState}
         onClose={() => setDrawerState(false)}
         classes={{
           paper: classes.drawerPaper,
         }}
       >
-        <div className={classes.drawerHeader}>
+        {/* <div className={classes.drawerHeader}>
           <IconButton
             onClick={() => setDrawerState(!drawerState)}
           ><ChevronLeftIcon /></IconButton>
         </div>
-        <Divider />
+        <Divider /> */}
         <List>
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem button key={text}>
