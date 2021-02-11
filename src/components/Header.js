@@ -17,7 +17,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import { context } from '../context/store';
+import { context } from '../context/StoreProvider';
 
 const drawerWidth = 300;
 
