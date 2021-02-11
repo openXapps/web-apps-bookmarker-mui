@@ -1,6 +1,6 @@
 import React from 'react';
-import { reducer } from '../reducers/reducer';
-import {getBookmarks, getTheme} from './init';
+import StoreReducer from './StoreReducer';
+import {getBookmarks, getTheme} from './InitialContext';
 
 /**
  * Initial context data
@@ -14,8 +14,8 @@ const data = {
 
 export const context = React.createContext(data);
 
-const Store = (props) => {
-  const [state, dispatch] = React.useReducer(reducer, data);
+const StoreProvider = (props) => {
+  const [state, dispatch] = React.useReducer(StoreReducer, data);
   return (
     <context.Provider value={[state, dispatch]}>
       {props.children}
@@ -23,4 +23,4 @@ const Store = (props) => {
   );
 };
 
-export default Store;
+export default StoreProvider;

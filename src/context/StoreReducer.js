@@ -3,7 +3,7 @@
  * @param {any} state Current state
  * @param {any} action Reducer action type and payload
  */
-export const reducer = (state, action) => {
+export default StoreReducer = (state, action) => {
   // console.log('reducer: action type......', action.type);
   // console.log('reducer: action payload...', action.payload);
   switch (action.type) {
