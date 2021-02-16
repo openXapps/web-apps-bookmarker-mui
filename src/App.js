@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+// import { createBrowserHistory } from "history";
 
 // Material UI
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -21,6 +22,8 @@ import Download from './components/Download';
 import Upload from './components/Upload';
 import Settings from './components/Settings';
 import PageNotFound from './components/PageNotFound';
+
+// const customHistory = createBrowserHistory();
 
 const App = () => {
   // https://medium.com/@svinkle/how-to-deploy-a-react-app-to-a-subdirectory-f694d46427c1
