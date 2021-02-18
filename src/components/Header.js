@@ -20,37 +20,43 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { context } from '../context/StoreProvider';
 import useHeaderStyle from './HeaderStyle';
 
-const Header = ({ home }) => {
+const Header = () => {
   const classes = useHeaderStyle();
-  const history = useHistory();
-  const [atHome, setAtHome] = React.useState(true);
+  const { goBack } = useHistory();
   const [drawerState, setDrawerState] = React.useState(false);
   const [state, dispatch] = React.useContext(context);
 
+  React.useEffect(() => {
+    console.log('Header: state.atHome...', state.atHome);
+    // Effect clean-up function
+    return () => true;
+    // *eslint-disable-next-line react-hooks/exhaustive-deps*
+  }, [state.atHome])
+
   const handleRouteState = () => {
     setDrawerState(!drawerState);
-    setAtHome(!atHome);
+    dispatch({ type: 'ATHOME', payload: false })
+  };
+
+  const handleGoHome = () => {
+    dispatch({ type: 'ATHOME', payload: true })
+    goBack();
   };
 
   const handleTheme = () => {
     const _isDark = !state.theme.isDark;
     const _template = _isDark ? 'dark' : 'light';
-    dispatch({ type: 'THEME_SWITCH', payload: { isDark: _isDark, template: _template } });
+    dispatch({ type: 'THEME', payload: { isDark: _isDark, template: _template } });
   };
 
-  const handleGoHome = () => {
-    setAtHome(!atHome);
-    history.goBack();
-  };
-
-  // console.log('Header: history...', history);
+  // console.log('Header: location...', location);
 
   return (
     <div className={classes.root}>
       <AppBar
         position='fixed'
       ><Toolbar>
-          {atHome ? (
+          {state.atHome ? (
             <IconButton
               color='inherit'
               onClick={() => setDrawerState(!drawerState)}

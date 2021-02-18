@@ -9,7 +9,8 @@ const data = {
   theme: getTheme(),
   isLoading: true,
   isEmpty: false,
-  bookmarks: getBookmarks()
+  bookmarks: getBookmarks(),
+  atHome: true
 };
 
 export const context = React.createContext(data);
