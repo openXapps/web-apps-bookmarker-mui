@@ -70,50 +70,80 @@ const getMockStorage = (obj) => {
   const response = {
     statusOK: true,
     // statusOK: false,
-    data: [
+    settings: {
+      version: '2.1.0',
+      darkMode: false,
+      confirmDelete: true,
+    },
+    favourites: [
+      '347cf222-887b-11e9-bc42-526af7764f01',
+      '347cf222-887b-11e9-bc42-526af7764f04',
+      '347cf222-887b-11e9-bc42-526af7764f07',
+    ],
+    categories: [
       {
-        siteId: '347cf222-887b-11e9-bc42-526af7764f64',
+        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+        category: '',
+      },
+      {
+        categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
+        category: '',
+      },
+      {
+        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
+        category: '',
+      },
+    ],
+    bookmarks: [
+      {
+        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cf222-887b-11e9-bc42-526af7764f01',
         siteName: 'Google',
         siteURL: 'https://www.google.co.za',
-        order: 0
       },
       {
-        siteId: '347cf4ca-887b-11e9-bc42-526af7764f64',
+        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cf4ca-887b-11e9-bc42-526af7764f02',
         siteName: 'Standard Bank',
         siteURL: 'https://www.google.co.za',
-        order: 0
       },
       {
-        siteId: '347cf632-887b-11e9-bc42-526af7764f64',
+        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cf632-887b-11e9-bc42-526af7764f03',
         siteName: 'Banana Tree',
         siteURL: 'https://www.google.co.za',
-        order: 0
       },
       {
-        siteId: '347cf786-887b-11e9-bc42-526af7764f64',
+        categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cf786-887b-11e9-bc42-526af7764f04',
         siteName: 'First National Bank',
         siteURL: 'https://www.google.co.za',
-        order: 0
       },
       {
-        siteId: '347cf9ac-887b-11e9-bc42-526af7764f64',
+        categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cf9ac-887b-11e9-bc42-526af7764f05',
         siteName: 'Apple Trees',
         siteURL: 'https://www.google.co.za',
-        order: 0
       },
       {
-        siteId: '347cfb0a-887b-11e9-bc42-526af7764f64',
+        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cfb0a-887b-11e9-bc42-526af7764f06',
         siteName: 'Hello World',
         siteURL: 'https://www.google.co.za',
-        order: 0
       },
       {
-        siteId: '347cfc54-887b-11e9-bc42-526af7764f64',
+        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cfc54-887b-11e9-bc42-526af7764f07',
         siteName: 'Batman',
         siteURL: 'https://www.batman.com',
-        order: 0
-      }
-    ]
+      },
+      {
+        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cfc54-887b-11e9-bc42-526af7764f08',
+        siteName: 'Very long bookmark name growing beyond the limits of its container',
+        siteURL: 'https://www.google.com',
+      },
+    ],
   };
   return response;
 }
