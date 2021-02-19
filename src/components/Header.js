@@ -54,7 +54,7 @@ const Header = () => {
   return (
     <div className={classes.root}>
       <AppBar
-        position='fixed'
+        position="static"
       ><Toolbar>
           {state.atHome ? (
             <IconButton
@@ -64,9 +64,8 @@ const Header = () => {
               className={classes.menuButton}
             ><MenuIcon /></IconButton>
           ) : (
-              // https://material-ui.com/components/links/
               <Fab
-                className={classes.menuButton}
+                className={classes.fabButton}
                 size="small"
                 color="primary"
                 aria-label="edit"
@@ -91,7 +90,7 @@ const Header = () => {
           </FormGroup>
         </Toolbar>
       </AppBar>
-      <Toolbar />
+      {/* <Toolbar /> */}
       <Drawer
         className={classes.drawer}
         open={drawerState}

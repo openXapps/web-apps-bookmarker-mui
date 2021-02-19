@@ -62,7 +62,7 @@ const saveLocalStorage = (obj, data) => {
 }
 
 /**
- * Get mock data sample data
+ * Get mock sample data
  * @param {string} obj Dummy local storage identifier
  */
 const getMockStorage = (obj) => {

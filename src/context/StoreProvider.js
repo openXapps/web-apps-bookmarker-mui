@@ -1,9 +1,9 @@
 import React from 'react';
 import StoreReducer from './StoreReducer';
-import {getBookmarks, getTheme} from './InitialContext';
+import {getBookmarks, getTheme} from './InitialState';
 
 /**
- * Initial context data
+ * Initial state
  */
 const data = {
   theme: getTheme(),

@@ -4,7 +4,7 @@ const drawerWidth = 300;
 
 const useHeaderStyle = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    flexGrow: 1,
   },
   title: {
     flexGrow: 1,
@@ -27,6 +27,10 @@ const useHeaderStyle = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
+  },
+  fabButton: {
+    marginRight: theme.spacing(1.5),
+    zIndex: 1,
   },
 }));
 
