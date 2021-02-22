@@ -1,22 +1,26 @@
 import React from 'react';
 import StoreReducer from './StoreReducer';
-import {getBookmarks, getTheme} from './InitialState';
+import {
+  // initialUse,
+  getSettings,
+  getBookmarks
+} from '../utilities/localstorage';
 
 /**
  * Initial state
  */
 const data = {
-  theme: getTheme(),
   isLoading: true,
   isEmpty: false,
-  bookmarks: getBookmarks(),
-  atHome: true
+  theme: getSettings().data.theme,
+  bookmarks: getBookmarks().data,
 };
 
 export const context = React.createContext(data);
 
 const StoreProvider = (props) => {
   const [state, dispatch] = React.useReducer(StoreReducer, data);
+  // initialUse(false);
   return (
     <context.Provider value={[state, dispatch]}>
       {props.children}

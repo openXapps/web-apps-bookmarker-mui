@@ -23,33 +23,38 @@ const isLocalStorage = () => {
 };
 
 /**
- * Get data from local storage
- * @param {string} obj Local storage identifier
+* Write initial storage on first time usage
+ * @param {boolean} force Force a local storage overwrite
  */
-const getLocalStorage = (obj) => {
-  let response = {
-    statusOK: false,
-    data: []
+const initialUse = (force) => {
+  const version = getSettings().data.version;
+  const numOfBookmarks = getBookmarks().data.length;
+  if (!(version && numOfBookmarks > 0) || force) {
+    saveLocalStorage('gd-bm-settings', getMockStorage().settings);
+    saveLocalStorage('gd-bm-favourites', getMockStorage().favourites);
+    saveLocalStorage('gd-bm-poplular', getMockStorage().poplular);
+    saveLocalStorage('gd-bm-categories', getMockStorage().categories);
+    saveLocalStorage('gd-bm-bookmarks', getMockStorage().bookmarks);
   }
-  try {
-    let storedData = JSON.parse(localStorage.getItem(obj));
-    // console.log(storedData);
-    if (storedData) {
-      response = {
-        statusOK: true,
-        data: storedData.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
-      };
-    } else {
-      // console.warn('No favorites found in local storage');
-      throw new Error('No items found in localStorage');
-    }
-  } catch (err) {
-    // console.log(err);
-    // Life goes on ...
+  if (!version && numOfBookmarks > 0 && !force) {
+    saveLocalStorage('gd-bm-settings', getMockStorage().settings);
+    saveLocalStorage('gd-bm-favourites', getMockStorage().favourites);
+    saveLocalStorage('gd-bm-poplular', getMockStorage().poplular);
+    saveLocalStorage('gd-bm-categories', getMockStorage().categories);
+    const currentBookmarks = getBookmarks().data;
+    const newBookmarks = currentBookmarks.map((v, i) => {
+      return (
+        {
+          categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+          siteId: v.siteId,
+          siteName: v.siteName,
+          siteURL: v.siteURL,
+        }
+      );
+    });
+    saveLocalStorage('gd-bm-bookmarks', newBookmarks);
   }
-  // console.log(response);
-  return response;
-}
+};
 
 /**
  * Overwrite item to local storage
@@ -59,97 +64,227 @@ const getLocalStorage = (obj) => {
 const saveLocalStorage = (obj, data) => {
   localStorage.setItem(obj, JSON.stringify(data));
   return true;
-}
+};
 
 /**
- * Get mock sample data
- * @param {string} obj Dummy local storage identifier
+ * Get SETTINGS from local storage
  */
-const getMockStorage = (obj) => {
-  // https://github.com/kelektiv/node-uuid
+const getSettings = () => {
+  let response = {
+    statusOK: false,
+    data: {
+      version: '2.1.0',
+      theme: {
+        isDark: false,
+        template: 'light'
+      },
+      confirmDelete: true,
+    }
+  }
+  try {
+    const settings = JSON.parse(localStorage.getItem('gd-bm-settings'));
+    // const { settings } = getMockStorage();
+    if (settings) {
+      response = {
+        statusOK: true,
+        data: settings
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    console.log(err);
+  }
+  return response;
+};
+
+/**
+ * Get FAVOURITES from local storage
+ */
+const getFavourites = () => {
+  let response = {
+    statusOK: false,
+    data: []
+  }
+  try {
+    // const favourites = JSON.parse(localStorage.getItem('gd-bm-favourites'));
+    const { favourites } = getMockStorage();
+    if (favourites) {
+      response = {
+        statusOK: true,
+        data: favourites
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    console.log(err);
+  }
+  return response;
+};
+
+/**
+ * Get POPULAR from local storage
+ */
+const getPopular = () => {
+  let response = {
+    statusOK: false,
+    data: []
+  }
+  try {
+    // const poplular = JSON.parse(localStorage.getItem('gd-bm-poplular'));
+    const { poplular } = getMockStorage();
+    if (poplular) {
+      response = {
+        statusOK: true,
+        data: poplular
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    console.log(err);
+  }
+  return response;
+};
+
+/**
+ * Get CATEGORIES from local storage
+ */
+const getCategories = () => {
+  let response = {
+    statusOK: false,
+    data: []
+  }
+  try {
+    // const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
+    const { categories } = getMockStorage();
+    if (categories) {
+      response = {
+        statusOK: true,
+        data: categories.sort((a, b) => (a.category > b.category) ? 1 : -1)
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    console.log(err);
+  }
+  return response;
+};
+
+/**
+ * Get BOOKMARKS from local storage
+ */
+const getBookmarks = () => {
+  let response = {
+    statusOK: false,
+    data: []
+  }
+  try {
+    // const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    const { bookmarks } = getMockStorage();
+    if (bookmarks) {
+      response = {
+        statusOK: true,
+        data: bookmarks.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    console.log(err);
+  }
+  return response;
+};
+
+
+
+
+
+
+
+/**
+ * MOCK DATA FOR TESTING
+ * https://github.com/kelektiv/node-uuid
+ */
+const getMockStorage = () => {
   const response = {
-    statusOK: true,
-    // statusOK: false,
+    // gd-bm-settings
     settings: {
       version: '2.1.0',
-      darkMode: false,
+      theme: {
+        isDark: false,
+        template: 'light'
+      },
       confirmDelete: true,
     },
+
+    // gd-bm-favourites
     favourites: [
       '347cf222-887b-11e9-bc42-526af7764f01',
-      '347cf222-887b-11e9-bc42-526af7764f04',
-      '347cf222-887b-11e9-bc42-526af7764f07',
+      '347cf222-887b-11e9-bc42-526af7764f03',
     ],
+
+    // gd-bm-poplular
+    poplular: [
+      '347cf222-887b-11e9-bc42-526af7764f02',
+      '347cf222-887b-11e9-bc42-526af7764f03',
+    ],
+
+    // gd-bm-categories
     categories: [
       {
         categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
-        category: '',
+        category: 'Default',
       },
       {
         categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
-        category: '',
+        category: 'Development Tools',
       },
       {
         categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
-        category: '',
+        category: 'Other',
       },
     ],
+
+    // gd-bm-bookmarks
     bookmarks: [
       {
         categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
         siteId: '347cf222-887b-11e9-bc42-526af7764f01',
         siteName: 'Google',
-        siteURL: 'https://www.google.co.za',
+        siteURL: 'https://www.google.com',
       },
       {
-        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+        categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
         siteId: '347cf4ca-887b-11e9-bc42-526af7764f02',
-        siteName: 'Standard Bank',
-        siteURL: 'https://www.google.co.za',
-      },
-      {
-        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
-        siteId: '347cf632-887b-11e9-bc42-526af7764f03',
-        siteName: 'Banana Tree',
-        siteURL: 'https://www.google.co.za',
-      },
-      {
-        categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
-        siteId: '347cf786-887b-11e9-bc42-526af7764f04',
-        siteName: 'First National Bank',
-        siteURL: 'https://www.google.co.za',
-      },
-      {
-        categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
-        siteId: '347cf9ac-887b-11e9-bc42-526af7764f05',
-        siteName: 'Apple Trees',
-        siteURL: 'https://www.google.co.za',
+        siteName: 'Material-UI',
+        siteURL: 'https://material-ui.com/',
       },
       {
         categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
-        siteId: '347cfb0a-887b-11e9-bc42-526af7764f06',
-        siteName: 'Hello World',
-        siteURL: 'https://www.google.co.za',
-      },
-      {
-        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
-        siteId: '347cfc54-887b-11e9-bc42-526af7764f07',
-        siteName: 'Batman',
-        siteURL: 'https://www.batman.com',
-      },
-      {
-        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
-        siteId: '347cfc54-887b-11e9-bc42-526af7764f08',
+        siteId: '347cfc54-887b-11e9-bc42-526af7764f03',
         siteName: 'Very long bookmark name growing beyond the limits of its container',
         siteURL: 'https://www.google.com',
       },
     ],
   };
   return response;
-}
+};
 
 // Export module methods
 module.exports.isLocalStorage = isLocalStorage;
-module.exports.getLocalStorage = getLocalStorage;
-module.exports.getMockStorage = getMockStorage;
+module.exports.initialUse = initialUse;
 module.exports.saveLocalStorage = saveLocalStorage;
+module.exports.getSettings = getSettings;
+module.exports.getCategories = getCategories;
+module.exports.getFavourites = getFavourites;
+module.exports.getPopular = getPopular;
+module.exports.getBookmarks = getBookmarks;
+module.exports.getMockStorage = getMockStorage;

@@ -37,11 +37,6 @@ const StoreReducer = (state, action) => {
         ...state,
         theme: action.payload
       };
-      case 'ATHOME':
-        return {
-          ...state,
-          atHome: action.payload
-        };
     default:
       throw new Error(`Reducer action type not defined: ${action.type}`);
   }

@@ -7,6 +7,9 @@ const light = {
     // secondary: {
     //   main: '#f50057',
     // },
+    background: {
+      default: '#e6f2ff',
+    },
   },
 };
 

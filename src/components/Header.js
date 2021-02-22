@@ -1,98 +1,57 @@
 import React from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Switch from '@material-ui/core/Switch';
-import Toolbar from '@material-ui/core/Toolbar';
-import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
+import HomeIcon from '@material-ui/icons/Home';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { context } from '../context/StoreProvider';
-import useHeaderStyle from './HeaderStyle';
+import useStyles from './HeaderStyle';
+import { getMockStorage } from '../utilities/localstorage';
 
-const Header = () => {
-  const classes = useHeaderStyle();
-  const { goBack } = useHistory();
+const Header = ({ history, location }) => {
+  const classes = useStyles();
   const [drawerState, setDrawerState] = React.useState(false);
-  const [state, dispatch] = React.useContext(context);
+  const localData = getMockStorage();
 
-  React.useEffect(() => {
-    console.log('Header: state.atHome...', state.atHome);
-    // Effect clean-up function
-    return () => true;
-    // *eslint-disable-next-line react-hooks/exhaustive-deps*
-  }, [state.atHome])
-
-  const handleRouteState = () => {
-    setDrawerState(!drawerState);
-    dispatch({ type: 'ATHOME', payload: false })
-  };
-
-  const handleGoHome = () => {
-    dispatch({ type: 'ATHOME', payload: true })
-    goBack();
-  };
-
-  const handleTheme = () => {
-    const _isDark = !state.theme.isDark;
-    const _template = _isDark ? 'dark' : 'light';
-    dispatch({ type: 'THEME', payload: { isDark: _isDark, template: _template } });
-  };
-
-  // console.log('Header: location...', location);
+  // console.log('Header: data...', data);
 
   return (
-    <div className={classes.root}>
+    <div className={classes.grow}>
       <AppBar
         position="static"
       ><Toolbar>
-          {state.atHome ? (
-            <IconButton
-              color='inherit'
-              onClick={() => setDrawerState(!drawerState)}
-              edge='start'
-              className={classes.menuButton}
-            ><MenuIcon /></IconButton>
-          ) : (
-              <Fab
-                className={classes.fabButton}
-                size="small"
-                color="primary"
-                aria-label="edit"
-                onClick={handleGoHome}
-              ><ChevronLeftIcon /></Fab>
-            )
-          }
+          <IconButton
+            aria-label="home button"
+            className={classes.leftButton}
+            color="inherit"
+            onClick={() => history.push('/')}
+          >{location.pathname === '/' ? <HomeIcon /> : <ChevronLeftIcon />}</IconButton>
           <Typography
-            variant='h6'
-            className={classes.title}
+            variant="h6"
+            className={classes.grow}
           >BookMARKER</Typography>
-          <FormGroup row>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={state.theme.isDark}
-                  onChange={handleTheme}
-                />
-              }
-              label='Dark Mode'
-            />
-          </FormGroup>
+          {location.pathname === '/' ? (
+            <IconButton
+              color="inherit"
+              onClick={() => setDrawerState(!drawerState)}
+            ><MenuIcon /></IconButton>
+          ) : (null)}
         </Toolbar>
       </AppBar>
       {/* <Toolbar /> */}
       <Drawer
         className={classes.drawer}
+        anchor="right"
         open={drawerState}
         onClose={() => setDrawerState(false)}
         classes={{
@@ -102,7 +61,8 @@ const Header = () => {
         <div className={classes.drawerHeader}>
           <IconButton
             onClick={() => setDrawerState(!drawerState)}
-          ><ChevronLeftIcon /></IconButton>
+          ><ChevronRightIcon /></IconButton>
+          <Typography>v{localData.settings.version}</Typography>
         </div>
         <Divider />
         <List>
@@ -110,19 +70,19 @@ const Header = () => {
             button
             component={RouterLink}
             to="/settings"
-            onClick={handleRouteState}
+            onClick={() => setDrawerState(false)}
           ><ListItemText>Settings</ListItemText></ListItem>
           <ListItem
             button
             component={RouterLink}
             to="/download"
-            onClick={handleRouteState}
+            onClick={() => setDrawerState(false)}
           ><ListItemText>Download Site Data</ListItemText></ListItem>
           <ListItem
             button
             component={RouterLink}
             to="/upload"
-            onClick={handleRouteState}
+            onClick={() => setDrawerState(false)}
           ><ListItemText>Upload Site Data</ListItemText></ListItem>
         </List>
       </Drawer>
@@ -130,15 +90,4 @@ const Header = () => {
   );
 };
 
-export default Header;
-
-/**
- * {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
- */
+export default withRouter(Header);

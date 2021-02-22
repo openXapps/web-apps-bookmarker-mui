@@ -1,16 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const drawerWidth = 300;
+const drawerWidth = 280;
 
-const useHeaderStyle = makeStyles((theme) => ({
-  root: {
+const useStyles = makeStyles((theme) => ({
+  grow: {
     flexGrow: 1,
   },
-  title: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  leftButton: {
+    marginRight: theme.spacing(1),
   },
   drawer: {
     width: drawerWidth,
@@ -22,16 +19,12 @@ const useHeaderStyle = makeStyles((theme) => ({
   },
   drawerHeader: {
     display: 'flex',
+    justifyContent: 'space-between',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
-  },
-  fabButton: {
-    marginRight: theme.spacing(1.5),
-    zIndex: 1,
   },
 }));
 
-export default useHeaderStyle;
+export default useStyles;
