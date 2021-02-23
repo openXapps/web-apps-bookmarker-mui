@@ -2,6 +2,7 @@ import React from 'react';
 import Switch from '@material-ui/core/Switch';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
 import { context } from '../context/StoreProvider';
 import { saveLocalStorage, getSettings } from '../utilities/localstorage';
@@ -47,20 +48,20 @@ const Settings = () => {
         className={classes.pageTitle}
         variant="h6"
       >Application Settings</Typography>
-      <div className={classes.container}>
+      <Box className={classes.container}>
         <Typography>Dark Mode</Typography>
         <Switch
           checked={state.theme.isDark}
           onChange={handleTheme}
         />
-      </div>
-      <div className={classes.container}>
+      </Box>
+      <Box className={classes.container}>
         <Typography>Confirm On Delete</Typography>
         <Switch
           checked={_confirmDelete}
           onChange={handleConfirmDelete}
         />
-      </div>
+      </Box>
     </div>
   );
 };

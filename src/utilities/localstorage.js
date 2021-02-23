@@ -62,7 +62,11 @@ const initialUse = (force) => {
  * @param {any} data Data object to store
  */
 const saveLocalStorage = (obj, data) => {
-  localStorage.setItem(obj, JSON.stringify(data));
+  try {
+    localStorage.setItem(obj, JSON.stringify(data));
+  } catch (error) {
+    console.log(error);
+  }
   return true;
 };
 
