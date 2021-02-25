@@ -47,7 +47,7 @@ const Settings = () => {
       <Typography
         className={classes.pageTitle}
         variant="h6"
-      >Application Settings</Typography>
+      >Application settings</Typography>
       <Box className={classes.container}>
         <Typography>Dark Mode</Typography>
         <Switch

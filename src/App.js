@@ -7,7 +7,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import {
   // createMuiTheme,
   // Fixes forward Ref issue
-  unstable_createMuiStrictModeTheme as createMuiTheme
+  unstable_createMuiStrictModeTheme as createMuiTheme,
 } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container } from '@material-ui/core';

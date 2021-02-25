@@ -1,7 +1,7 @@
 import React from 'react';
 import StoreReducer from './StoreReducer';
 import {
-  // initialUse,
+  initialUse,
   getSettings,
   getBookmarks
 } from '../utilities/localstorage';
@@ -9,6 +9,7 @@ import {
 /**
  * Initial state
  */
+initialUse(false);
 const data = {
   isLoading: true,
   isEmpty: false,
@@ -20,7 +21,6 @@ export const context = React.createContext(data);
 
 const StoreProvider = (props) => {
   const [state, dispatch] = React.useReducer(StoreReducer, data);
-  // initialUse(false);
   return (
     <context.Provider value={[state, dispatch]}>
       {props.children}

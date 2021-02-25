@@ -26,17 +26,23 @@ const isLocalStorage = () => {
 * Write initial storage on first time usage
  * @param {boolean} force Force a local storage overwrite
  */
-const initialUse = (force) => {
+const initialUse = () => {
   const version = getSettings().data.version;
+  console.log('initialUse: version..........', version);
   const numOfBookmarks = getBookmarks().data.length;
-  if (!(version && numOfBookmarks > 0) || force) {
+  console.log('initialUse: numOfBookmarks...', numOfBookmarks);
+
+  // Nothing exist
+  if (!(version && numOfBookmarks > 0) && false) {
     saveLocalStorage('gd-bm-settings', getMockStorage().settings);
     saveLocalStorage('gd-bm-favourites', getMockStorage().favourites);
     saveLocalStorage('gd-bm-poplular', getMockStorage().poplular);
     saveLocalStorage('gd-bm-categories', getMockStorage().categories);
     saveLocalStorage('gd-bm-bookmarks', getMockStorage().bookmarks);
   }
-  if (!version && numOfBookmarks > 0 && !force) {
+
+  // No version but bookmarks do exist
+  if (!version && numOfBookmarks > 0 && false) {
     saveLocalStorage('gd-bm-settings', getMockStorage().settings);
     saveLocalStorage('gd-bm-favourites', getMockStorage().favourites);
     saveLocalStorage('gd-bm-poplular', getMockStorage().poplular);
@@ -53,6 +59,12 @@ const initialUse = (force) => {
       );
     });
     saveLocalStorage('gd-bm-bookmarks', newBookmarks);
+  }
+
+  // Bump version if it exists and is not the latest
+  if (version && version !== getMockStorage().settings.version) {
+    const currentSettings = getSettings().data;
+    saveLocalStorage('gd-bm-settings', {...currentSettings, version: getMockStorage().settings.version});
   }
 };
 
@@ -76,14 +88,7 @@ const saveLocalStorage = (obj, data) => {
 const getSettings = () => {
   let response = {
     statusOK: false,
-    data: {
-      version: '2.1.0',
-      theme: {
-        isDark: false,
-        template: 'light'
-      },
-      confirmDelete: true,
-    }
+    data: getMockStorage().settings,
   }
   try {
     const settings = JSON.parse(localStorage.getItem('gd-bm-settings'));
@@ -221,7 +226,7 @@ const getMockStorage = () => {
   const response = {
     // gd-bm-settings
     settings: {
-      version: '2.1.0',
+      version: '0.3.0',
       theme: {
         isDark: false,
         template: 'light'
