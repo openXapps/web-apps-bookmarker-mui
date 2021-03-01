@@ -1,5 +1,7 @@
 // Utility module to manage HTML5 localStorage
 
+import { getDefaultData } from './defaultdata';
+
 /**
  * Check whether localStorage is available.
  * It sets a dummy key.
@@ -34,19 +36,19 @@ const initialUse = () => {
 
   // Nothing exist
   if (!(version && numOfBookmarks > 0) && false) {
-    saveLocalStorage('gd-bm-settings', getMockStorage().settings);
-    saveLocalStorage('gd-bm-favourites', getMockStorage().favourites);
-    saveLocalStorage('gd-bm-poplular', getMockStorage().poplular);
-    saveLocalStorage('gd-bm-categories', getMockStorage().categories);
-    saveLocalStorage('gd-bm-bookmarks', getMockStorage().bookmarks);
+    saveLocalStorage('gd-bm-settings', getDefaultData().settings);
+    saveLocalStorage('gd-bm-favourites', getDefaultData().favourites);
+    saveLocalStorage('gd-bm-poplular', getDefaultData().poplular);
+    saveLocalStorage('gd-bm-categories', getDefaultData().categories);
+    saveLocalStorage('gd-bm-bookmarks', getDefaultData().bookmarks);
   }
 
   // No version but bookmarks do exist
   if (!version && numOfBookmarks > 0 && false) {
-    saveLocalStorage('gd-bm-settings', getMockStorage().settings);
-    saveLocalStorage('gd-bm-favourites', getMockStorage().favourites);
-    saveLocalStorage('gd-bm-poplular', getMockStorage().poplular);
-    saveLocalStorage('gd-bm-categories', getMockStorage().categories);
+    saveLocalStorage('gd-bm-settings', getDefaultData().settings);
+    saveLocalStorage('gd-bm-favourites', getDefaultData().favourites);
+    saveLocalStorage('gd-bm-poplular', getDefaultData().poplular);
+    saveLocalStorage('gd-bm-categories', getDefaultData().categories);
     const currentBookmarks = getBookmarks().data;
     const newBookmarks = currentBookmarks.map((v, i) => {
       return (
@@ -62,9 +64,9 @@ const initialUse = () => {
   }
 
   // Bump version if it exists and is not the latest
-  if (version && version !== getMockStorage().settings.version) {
+  if (version && version !== getDefaultData().settings.version) {
     const currentSettings = getSettings().data;
-    saveLocalStorage('gd-bm-settings', {...currentSettings, version: getMockStorage().settings.version});
+    saveLocalStorage('gd-bm-settings', { ...currentSettings, version: getDefaultData().settings.version });
   }
 };
 
@@ -88,11 +90,11 @@ const saveLocalStorage = (obj, data) => {
 const getSettings = () => {
   let response = {
     statusOK: false,
-    data: getMockStorage().settings,
+    data: getDefaultData().settings,
   }
   try {
     const settings = JSON.parse(localStorage.getItem('gd-bm-settings'));
-    // const { settings } = getMockStorage();
+    // const { settings } = getDefaultData();
     if (settings) {
       response = {
         statusOK: true,
@@ -118,7 +120,7 @@ const getFavourites = () => {
   }
   try {
     // const favourites = JSON.parse(localStorage.getItem('gd-bm-favourites'));
-    const { favourites } = getMockStorage();
+    const { favourites } = getDefaultData();
     if (favourites) {
       response = {
         statusOK: true,
@@ -144,7 +146,7 @@ const getPopular = () => {
   }
   try {
     // const poplular = JSON.parse(localStorage.getItem('gd-bm-poplular'));
-    const { poplular } = getMockStorage();
+    const { poplular } = getDefaultData();
     if (poplular) {
       response = {
         statusOK: true,
@@ -170,7 +172,7 @@ const getCategories = () => {
   }
   try {
     // const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
-    const { categories } = getMockStorage();
+    const { categories } = getDefaultData();
     if (categories) {
       response = {
         statusOK: true,
@@ -189,14 +191,14 @@ const getCategories = () => {
 /**
  * Get BOOKMARKS from local storage
  */
-const getBookmarks = () => {
+export const getBookmarks = () => {
   let response = {
     statusOK: false,
     data: []
   }
   try {
     // const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
-    const { bookmarks } = getMockStorage();
+    const { bookmarks } = getDefaultData();
     if (bookmarks) {
       response = {
         statusOK: true,
@@ -212,82 +214,7 @@ const getBookmarks = () => {
   return response;
 };
 
-
-
-
-
-
-
-/**
- * MOCK DATA FOR TESTING
- * https://github.com/kelektiv/node-uuid
- */
-const getMockStorage = () => {
-  const response = {
-    // gd-bm-settings
-    settings: {
-      version: '0.3.0',
-      theme: {
-        isDark: false,
-        template: 'light'
-      },
-      confirmDelete: true,
-    },
-
-    // gd-bm-favourites
-    favourites: [
-      '347cf222-887b-11e9-bc42-526af7764f01',
-      '347cf222-887b-11e9-bc42-526af7764f03',
-    ],
-
-    // gd-bm-poplular
-    poplular: [
-      '347cf222-887b-11e9-bc42-526af7764f02',
-      '347cf222-887b-11e9-bc42-526af7764f03',
-    ],
-
-    // gd-bm-categories
-    categories: [
-      {
-        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
-        category: 'Default',
-      },
-      {
-        categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
-        category: 'Development Tools',
-      },
-      {
-        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
-        category: 'Other',
-      },
-    ],
-
-    // gd-bm-bookmarks
-    bookmarks: [
-      {
-        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
-        siteId: '347cf222-887b-11e9-bc42-526af7764f01',
-        siteName: 'Google',
-        siteURL: 'https://www.google.com',
-      },
-      {
-        categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
-        siteId: '347cf4ca-887b-11e9-bc42-526af7764f02',
-        siteName: 'Material-UI',
-        siteURL: 'https://material-ui.com/',
-      },
-      {
-        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
-        siteId: '347cfc54-887b-11e9-bc42-526af7764f03',
-        siteName: 'Very long bookmark name growing beyond the limits of its container',
-        siteURL: 'https://www.google.com',
-      },
-    ],
-  };
-  return response;
-};
-
-// Export module methods
+// Export module functions
 module.exports.isLocalStorage = isLocalStorage;
 module.exports.initialUse = initialUse;
 module.exports.saveLocalStorage = saveLocalStorage;
@@ -295,5 +222,4 @@ module.exports.getSettings = getSettings;
 module.exports.getCategories = getCategories;
 module.exports.getFavourites = getFavourites;
 module.exports.getPopular = getPopular;
-module.exports.getBookmarks = getBookmarks;
-module.exports.getMockStorage = getMockStorage;
+// module.exports.getBookmarks = getBookmarks;

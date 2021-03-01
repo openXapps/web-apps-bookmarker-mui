@@ -18,14 +18,14 @@ import dark from './themes/dark';
 import light from './themes/light';
 
 // App components
-import Header from './components/Header';
-import Content from './components/Content';
-import Editor from './components/Editor';
-import Delete from './components/Delete';
-import Download from './components/Download';
-import Upload from './components/Upload';
-import Settings from './components/Settings';
-import PageNotFound from './components/PageNotFound';
+import HeaderComponent from './components/Header/HeaderComponent';
+import ContentComponent from './components/Content/ContentComponent';
+import EditorComponent from './components/Editor/EditorComponent';
+import DeleteComponent from './components/Delete/DeleteComponent';
+import DownloadComponent from './components/Download/DownloadComponent';
+import UploadComponent from './components/Upload/UploadComponent';
+import SettingsComponent from './components/Settings/SettingsComponent';
+import PageNotFound from './components/Error';
 
 // App container styling
 const useStyles = makeStyles((theme) => ({
@@ -49,17 +49,17 @@ const App = () => {
       <CssBaseline />
       <BrowserRouter basename={root}>
         <Container className={classes.root} maxWidth="md" disableGutters={true}>
-          <Header home={root} />
+          <HeaderComponent home={root} />
           <Switch>
-            <Route path="/" exact component={Content} />
-            <Route path="/filter/:id" component={Content} />
-            <Route path="/edit/:id" component={Editor} />
-            <Route path="/copy/:id" component={Editor} />
-            <Route path="/new" component={Editor} />
-            <Route path="/delete/:id" component={Delete} />
-            <Route path="/download" component={Download} />
-            <Route path="/upload" component={Upload} />
-            <Route path="/settings" component={Settings} />
+            <Route path="/" exact component={ContentComponent} />
+            <Route path="/filter/:id" component={ContentComponent} />
+            <Route path="/edit/:id" component={EditorComponent} />
+            <Route path="/copy/:id" component={EditorComponent} />
+            <Route path="/new" component={EditorComponent} />
+            <Route path="/delete/:id" component={DeleteComponent} />
+            <Route path="/download" component={DownloadComponent} />
+            <Route path="/upload" component={UploadComponent} />
+            <Route path="/settings" component={SettingsComponent} />
             <Route component={PageNotFound} />
           </Switch>
         </Container>
@@ -71,14 +71,14 @@ const App = () => {
 export default App;
 
 /*
-<Route path="/" exact     ><Content /></Route>
-<Route path="/filter/:id" ><Content /></Route>
-<Route path="/edit/:id"   ><Editor /></Route>
-<Route path="/copy/:id"   ><Editor /></Route>
-<Route path="/new"        ><Editor /></Route>
-<Route path="/delete/:id" ><Delete /></Route>
-<Route path="/download"   ><Download /></Route>
-<Route path="/upload"     ><Upload /></Route>
-<Route path="/settings"   ><Settings /></Route>
+<Route path="/" exact     ><ContentComponent /></Route>
+<Route path="/filter/:id" ><ContentComponent /></Route>
+<Route path="/edit/:id"   ><EditorComponent /></Route>
+<Route path="/copy/:id"   ><EditorComponent /></Route>
+<Route path="/new"        ><EditorComponent /></Route>
+<Route path="/delete/:id" ><DeleteComponent /></Route>
+<Route path="/download"   ><DownloadComponent /></Route>
+<Route path="/upload"     ><UploadComponent /></Route>
+<Route path="/settings"   ><SettingsComponent /></Route>
 <Route                    ><PageNotFound /></Route>
 */

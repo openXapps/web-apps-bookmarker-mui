@@ -9,38 +9,11 @@ import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 
+import { useStyles } from './UploadStyles';
 // import { saveLocalStorage } from '../utilities/localstorage';
-import { validator } from '../utilities/validator';
+import { validator } from '../../utilities/validator';
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(4),
-    marginRight: theme.spacing(4),
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2),
-    },
-  },
-  hGutter: {
-    marginTop: theme.spacing(2),
-  },
-  vGutter: {
-    marginRight: theme.spacing(1),
-    [theme.breakpoints.down('xs')]: {
-      marginRight: theme.spacing(0),
-    },
-  },
-  validator: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  grow: {
-    flexGrow: 1,
-  },
-}));
-
-const Upload = ({ history }) => {
+const UploadComponent = ({ history }) => {
   const classes = useStyles();
   const inputRef = React.useRef(null);
   const [snackState, setSnackState] = React.useState({
@@ -122,11 +95,11 @@ const Upload = ({ history }) => {
       <div className={classes.hGutter}></div>
       <Snackbar
         anchorOrigin={{
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'center',
         }}
         open={snackState.show}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         onClose={handleSnackState}
       ><Alert onClose={handleSnackState} severity={snackState.severity}>
           {snackState.message}
@@ -135,4 +108,4 @@ const Upload = ({ history }) => {
   );
 };
 
-export default Upload;
+export default UploadComponent;

@@ -3,11 +3,12 @@ import StoreReducer from './StoreReducer';
 import {
   initialUse,
   getSettings,
-  getBookmarks
+  getBookmarks,
 } from '../utilities/localstorage';
 
 /**
  * Initial state
+ * Loads default site data if first use
  */
 initialUse(false);
 const data = {

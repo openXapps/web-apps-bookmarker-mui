@@ -15,13 +15,13 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import useStyles from './HeaderStyle';
-import { getMockStorage } from '../utilities/localstorage';
+import useStyles from './HeaderStyles';
+import { getDefaultData } from '../utilities/defaultdata';
 
 const Header = ({ history, location }) => {
   const classes = useStyles();
   const [drawerState, setDrawerState] = React.useState(false);
-  const localData = getMockStorage();
+  const localData = getDefaultData();
 
   // console.log('Header: data...', data);
 
