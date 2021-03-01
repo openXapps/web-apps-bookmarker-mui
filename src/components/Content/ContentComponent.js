@@ -1,14 +1,14 @@
 import React from 'react';
-import Categories from './Categories';
-import Bookmarks from './Bookmarks';
+import CategoriesComponent from './CategoriesComponent';
+import BookmarksComponent from './BookmarksComponent';
 
-const Content = () => {
+const ContentComponent = () => {
   return (
     <div style={{ display: 'flex' }}>
-      <Categories />
-      <Bookmarks />
+      <CategoriesComponent />
+      <BookmarksComponent />
     </div>
   );
 };
 
-export default Content;
+export default ContentComponent;

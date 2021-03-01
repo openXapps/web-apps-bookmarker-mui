@@ -16,7 +16,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import useStyles from './HeaderStyles';
-import { getDefaultData } from '../utilities/defaultdata';
+import { getDefaultData } from '../../utilities/defaultdata';
 
 const Header = ({ history, location }) => {
   const classes = useStyles();

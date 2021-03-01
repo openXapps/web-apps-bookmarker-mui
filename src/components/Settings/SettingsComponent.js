@@ -1,26 +1,11 @@
 import React from 'react';
 import Switch from '@material-ui/core/Switch';
-import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-import { context } from '../context/StoreProvider';
-import { saveLocalStorage, getSettings } from '../utilities/localstorage';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: theme.spacing(5),
-  },
-  pageTitle: {
-
-  },
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: theme.spacing(3),
-  },
-}));
+import { context } from '../../context/StoreProvider';
+import { saveLocalStorage, getSettings } from '../../utilities/localstorage';
+import { useStyles } from './SettingsStyles';
 
 const Settings = () => {
   const classes = useStyles();

@@ -11,7 +11,7 @@ import Alert from '@material-ui/lab/Alert';
 
 import { useStyles } from './UploadStyles';
 // import { saveLocalStorage } from '../utilities/localstorage';
-import { validator } from '../../utilities/validator';
+import { validator } from './UploadValidator';
 
 const UploadComponent = ({ history }) => {
   const classes = useStyles();

@@ -25,7 +25,7 @@ import DeleteComponent from './components/Delete/DeleteComponent';
 import DownloadComponent from './components/Download/DownloadComponent';
 import UploadComponent from './components/Upload/UploadComponent';
 import SettingsComponent from './components/Settings/SettingsComponent';
-import PageNotFound from './components/Error';
+import Error404Component from './components/Error/Error404Component';
 
 // App container styling
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +60,7 @@ const App = () => {
             <Route path="/download" component={DownloadComponent} />
             <Route path="/upload" component={UploadComponent} />
             <Route path="/settings" component={SettingsComponent} />
-            <Route component={PageNotFound} />
+            <Route component={Error404Component} />
           </Switch>
         </Container>
       </BrowserRouter>
@@ -80,5 +80,5 @@ export default App;
 <Route path="/download"   ><DownloadComponent /></Route>
 <Route path="/upload"     ><UploadComponent /></Route>
 <Route path="/settings"   ><SettingsComponent /></Route>
-<Route                    ><PageNotFound /></Route>
+<Route                    ><Error404Component /></Route>
 */

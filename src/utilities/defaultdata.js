@@ -2,7 +2,7 @@
  * DEFAULT DATA FOR INITIAL APP LOAD
  * https://github.com/kelektiv/node-uuid
  */
-const getDefaultData = () => {
+export const getDefaultData = () => {
   const response = {
     // gd-bm-settings
     settings: {
@@ -67,4 +67,4 @@ const getDefaultData = () => {
   return response;
 };
 
-module.exports.getDefaultData = getDefaultData;
+// module.exports.getDefaultData = getDefaultData;

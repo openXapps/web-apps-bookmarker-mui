@@ -8,7 +8,7 @@ import { getDefaultData } from './defaultdata';
  * Validates the dummy key.
  * Then deletes the dummy key.
  */
-const isLocalStorage = () => {
+export const isLocalStorage = () => {
   try {
     localStorage.setItem('test', 'x');
     // console.log(localStorage.getItem('text'));
@@ -28,7 +28,7 @@ const isLocalStorage = () => {
 * Write initial storage on first time usage
  * @param {boolean} force Force a local storage overwrite
  */
-const initialUse = () => {
+export const initialUse = () => {
   const version = getSettings().data.version;
   console.log('initialUse: version..........', version);
   const numOfBookmarks = getBookmarks().data.length;
@@ -75,7 +75,7 @@ const initialUse = () => {
  * @param {string} obj Local storage identifier
  * @param {any} data Data object to store
  */
-const saveLocalStorage = (obj, data) => {
+export const saveLocalStorage = (obj, data) => {
   try {
     localStorage.setItem(obj, JSON.stringify(data));
   } catch (error) {
@@ -87,7 +87,7 @@ const saveLocalStorage = (obj, data) => {
 /**
  * Get SETTINGS from local storage
  */
-const getSettings = () => {
+export const getSettings = () => {
   let response = {
     statusOK: false,
     data: getDefaultData().settings,
@@ -113,7 +113,7 @@ const getSettings = () => {
 /**
  * Get FAVOURITES from local storage
  */
-const getFavourites = () => {
+export const getFavourites = () => {
   let response = {
     statusOK: false,
     data: []
@@ -139,7 +139,7 @@ const getFavourites = () => {
 /**
  * Get POPULAR from local storage
  */
-const getPopular = () => {
+export const getPopular = () => {
   let response = {
     statusOK: false,
     data: []
@@ -165,7 +165,7 @@ const getPopular = () => {
 /**
  * Get CATEGORIES from local storage
  */
-const getCategories = () => {
+export const getCategories = () => {
   let response = {
     statusOK: false,
     data: []
@@ -215,11 +215,11 @@ export const getBookmarks = () => {
 };
 
 // Export module functions
-module.exports.isLocalStorage = isLocalStorage;
-module.exports.initialUse = initialUse;
-module.exports.saveLocalStorage = saveLocalStorage;
-module.exports.getSettings = getSettings;
-module.exports.getCategories = getCategories;
-module.exports.getFavourites = getFavourites;
-module.exports.getPopular = getPopular;
+// module.exports.isLocalStorage = isLocalStorage;
+// module.exports.initialUse = initialUse;
+// module.exports.saveLocalStorage = saveLocalStorage;
+// module.exports.getSettings = getSettings;
+// module.exports.getCategories = getCategories;
+// module.exports.getFavourites = getFavourites;
+// module.exports.getPopular = getPopular;
 // module.exports.getBookmarks = getBookmarks;
