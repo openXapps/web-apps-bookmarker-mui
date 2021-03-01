@@ -16,14 +16,20 @@ export const getDefaultData = () => {
 
     // gd-bm-favourites
     favourites: [
-      '347cf222-887b-11e9-bc42-526af7764f01',
-      '347cf222-887b-11e9-bc42-526af7764f03',
+      { siteId: '347cf222-887b-11e9-bc42-526af7764f01' },
+      { siteId: '347cf222-887b-11e9-bc42-526af7764f03' },
     ],
 
     // gd-bm-poplular
     poplular: [
-      '347cf222-887b-11e9-bc42-526af7764f02',
-      '347cf222-887b-11e9-bc42-526af7764f03',
+      {
+        siteId: '347cf222-887b-11e9-bc42-526af7764f02',
+        lastUsed: '2020-03-23T06:07:30.407Z',
+      },
+      {
+        siteId: '347cf222-887b-11e9-bc42-526af7764f03',
+        lastUsed: '2021-02-23T06:07:30.407Z',
+      },
     ],
 
     // gd-bm-categories
@@ -60,7 +66,7 @@ export const getDefaultData = () => {
         categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
         siteId: '347cfc54-887b-11e9-bc42-526af7764f03',
         siteName: 'Very long bookmark name growing beyond the limits of its container',
-        siteURL: 'https://www.google.com',
+        siteURL: 'https://www.w3schools.com',
       },
     ],
   };

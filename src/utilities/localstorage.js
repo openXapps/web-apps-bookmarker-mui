@@ -29,28 +29,15 @@ export const isLocalStorage = () => {
  * @param {boolean} force Force a local storage overwrite
  */
 export const initialUse = () => {
-  const version = getSettings().data.version;
-  console.log('initialUse: version..........', version);
-  const numOfBookmarks = getBookmarks().data.length;
-  console.log('initialUse: numOfBookmarks...', numOfBookmarks);
+  const settings = getSettings();
+  const favourites = getFavourites();
+  const poplular = getPopular();
+  const categories = getCategories();
+  const bookmarks = getBookmarks();
 
-  // Nothing exist
-  if (!(version && numOfBookmarks > 0) && false) {
-    saveLocalStorage('gd-bm-settings', getDefaultData().settings);
-    saveLocalStorage('gd-bm-favourites', getDefaultData().favourites);
-    saveLocalStorage('gd-bm-poplular', getDefaultData().poplular);
-    saveLocalStorage('gd-bm-categories', getDefaultData().categories);
-    saveLocalStorage('gd-bm-bookmarks', getDefaultData().bookmarks);
-  }
-
-  // No version but bookmarks do exist
-  if (!version && numOfBookmarks > 0 && false) {
-    saveLocalStorage('gd-bm-settings', getDefaultData().settings);
-    saveLocalStorage('gd-bm-favourites', getDefaultData().favourites);
-    saveLocalStorage('gd-bm-poplular', getDefaultData().poplular);
-    saveLocalStorage('gd-bm-categories', getDefaultData().categories);
-    const currentBookmarks = getBookmarks().data;
-    const newBookmarks = currentBookmarks.map((v, i) => {
+  // Convert old bookmarks to new version (0.3.0)
+  if (!settings.statusOK && bookmarks.data.length > 0) {
+    const newBookmarks = bookmarks.data.map((v, i) => {
       return (
         {
           categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
@@ -64,10 +51,35 @@ export const initialUse = () => {
   }
 
   // Bump version if it exists and is not the latest
-  if (version && version !== getDefaultData().settings.version) {
-    const currentSettings = getSettings().data;
-    saveLocalStorage('gd-bm-settings', { ...currentSettings, version: getDefaultData().settings.version });
+  if (settings.data.version && settings.data.version !== getDefaultData().settings.version) {
+    saveLocalStorage('gd-bm-settings', { ...settings, version: getDefaultData().settings.version });
   }
+
+  // No settings exist
+  if (!settings.statusOK) {
+    saveLocalStorage('gd-bm-settings', getDefaultData().settings);
+  }
+
+  // No favourites exist
+  if (!favourites.statusOK) {
+    saveLocalStorage('gd-bm-favourites', getDefaultData().favourites);
+  }
+
+  // No popular exist
+  if (!poplular.statusOK) {
+    saveLocalStorage('gd-bm-poplular', getDefaultData().poplular);
+  }
+
+  // No categories exist
+  if (!categories.statusOK) {
+    saveLocalStorage('gd-bm-categories', getDefaultData().categories);
+  }
+
+  // No bookamrks exist
+  if (!bookmarks.statusOK) {
+    saveLocalStorage('gd-bm-bookmarks', getDefaultData().bookmarks);
+  }
+
 };
 
 /**
@@ -119,8 +131,8 @@ export const getFavourites = () => {
     data: []
   }
   try {
-    // const favourites = JSON.parse(localStorage.getItem('gd-bm-favourites'));
-    const { favourites } = getDefaultData();
+    const favourites = JSON.parse(localStorage.getItem('gd-bm-favourites'));
+    // const { favourites } = getDefaultData();
     if (favourites) {
       response = {
         statusOK: true,
@@ -145,12 +157,12 @@ export const getPopular = () => {
     data: []
   }
   try {
-    // const poplular = JSON.parse(localStorage.getItem('gd-bm-poplular'));
-    const { poplular } = getDefaultData();
+    const poplular = JSON.parse(localStorage.getItem('gd-bm-poplular'));
+    // const { poplular } = getDefaultData();
     if (poplular) {
       response = {
         statusOK: true,
-        data: poplular
+        data: poplular.sort((a, b) => (a.lastUsed > b.lastUsed) ? 1 : -1)
       };
     } else {
       throw new Error('No items found in localStorage');
@@ -171,8 +183,8 @@ export const getCategories = () => {
     data: []
   }
   try {
-    // const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
-    const { categories } = getDefaultData();
+    const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
+    // const { categories } = getDefaultData();
     if (categories) {
       response = {
         statusOK: true,
@@ -197,8 +209,8 @@ export const getBookmarks = () => {
     data: []
   }
   try {
-    // const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
-    const { bookmarks } = getDefaultData();
+    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    // const { bookmarks } = getDefaultData();
     if (bookmarks) {
       response = {
         statusOK: true,
@@ -214,12 +226,3 @@ export const getBookmarks = () => {
   return response;
 };
 
-// Export module functions
-// module.exports.isLocalStorage = isLocalStorage;
-// module.exports.initialUse = initialUse;
-// module.exports.saveLocalStorage = saveLocalStorage;
-// module.exports.getSettings = getSettings;
-// module.exports.getCategories = getCategories;
-// module.exports.getFavourites = getFavourites;
-// module.exports.getPopular = getPopular;
-// module.exports.getBookmarks = getBookmarks;

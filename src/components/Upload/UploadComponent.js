@@ -1,7 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -22,6 +21,7 @@ const UploadComponent = ({ history }) => {
     show: false
   });
   const [isValid, setIsValid] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
 
   const handleSnackState = () => {
     setSnackState({ ...snackState, show: false });
@@ -33,7 +33,9 @@ const UploadComponent = ({ history }) => {
     if (validator(inputRef.current.value)) {
       setSnackState({ severity: 'success', message: 'Validation SUCCESS', show: true });
       setIsValid(true);
+      setIsError(false);
     } else {
+      setIsError(true);
       setSnackState({ severity: 'error', message: 'Validation FAILED', show: true });
     }
   };
@@ -48,7 +50,7 @@ const UploadComponent = ({ history }) => {
         <Button
           variant="outlined"
           onClick={handleValidation}
-          color={!isValid ? 'default' : 'secondary'}
+          disabled={isValid}
         >{isValid ? 'Done' : 'Validate'}</Button>
       </Box>
       <div className={classes.hGutter}></div>
@@ -63,6 +65,7 @@ const UploadComponent = ({ history }) => {
         rowsMax={25}
         fullWidth={true}
         disabled={isValid}
+        error={isError}
       ></TextField>
       <Grid
         container
