@@ -30,7 +30,7 @@ const UploadComponent = ({ history }) => {
   const handleValidation = () => {
     // console.log('Upload: inputRef...', inputRef.current.value);
     // TODO validation of data
-    if (validator(inputRef.current.value)) {
+    if (!validator(inputRef.current.value)) {
       setSnackState({ severity: 'success', message: 'Validation SUCCESS', show: true });
       setIsValid(true);
       setIsError(false);

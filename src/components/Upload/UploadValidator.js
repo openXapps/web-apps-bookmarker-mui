@@ -2,12 +2,22 @@
  * Helper function to validate an object
  * @param {any} obj Data object to validate
  */
-const validator = (obj) => {
-  let response = false;
-  if (obj) {
-    response = true;
+export const validator = (data) => {
+  let hasError = false;
+  let obj = {};
+  
+  try {
+    obj = JSON.parse(data);
+  } catch (error) {
+    console.log(error);
+    hasError = true;
   }
-  return response;
-};
 
-module.exports.validator = validator;
+  // Check for favourites
+  if (!obj.favourites && !hasError) hasError = true;
+  if (!obj.poplular && !hasError) hasError = true;
+  if (!obj.categories && !hasError) hasError = true;
+  if (!obj.bookmarks && !hasError) hasError = true;
+
+  return hasError;
+};
