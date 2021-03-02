@@ -1,11 +1,11 @@
 import React from 'react';
-import CategoriesComponent from './CategoriesComponent';
+import NavigationComponent from './NavigationComponent';
 import BookmarksComponent from './BookmarksComponent';
 
 const ContentComponent = () => {
   return (
     <div style={{ display: 'flex' }}>
-      <CategoriesComponent />
+      <NavigationComponent />
       <BookmarksComponent />
     </div>
   );

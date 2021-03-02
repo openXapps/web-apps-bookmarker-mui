@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 
 import { getCategories } from '../../utilities/localstorage';
 
-const CategoriesComponent = () => {
+const NavigationComponent = () => {
     const [categories, setCategories] = React.useState([]);
 
     React.useEffect(() => {
@@ -24,4 +24,4 @@ const CategoriesComponent = () => {
     );
 };
 
-export default CategoriesComponent;
+export default NavigationComponent;

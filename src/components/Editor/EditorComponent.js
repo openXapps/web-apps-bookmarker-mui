@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Editor = () => {
+const EditorComponent = () => {
     return (
         <h3>Editor</h3>
     );
 };
 
-export default Editor;
+export default EditorComponent;

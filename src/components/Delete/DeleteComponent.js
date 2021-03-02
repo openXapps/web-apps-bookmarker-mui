@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Delete = () => {
+const DeleteComponent = () => {
     return (
         <h3>Delete</h3>
     );
 };
 
-export default Delete;
+export default DeleteComponent;
