@@ -226,3 +226,31 @@ export const getBookmarks = () => {
   return response;
 };
 
+/**
+ * Get DOWNLOADABLE data from storage
+ */
+export const getDownloadableData = () => {
+  let data = '{\n"favourites":\n';
+  data += stringPop(JSON.stringify(getFavourites().data));
+  data += ',\n"popular":\n';
+  data += stringPop(JSON.stringify(getPopular().data));
+  data += ',\n"categories":\n';
+  data += stringPop(JSON.stringify(getCategories().data));
+  data += ',\n"bookmarks":\n';
+  data += stringPop(JSON.stringify(getBookmarks().data));
+  data += '\n}';
+  return data;
+};
+
+/**
+ * Helper function to prettify JSON object
+ * @param {string} data String to prettify
+ */
+function stringPop(data) {
+  let result = data;
+  result = result.replace('[', '[\n');
+  result = result.replace(']', '\n]');
+  result = result.replace(/},{/g, '},\n{');
+  return result;
+}
+

@@ -5,19 +5,18 @@
 export const validator = (data) => {
   let hasError = false;
   let obj = {};
-  
+
   try {
     obj = JSON.parse(data);
+    // Check for favourites
+    if (!obj.favourites) throw new Error('Missing favourites');
+    if (!obj.popular) throw new Error('Missing popular');
+    if (!obj.categories) throw new Error('Missing categories');
+    if (!obj.bookmarks) throw new Error('Missing bookmarks');
   } catch (error) {
     console.log(error);
     hasError = true;
   }
-
-  // Check for favourites
-  if (!obj.favourites && !hasError) hasError = true;
-  if (!obj.poplular && !hasError) hasError = true;
-  if (!obj.categories && !hasError) hasError = true;
-  if (!obj.bookmarks && !hasError) hasError = true;
 
   return hasError;
 };

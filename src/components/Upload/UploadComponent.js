@@ -29,7 +29,6 @@ const UploadComponent = ({ history }) => {
 
   const handleValidation = () => {
     // console.log('Upload: inputRef...', inputRef.current.value);
-    // TODO validation of data
     if (!validator(inputRef.current.value)) {
       setSnackState({ severity: 'success', message: 'Validation SUCCESS', show: true });
       setIsValid(true);
@@ -56,10 +55,8 @@ const UploadComponent = ({ history }) => {
       <div className={classes.hGutter}></div>
       <TextField
         multiline
-        id="bm-site-data"
-        // value={bookmarks}
+        id="bm-site-data-upload"
         inputRef={inputRef}
-        // onChange={handleTextChanges}
         variant="outlined"
         rows={25}
         rowsMax={25}
@@ -75,14 +72,12 @@ const UploadComponent = ({ history }) => {
       ><Grid item>
           <Button
             variant="outlined"
-            // className={classes.vGutter}
             disabled={!isValid}
           >Append</Button>
         </Grid>
         <Grid item>
           <Button
             variant="outlined"
-            // className={classes.vGutter}
             disabled={!isValid}
           >Overwrite</Button>
         </Grid>
