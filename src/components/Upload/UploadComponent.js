@@ -11,6 +11,7 @@ import Alert from '@material-ui/lab/Alert';
 import { useStyles } from './UploadStyles';
 // import { saveLocalStorage } from '../utilities/localstorage';
 import { validator } from './UploadValidator';
+import { mergeData, overwriteData } from './UploadLoader';
 
 const UploadComponent = ({ history }) => {
   const classes = useStyles();
@@ -37,6 +38,16 @@ const UploadComponent = ({ history }) => {
       setIsError(true);
       setSnackState({ severity: 'error', message: 'Validation FAILED', show: true });
     }
+  };
+
+  const handleMergeData = () => {
+    mergeData();
+    setSnackState({ severity: 'success', message: 'Data merged SUCCESS', show: true });
+  }
+
+  const handleOverwriteData = () => {
+    overwriteData();
+    setSnackState({ severity: 'success', message: 'Data overwrite SUCCESS', show: true });
   };
 
   // console.log('Upload: history...', history);
@@ -73,12 +84,14 @@ const UploadComponent = ({ history }) => {
           <Button
             variant="outlined"
             disabled={!isValid}
-          >Append</Button>
+            onClick={handleMergeData}
+          >Merge</Button>
         </Grid>
         <Grid item>
           <Button
             variant="outlined"
             disabled={!isValid}
+            onClick={handleOverwriteData}
           >Overwrite</Button>
         </Grid>
         <Grid item>
@@ -97,7 +110,7 @@ const UploadComponent = ({ history }) => {
           horizontal: 'center',
         }}
         open={snackState.show}
-        autoHideDuration={4000}
+        autoHideDuration={2500}
         onClose={handleSnackState}
       ><Alert onClose={handleSnackState} severity={snackState.severity}>
           {snackState.message}
