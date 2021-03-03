@@ -10,10 +10,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import HomeIcon from '@material-ui/icons/Home';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import useStyles from './HeaderStyles';
 import { getDefaultData } from '../../utilities/defaultdata';
@@ -41,10 +42,16 @@ const Header = ({ history, location }) => {
             className={classes.grow}
           >BookMARKER</Typography>
           {location.pathname === '/' ? (
-            <IconButton
-              color="inherit"
-              onClick={() => setDrawerState(!drawerState)}
-            ><MenuIcon /></IconButton>
+            <>
+              <IconButton
+                color="inherit"
+                onClick={() => history.push('/settings')}
+              ><SettingsIcon /></IconButton>
+              <IconButton
+                color="inherit"
+                onClick={() => setDrawerState(!drawerState)}
+              ><MenuIcon /></IconButton>
+            </>
           ) : (null)}
         </Toolbar>
       </AppBar>

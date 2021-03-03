@@ -22,9 +22,7 @@ const DownloadComponent = ({ history }) => {
     const [siteData, setSiteData] = React.useState('');
 
     React.useEffect(() => {
-        setTimeout(() => {
-            setSiteData(getDownloadableData());
-        }, 500);
+        setSiteData(getDownloadableData());
         // Effect clean-up function
         return () => true;
     }, []);

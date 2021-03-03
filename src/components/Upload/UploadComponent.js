@@ -23,6 +23,11 @@ const UploadComponent = ({ history }) => {
   });
   const [isValid, setIsValid] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
+  const [buttonState, setButtonState] = React.useState({
+    locked: true,
+    merge: 'Merge',
+    overwrite: 'Overwrite'
+  });
 
   const handleSnackState = () => {
     setSnackState({ ...snackState, show: false });
@@ -34,6 +39,7 @@ const UploadComponent = ({ history }) => {
       setSnackState({ severity: 'success', message: 'Validation SUCCESS', show: true });
       setIsValid(true);
       setIsError(false);
+      setButtonState({ ...buttonState, locked: false });
     } else {
       setIsError(true);
       setSnackState({ severity: 'error', message: 'Validation FAILED', show: true });
@@ -42,11 +48,13 @@ const UploadComponent = ({ history }) => {
 
   const handleMergeData = () => {
     mergeData();
+    setButtonState({ ...buttonState, locked: true, merge: 'Merge Done' });
     setSnackState({ severity: 'success', message: 'Data merged SUCCESS', show: true });
   }
 
   const handleOverwriteData = () => {
     overwriteData();
+    setButtonState({ ...buttonState, locked: true, overwrite: 'Overwrite Done' });
     setSnackState({ severity: 'success', message: 'Data overwrite SUCCESS', show: true });
   };
 
@@ -56,7 +64,7 @@ const UploadComponent = ({ history }) => {
     <div className={classes.container}>
       <Typography variant="h6" className={classes.hGutter}>Upload</Typography>
       <Box className={clsx(classes.validator, classes.hGutter)}>
-        <Typography className={classes.grow}>Paste your saved site data in the text box below</Typography>
+        <Typography className={classes.grow}>Paste your site data in the text box below</Typography>
         <Button
           variant="outlined"
           onClick={handleValidation}
@@ -68,6 +76,7 @@ const UploadComponent = ({ history }) => {
         multiline
         id="bm-site-data-upload"
         inputRef={inputRef}
+        inputProps={{ spellCheck: false }}
         variant="outlined"
         rows={25}
         rowsMax={25}
@@ -83,16 +92,16 @@ const UploadComponent = ({ history }) => {
       ><Grid item>
           <Button
             variant="outlined"
-            disabled={!isValid}
+            disabled={buttonState.locked}
             onClick={handleMergeData}
-          >Merge</Button>
+          >{buttonState.merge}</Button>
         </Grid>
         <Grid item>
           <Button
             variant="outlined"
-            disabled={!isValid}
+            disabled={buttonState.locked}
             onClick={handleOverwriteData}
-          >Overwrite</Button>
+          >{buttonState.overwrite}</Button>
         </Grid>
         <Grid item>
           <Button
