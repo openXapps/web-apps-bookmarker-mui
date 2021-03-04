@@ -11,7 +11,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { useStyles } from './NavigationStyles';
 import { getCategories } from '../../utilities/localstorage';
 
-const NavigationComponent = (props) => {
+const NavigationComponent = ({ history }) => {
     const classes = useStyles();
     const [categories, setCategories] = React.useState([]);
 
@@ -20,7 +20,7 @@ const NavigationComponent = (props) => {
         return () => true;
     }, []);
 
-    // console.log('Nav: props...', props);
+    console.log('Nav: location...', history.location);
 
     return (
         <Box className={classes.root}>

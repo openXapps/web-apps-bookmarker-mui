@@ -7,11 +7,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-// import FavoriteIcon from '@material-ui/icons/Favorite';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import EditIcon from '@material-ui/icons/Edit';
 
 import { getBookmarks } from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
+import { Link } from '@material-ui/core';
 
 // https://material-ui.com/components/speed-dial/
 
@@ -26,6 +26,10 @@ const BookmarksComponent = () => {
         return () => true;
     }, []);
 
+    const handleEdit = () => {
+        console.log('Edit button clicked');
+    };
+
     return (
         <Box className={classes.root}>
             <List disablePadding>
@@ -33,16 +37,24 @@ const BookmarksComponent = () => {
                     bookmarks.data.map((v, i) => {
                         return (
                             <div key={i}>
-                                <ListItem button disableGutters>
+                                <ListItem
+                                    disableGutters
+                                    button
+                                    component="a"
+                                    href={v.siteURL}
+                                    target="_blank"
+                                    rel="noopener">
                                     <ListItemText
                                         className={classes.bookmarkText}
                                         primary={v.siteName}
                                         primaryTypographyProps={matches ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
                                     />
                                     <ListItemSecondaryAction>
-                                        <IconButton edge="end">
-                                            <MoreVertIcon />
-                                        </IconButton>
+                                        {/* <Link href="https://www.google.co.za" target="_blank" rel="noopener"><EditIcon /></Link> */}
+                                        <Link href={`/edit/${v.siteId}`}><EditIcon /></Link>
+                                        {/* <IconButton edge="end" onClick={handleEdit}>
+                                            <EditIcon />
+                                        </IconButton> */}
                                     </ListItemSecondaryAction>
                                 </ListItem>
                             </div>
