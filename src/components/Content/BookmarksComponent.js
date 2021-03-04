@@ -1,26 +1,23 @@
 import React from 'react';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+// import FavoriteIcon from '@material-ui/icons/Favorite';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { getBookmarks } from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
 
-// const listText = (props) => {
-//     return (
-//         <Box
-//             component="div"
-//             textOverflow="ellipsis"
-//             overflow="hidden"
-//         >{props.siteName}</Box>
-//     );
-// };
+// https://material-ui.com/components/speed-dial/
 
 const BookmarksComponent = () => {
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down('sm'));
     const classes = useStyles();
     const [bookmarks, setBookmarks] = React.useState([]);
 
@@ -39,13 +36,12 @@ const BookmarksComponent = () => {
                                 <ListItem button disableGutters>
                                     <ListItemText
                                         className={classes.bookmarkText}
-                                        // disableTypography={true}
-                                        // primary={listText({ siteName: v.siteName })}
                                         primary={v.siteName}
+                                        primaryTypographyProps={matches ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
                                     />
                                     <ListItemSecondaryAction>
                                         <IconButton edge="end">
-                                            <FavoriteIcon className={classes.favIcon} />
+                                            <MoreVertIcon />
                                         </IconButton>
                                     </ListItemSecondaryAction>
                                 </ListItem>

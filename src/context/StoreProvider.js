@@ -3,7 +3,6 @@ import StoreReducer from './StoreReducer';
 import {
   initialUse,
   getSettings,
-  getBookmarks,
 } from '../utilities/localstorage';
 
 /**
@@ -15,7 +14,7 @@ const data = {
   isLoading: true,
   isEmpty: false,
   theme: getSettings().data.theme,
-  bookmarks: getBookmarks().data,
+  view: getSettings().data.defaultView,
 };
 
 export const context = React.createContext(data);

@@ -30,8 +30,8 @@ export const isLocalStorage = () => {
  */
 export const initialUse = () => {
   const settings = getSettings();
-  const favourites = getFavourites();
-  const poplular = getPopular();
+  // const favourites = getFavourites();
+  // const poplular = getPopular();
   const categories = getCategories();
   const bookmarks = getBookmarks();
 
@@ -44,6 +44,8 @@ export const initialUse = () => {
           siteId: v.siteId,
           siteName: v.siteName,
           siteURL: v.siteURL,
+          favourite: false,
+          lastUsed: new Date()
         }
       );
     });
@@ -61,14 +63,14 @@ export const initialUse = () => {
   }
 
   // No favourites exist
-  if (!favourites.statusOK) {
-    saveLocalStorage('gd-bm-favourites', getDefaultData().favourites);
-  }
+  // if (!favourites.statusOK) {
+  //   saveLocalStorage('gd-bm-favourites', getDefaultData().favourites);
+  // }
 
   // No popular exist
-  if (!poplular.statusOK) {
-    saveLocalStorage('gd-bm-poplular', getDefaultData().poplular);
-  }
+  // if (!poplular.statusOK) {
+  //   saveLocalStorage('gd-bm-poplular', getDefaultData().poplular);
+  // }
 
   // No categories exist
   if (!categories.statusOK) {
@@ -106,7 +108,6 @@ export const getSettings = () => {
   }
   try {
     const settings = JSON.parse(localStorage.getItem('gd-bm-settings'));
-    // const { settings } = getDefaultData();
     if (settings) {
       response = {
         statusOK: true,
@@ -130,13 +131,14 @@ export const getFavourites = () => {
     statusOK: false,
     data: []
   }
+  let favourites = [];
   try {
-    const favourites = JSON.parse(localStorage.getItem('gd-bm-favourites'));
-    // const { favourites } = getDefaultData();
-    if (favourites) {
+    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    if (bookmarks) {
+      favourites = bookmarks.data.filter((v, i, a) => v.favourite)
       response = {
         statusOK: true,
-        data: favourites
+        data: favourites.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
       };
     } else {
       throw new Error('No items found in localStorage');
@@ -157,12 +159,12 @@ export const getPopular = () => {
     data: []
   }
   try {
-    const poplular = JSON.parse(localStorage.getItem('gd-bm-poplular'));
-    // const { poplular } = getDefaultData();
-    if (poplular) {
+    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    // const { bookmarks } = getDefaultData();
+    if (bookmarks) {
       response = {
         statusOK: true,
-        data: poplular.sort((a, b) => (a.lastUsed > b.lastUsed) ? 1 : -1)
+        data: bookmarks.sort((a, b) => (a.lastUsed < b.lastUsed) ? 1 : -1)
       };
     } else {
       throw new Error('No items found in localStorage');
@@ -230,12 +232,12 @@ export const getBookmarks = () => {
  * Get DOWNLOADABLE data from storage
  */
 export const getDownloadableData = () => {
-  let data = '{\n"favourites":\n';
-  data += stringPop(JSON.stringify(getFavourites().data));
-  data += ',\n"popular":\n';
-  data += stringPop(JSON.stringify(getPopular().data));
-  data += ',\n"categories":\n';
+  let data = '{\n"categories":\n';
   data += stringPop(JSON.stringify(getCategories().data));
+  // data += ',\n"popular":\n';
+  // data += stringPop(JSON.stringify(getPopular().data));
+  // data += ',\n"favourites":\n';
+  // data += stringPop(JSON.stringify(getFavourites().data));
   data += ',\n"bookmarks":\n';
   data += stringPop(JSON.stringify(getBookmarks().data));
   data += '\n}';

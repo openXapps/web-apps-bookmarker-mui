@@ -12,25 +12,8 @@ export const getDefaultData = () => {
         template: 'light'
       },
       confirmDelete: true,
+      defaultView: 'popular'
     },
-
-    // gd-bm-favourites
-    favourites: [
-      { siteId: '347cf222-887b-11e9-bc42-526af7764f01' },
-      { siteId: '347cf222-887b-11e9-bc42-526af7764f03' },
-    ],
-
-    // gd-bm-poplular
-    poplular: [
-      {
-        siteId: '347cf222-887b-11e9-bc42-526af7764f02',
-        lastUsed: '2020-03-23T06:07:30.407Z',
-      },
-      {
-        siteId: '347cf222-887b-11e9-bc42-526af7764f03',
-        lastUsed: '2021-02-23T06:07:30.407Z',
-      },
-    ],
 
     // gd-bm-categories
     categories: [
@@ -55,22 +38,26 @@ export const getDefaultData = () => {
         siteId: '347cf222-887b-11e9-bc42-526af7764f01',
         siteName: 'Google',
         siteURL: 'https://www.google.com',
+        favourite: true,
+        lastUsed: '2020-03-23T06:07:30.407Z'
       },
       {
         categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
         siteId: '347cf4ca-887b-11e9-bc42-526af7764f02',
         siteName: 'Material-UI',
         siteURL: 'https://material-ui.com/',
+        favourite: false,
+        lastUsed: '2020-05-23T06:07:30.407Z'
       },
       {
         categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
         siteId: '347cfc54-887b-11e9-bc42-526af7764f03',
         siteName: 'Very long bookmark name growing beyond the limits of its container',
         siteURL: 'https://www.w3schools.com',
+        favourite: false,
+        lastUsed: '2020-01-23T06:07:30.407Z'
       },
     ],
   };
   return response;
 };
-
-// module.exports.getDefaultData = getDefaultData;

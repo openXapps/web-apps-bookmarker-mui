@@ -4,11 +4,11 @@ import Box from '@material-ui/core/Box';
 import NavigationComponent from './NavigationComponent';
 import BookmarksComponent from './BookmarksComponent';
 
-const ContentComponent = () => {
+const ContentComponent = ({ location, history }) => {
   return (
     <Box display="flex" mt={1}>
-      <NavigationComponent />
-      <BookmarksComponent />
+      <NavigationComponent location={location} history={history} />
+      <BookmarksComponent location={location} history={history} />
     </Box>
   );
 };

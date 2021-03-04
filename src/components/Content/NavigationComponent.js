@@ -5,38 +5,35 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 import SearchIcon from '@material-ui/icons/Search';
 
 import { useStyles } from './NavigationStyles';
-import {
-    // getPopular,
-    // getFavourites,
-    getCategories,
-} from '../../utilities/localstorage';
+import { getCategories } from '../../utilities/localstorage';
 
-const NavigationComponent = () => {
+const NavigationComponent = (props) => {
     const classes = useStyles();
-    // const [popular, setPopular] = React.useState([]);
-    // const [favourites, setFavourites] = React.useState([]);
     const [categories, setCategories] = React.useState([]);
 
     React.useEffect(() => {
-        // setPopular(getPopular());
-        // setFavourites(getFavourites());
         setCategories(getCategories());
         return () => true;
     }, []);
 
+    // console.log('Nav: props...', props);
+
     return (
         <Box className={classes.root}>
-            <Box className={classes.searchContainer}>
-                <InputBase
-                    className={classes.searchField}
-                    placeholder="Search..."
-                />
-                <IconButton className={classes.searchButton}>
-                    <SearchIcon />
-                </IconButton>
+            <Box display={{ xs: 'none', sm: 'none', md: 'block' }}>
+                <Box className={classes.searchContainer}>
+                    <InputBase
+                        className={classes.searchField}
+                        placeholder="Search..."
+                    />
+                    <IconButton className={classes.searchButton}>
+                        <SearchIcon />
+                    </IconButton>
+                </Box>
             </Box>
             <List disablePadding>
                 <ListItem button disableGutters>
@@ -45,7 +42,7 @@ const NavigationComponent = () => {
                 <ListItem button disableGutters>
                     <ListItemText primary="Favourites" className={classes.listItemText} />
                 </ListItem>
-                <div></div>
+                <Divider />
                 {categories.statusOK ? (
                     categories.data.map((v, i) => {
                         return (

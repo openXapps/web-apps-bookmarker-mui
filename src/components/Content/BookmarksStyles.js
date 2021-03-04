@@ -1,4 +1,4 @@
-import { darken, lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles((theme) => ({
   root: {
@@ -7,9 +7,6 @@ export const useStyles = makeStyles((theme) => ({
     // marginTop: theme.spacing(1),
     // [theme.breakpoints.up('md')]: {
     //   marginLeft: theme.spacing(0),
-    // },
-    // [theme.breakpoints.down('xs')]: {
-    //   marginLeft: theme.spacing(0.5),
     // },
   },
   bookmarkContainer: {
@@ -20,11 +17,8 @@ export const useStyles = makeStyles((theme) => ({
   },
   bookmarkText: {
     paddingLeft: theme.spacing(1),
-  },
-  favIcon: {
-    color: lighten(theme.palette.primary.main, 0.5),
-    '&:hover': {
-      color: theme.palette.primary.main,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 10,
     },
   },
 }));

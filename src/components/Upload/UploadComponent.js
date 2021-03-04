@@ -26,7 +26,8 @@ const UploadComponent = ({ history }) => {
   const [buttonState, setButtonState] = React.useState({
     locked: true,
     merge: 'Merge',
-    overwrite: 'Overwrite'
+    overwrite: 'Overwrite',
+    exit: 'Cancel'
   });
 
   const handleSnackState = () => {
@@ -35,7 +36,7 @@ const UploadComponent = ({ history }) => {
 
   const handleValidation = () => {
     // console.log('Upload: inputRef...', inputRef.current.value);
-    if (!validator(inputRef.current.value)) {
+    if (!validator(inputRef.current.value).hasError) {
       setSnackState({ severity: 'success', message: 'Validation SUCCESS', show: true });
       setIsValid(true);
       setIsError(false);
@@ -47,14 +48,18 @@ const UploadComponent = ({ history }) => {
   };
 
   const handleMergeData = () => {
-    mergeData();
-    setButtonState({ ...buttonState, locked: true, merge: 'Merge Done' });
-    setSnackState({ severity: 'success', message: 'Data merged SUCCESS', show: true });
+    if (mergeData(inputRef.current.value)) {
+      setButtonState({ ...buttonState, locked: true, merge: 'Merge Done', exit: 'Back' });
+      setSnackState({ severity: 'success', message: 'Data merge SUCCESS', show: true });
+    } else {
+      setButtonState({ ...buttonState, locked: false, merge: 'Merge Error' });
+      setSnackState({ severity: 'error', message: 'Data merge FAILED', show: true });
+    }
   }
 
   const handleOverwriteData = () => {
-    overwriteData();
-    setButtonState({ ...buttonState, locked: true, overwrite: 'Overwrite Done' });
+    overwriteData(inputRef.current.value);
+    setButtonState({ ...buttonState, locked: true, overwrite: 'Overwrite Done', exit: 'Back' });
     setSnackState({ severity: 'success', message: 'Data overwrite SUCCESS', show: true });
   };
 
@@ -107,7 +112,7 @@ const UploadComponent = ({ history }) => {
           <Button
             variant="outlined"
             onClick={() => history.goBack()}
-          >Cancel</Button>
+          >{buttonState.exit}</Button>
         </Grid>
       </Grid>
       {/* <Box className={classes.hGutter}>
