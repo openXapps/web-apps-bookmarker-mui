@@ -10,10 +10,12 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-import { getBookmarks } from '../../utilities/localstorage';
+import {
+    getBookmarks,
+    getByCategory,
+    getFavourites,
+} from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
-
-// https://material-ui.com/components/speed-dial/
 
 const BookmarksComponent = ({history}) => {
     const theme = useTheme();
@@ -22,7 +24,8 @@ const BookmarksComponent = ({history}) => {
     const [bookmarks, setBookmarks] = React.useState([]);
 
     React.useEffect(() => {
-        setBookmarks(getBookmarks());
+        // setBookmarks(getBookmarks());
+        setBookmarks(getByCategory('017cf222-887b-11e9-bc42-526af7764f64'))
         return () => true;
     }, []);
 
@@ -31,6 +34,8 @@ const BookmarksComponent = ({history}) => {
         const siteId = e.currentTarget.dataset.siteId;
         history.push('/edit/' + siteId);
     };
+
+    console.log('Bookmarks: bookmarks...', bookmarks);
 
     return (
         <Box className={classes.root}>

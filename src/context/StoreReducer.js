@@ -37,6 +37,11 @@ const StoreReducer = (state, action) => {
         ...state,
         theme: action.payload
       };
+    case 'VIEW':
+      return {
+        ...state,
+        currentView: action.payload
+      };
     default:
       throw new Error(`Reducer action type not defined: ${action.type}`);
   }

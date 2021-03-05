@@ -135,7 +135,7 @@ export const getFavourites = () => {
   try {
     const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
     if (bookmarks) {
-      favourites = bookmarks.data.filter((v, i, a) => v.favourite)
+      favourites = bookmarks.filter((v) => v.favourite)
       response = {
         statusOK: true,
         data: favourites.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
@@ -160,11 +160,37 @@ export const getPopular = () => {
   }
   try {
     const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
-    // const { bookmarks } = getDefaultData();
     if (bookmarks) {
       response = {
         statusOK: true,
         data: bookmarks.sort((a, b) => (a.lastUsed < b.lastUsed) ? 1 : -1)
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    console.log(err);
+  }
+  return response;
+};
+
+/**
+ * Get by CATEGORY from local storage
+ */
+export const getByCategory = (categoryId) => {
+  let response = {
+    statusOK: false,
+    data: []
+  }
+  let byCategory = [];
+  try {
+    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    if (bookmarks) {
+      byCategory = bookmarks.filter((v) => v.categoryId === categoryId);
+      response = {
+        statusOK: true,
+        data: byCategory.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
       };
     } else {
       throw new Error('No items found in localStorage');
@@ -186,7 +212,6 @@ export const getCategories = () => {
   }
   try {
     const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
-    // const { categories } = getDefaultData();
     if (categories) {
       response = {
         statusOK: true,
@@ -212,7 +237,6 @@ export const getBookmarks = () => {
   }
   try {
     const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
-    // const { bookmarks } = getDefaultData();
     if (bookmarks) {
       response = {
         statusOK: true,
