@@ -3,19 +3,19 @@ import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
+// import Link from '@material-ui/core/Link';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import EditIcon from '@material-ui/icons/Edit';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { getBookmarks } from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
-import { Link } from '@material-ui/core';
 
 // https://material-ui.com/components/speed-dial/
 
-const BookmarksComponent = () => {
+const BookmarksComponent = ({history}) => {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
     const classes = useStyles();
@@ -26,8 +26,10 @@ const BookmarksComponent = () => {
         return () => true;
     }, []);
 
-    const handleEdit = () => {
-        console.log('Edit button clicked');
+    const handleEdit = (e) => {
+        // console.log('Bookmarks: edit.siteId...', e.currentTarget.dataset.siteId);
+        const siteId = e.currentTarget.dataset.siteId;
+        history.push('/edit/' + siteId);
     };
 
     return (
@@ -51,10 +53,12 @@ const BookmarksComponent = () => {
                                     />
                                     <ListItemSecondaryAction>
                                         {/* <Link href="https://www.google.co.za" target="_blank" rel="noopener"><EditIcon /></Link> */}
-                                        <Link href={`/edit/${v.siteId}`}><EditIcon /></Link>
-                                        {/* <IconButton edge="end" onClick={handleEdit}>
-                                            <EditIcon />
-                                        </IconButton> */}
+                                        {/* <Link href={`/edit/${v.siteId}`}><MoreVertIcon /></Link> */}
+                                        <IconButton
+                                            edge="end"
+                                            data-site-id={v.siteId}
+                                            onClick={handleEdit}
+                                        ><MoreVertIcon /></IconButton>
                                     </ListItemSecondaryAction>
                                 </ListItem>
                             </div>

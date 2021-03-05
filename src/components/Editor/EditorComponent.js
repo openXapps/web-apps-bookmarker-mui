@@ -1,6 +1,9 @@
 import React from 'react';
 
-const EditorComponent = () => {
+const EditorComponent = ({ match }) => {
+
+    console.log('Edit: route...', match);
+
     return (
         <h3>Editor</h3>
     );

@@ -20,7 +20,7 @@ const NavigationComponent = ({ history }) => {
         return () => true;
     }, []);
 
-    console.log('Nav: location...', history.location);
+    // console.log('Nav: location...', history.location);
 
     return (
         <Box className={classes.root}>

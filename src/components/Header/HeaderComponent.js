@@ -1,98 +1,91 @@
 import React from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
+import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import SettingsIcon from '@material-ui/icons/Settings';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Hidden from '@material-ui/core/Hidden';
 
 import useStyles from './HeaderStyles';
 import { getDefaultData } from '../../utilities/defaultdata';
 
-const Header = ({ history, location }) => {
+const Header = ({ history }) => {
   const classes = useStyles();
-  const [drawerState, setDrawerState] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const localData = getDefaultData();
 
-  // console.log('Header: data...', data);
+  const handleMenuToggle = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleRoute = (e) => {
+    handleMenuClose();
+    // console.log(e.currentTarget.dataset.name);
+    history.push(`/${e.currentTarget.dataset.name}`);
+  }
 
   return (
-    <div className={classes.grow}>
+    <div>
       <AppBar
         position="static"
-      ><Toolbar>
+      ><Toolbar disableGutters className={classes.toolboxPadding}>
           <IconButton
             aria-label="home button"
             className={classes.leftButton}
             color="inherit"
             onClick={() => history.push('/')}
-          >{location.pathname === '/' ? <HomeIcon /> : <ChevronLeftIcon />}</IconButton>
+          >{history.location.pathname === '/' ? <HomeIcon /> : <ChevronLeftIcon />}</IconButton>
           <Typography
-            variant="h6"
             className={classes.grow}
-          >BookMARKER</Typography>
-          {location.pathname === '/' ? (
+            variant="h6"
+          >BookMARKER <span className={classes.appVersion}><Hidden xsDown>v{localData.settings.version}</Hidden></span>
+          </Typography>
+          {history.location.pathname === '/' ? (
             <>
+              <IconButton
+                color="inherit"
+                onClick={() => history.push('/new')}
+              ><AddCircleIcon /></IconButton>
               <IconButton
                 color="inherit"
                 onClick={() => history.push('/settings')}
               ><SettingsIcon /></IconButton>
               <IconButton
                 color="inherit"
-                onClick={() => setDrawerState(!drawerState)}
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenuToggle}
               ><MenuIcon /></IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                getContentAnchorEl={null}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right', }}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleRoute} data-name='settings'>Settings</MenuItem>
+                <MenuItem onClick={handleRoute} data-name='download'>Backup my Data</MenuItem>
+                <MenuItem onClick={handleRoute} data-name='upload'>Restore my Backups</MenuItem>
+              </Menu>
             </>
           ) : (null)}
         </Toolbar>
       </AppBar>
-      {/* <Toolbar /> */}
-      <Drawer
-        className={classes.drawer}
-        anchor="right"
-        open={drawerState}
-        onClose={() => setDrawerState(false)}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton
-            onClick={() => setDrawerState(!drawerState)}
-          ><ChevronRightIcon /></IconButton>
-          <Typography>v{localData.settings.version}</Typography>
-        </div>
-        <Divider />
-        <List>
-          <ListItem
-            button
-            component={RouterLink}
-            to="/settings"
-            onClick={() => setDrawerState(false)}
-          ><ListItemText>Settings</ListItemText></ListItem>
-          <ListItem
-            button
-            component={RouterLink}
-            to="/download"
-            onClick={() => setDrawerState(false)}
-          ><ListItemText>Download Site Data</ListItemText></ListItem>
-          <ListItem
-            button
-            component={RouterLink}
-            to="/upload"
-            onClick={() => setDrawerState(false)}
-          ><ListItemText>Upload Site Data</ListItemText></ListItem>
-        </List>
-      </Drawer>
     </div>
   );
 };

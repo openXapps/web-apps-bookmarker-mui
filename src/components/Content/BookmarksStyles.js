@@ -13,7 +13,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'nowrap',
     alignItems: 'center',
-    marginLeft: theme.spacing(1),
+    // marginLeft: theme.spacing(1),
   },
   bookmarkText: {
     paddingLeft: theme.spacing(1),
