@@ -12,10 +12,6 @@ export const getDefaultData = () => {
         template: 'light'
       },
       confirmDelete: true,
-      currentView: {
-        view: 'popular',
-        category: ''
-      }
     },
 
     // gd-bm-categories

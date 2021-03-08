@@ -51,11 +51,13 @@ const App = () => {
         <Container className={classes.root} maxWidth="md" disableGutters={true}>
           <HeaderComponent home={root} />
           <Switch>
+            {/* root shows popular bookamrks */}
             <Route path="/" exact component={ContentComponent} />
-            <Route path="/filter/:id" component={ContentComponent} />
-            <Route path="/edit/:id" component={EditorComponent} />
-            <Route path="/copy/:id" component={EditorComponent} />
+            <Route path="/favourites" component={ContentComponent} />
+            <Route path="/category/:id" component={ContentComponent} />
+            <Route path="/search/:name" exact component={ContentComponent} />
             <Route path="/new" component={EditorComponent} />
+            <Route path="/edit/:id" component={EditorComponent} />
             <Route path="/delete/:id" component={DeleteComponent} />
             <Route path="/download" component={DownloadComponent} />
             <Route path="/upload" component={UploadComponent} />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Box from '@material-ui/core/Box';
@@ -11,23 +12,44 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import {
-    getBookmarks,
+    updateLastClicked,
+    getPopular,
     getByCategory,
     getFavourites,
 } from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
 
-const BookmarksComponent = ({history}) => {
+const BookmarksComponent = ({ history }) => {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
     const classes = useStyles();
+    const { id } = useParams();
     const [bookmarks, setBookmarks] = React.useState([]);
 
     React.useEffect(() => {
-        // setBookmarks(getBookmarks());
-        setBookmarks(getByCategory('017cf222-887b-11e9-bc42-526af7764f64'))
+        const route = history.location.pathname;
+        let data = {};
+        switch (route) {
+            case '/':
+                data = getPopular();
+                if (data.statusOK) setBookmarks(data);
+                break;
+            case '/favourites':
+                data = getFavourites();
+                if (data.statusOK) setBookmarks(data);
+                break;
+            default:
+                data = getByCategory(id);
+                if (data.statusOK) setBookmarks(data);
+                break;
+        }
+        // console.log('Bookmarks: route...', route);
+        // console.log('Bookmarks: id......', id);
+        // console.log('Bookmarks: data....', data);
+
+        // Clean-up function
         return () => true;
-    }, []);
+    }, [history.location.pathname, id]);
 
     const handleEdit = (e) => {
         // console.log('Bookmarks: edit.siteId...', e.currentTarget.dataset.siteId);
@@ -35,7 +57,10 @@ const BookmarksComponent = ({history}) => {
         history.push('/edit/' + siteId);
     };
 
-    console.log('Bookmarks: bookmarks...', bookmarks);
+    const handleLastClicked = (e) => {
+        console.log(e.currentTarget.dataset.siteId);
+        updateLastClicked(e.currentTarget.dataset.siteId);
+    };
 
     return (
         <Box className={classes.root}>
@@ -50,7 +75,9 @@ const BookmarksComponent = ({history}) => {
                                     component="a"
                                     href={v.siteURL}
                                     target="_blank"
-                                    rel="noopener">
+                                    rel="noopener"
+                                    data-site-id={v.siteId}
+                                    onClick={handleLastClicked}>
                                     <ListItemText
                                         className={classes.bookmarkText}
                                         primary={v.siteName}

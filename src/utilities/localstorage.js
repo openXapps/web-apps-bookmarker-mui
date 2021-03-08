@@ -30,8 +30,6 @@ export const isLocalStorage = () => {
  */
 export const initialUse = () => {
   const settings = getSettings();
-  // const favourites = getFavourites();
-  // const poplular = getPopular();
   const categories = getCategories();
   const bookmarks = getBookmarks();
 
@@ -62,16 +60,6 @@ export const initialUse = () => {
     saveLocalStorage('gd-bm-settings', getDefaultData().settings);
   }
 
-  // No favourites exist
-  // if (!favourites.statusOK) {
-  //   saveLocalStorage('gd-bm-favourites', getDefaultData().favourites);
-  // }
-
-  // No popular exist
-  // if (!poplular.statusOK) {
-  //   saveLocalStorage('gd-bm-poplular', getDefaultData().poplular);
-  // }
-
   // No categories exist
   if (!categories.statusOK) {
     saveLocalStorage('gd-bm-categories', getDefaultData().categories);
@@ -99,13 +87,34 @@ export const saveLocalStorage = (obj, data) => {
 };
 
 /**
+ * Helper function to update a bookmark's last used date
+ * @param {string} siteId Site ID to look for
+ */
+export const updateLastClicked = (siteId) => {
+  const bookmarks = getBookmarks();
+
+  // Convert old bookmarks to new version (0.3.0)
+  if (bookmarks.statusOK) {
+    const newBookmarks = bookmarks.data.map((v, i) => {
+      return (v.siteId === siteId ?
+        (
+          { ...v, lastUsed: new Date() }
+        ) : (v)
+      );
+    });
+    saveLocalStorage('gd-bm-bookmarks', newBookmarks);
+  }
+  return true;
+};
+
+/**
  * Get SETTINGS from local storage
  */
 export const getSettings = () => {
   let response = {
     statusOK: false,
     data: getDefaultData().settings,
-  }
+  };
   try {
     const settings = JSON.parse(localStorage.getItem('gd-bm-settings'));
     if (settings) {
@@ -130,7 +139,7 @@ export const getFavourites = () => {
   let response = {
     statusOK: false,
     data: []
-  }
+  };
   let favourites = [];
   try {
     const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
@@ -157,7 +166,7 @@ export const getPopular = () => {
   let response = {
     statusOK: false,
     data: []
-  }
+  };
   try {
     const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
     if (bookmarks) {
@@ -182,7 +191,7 @@ export const getByCategory = (categoryId) => {
   let response = {
     statusOK: false,
     data: []
-  }
+  };
   let byCategory = [];
   try {
     const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
@@ -209,7 +218,7 @@ export const getCategories = () => {
   let response = {
     statusOK: false,
     data: []
-  }
+  };
   try {
     const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
     if (categories) {
@@ -234,7 +243,7 @@ export const getBookmarks = () => {
   let response = {
     statusOK: false,
     data: []
-  }
+  };
   try {
     const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
     if (bookmarks) {

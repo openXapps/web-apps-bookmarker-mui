@@ -14,7 +14,6 @@ const data = {
   isLoading: true,
   isEmpty: false,
   theme: getSettings().data.theme,
-  view: getSettings().data.defaultView,
 };
 
 export const context = React.createContext(data);
