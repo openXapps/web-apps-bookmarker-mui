@@ -9,7 +9,7 @@ import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Hidden from '@material-ui/core/Hidden';
@@ -46,7 +46,7 @@ const Header = ({ history }) => {
             className={classes.leftButton}
             color="inherit"
             onClick={() => history.push('/')}
-          >{history.location.pathname === '/' ? <HomeIcon /> : <ChevronLeftIcon />}</IconButton>
+          >{history.location.pathname === '/' ? <HomeIcon /> : <ArrowBackIcon />}</IconButton>
           <Typography
             className={classes.grow}
             variant="h6"

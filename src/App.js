@@ -6,10 +6,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import {
   // createMuiTheme,
-  // Fixes forward Ref issue
+  // Fixes forward Ref issue - NOT FOR PRODUCTION USE
   unstable_createMuiStrictModeTheme as createMuiTheme,
 } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/core/styles';
 import { Container } from '@material-ui/core';
 
 // App assets
@@ -27,28 +26,18 @@ import UploadComponent from './components/Upload/UploadComponent';
 import SettingsComponent from './components/Settings/SettingsComponent';
 import Error404Component from './components/Error/Error404Component';
 
-// App container styling
-const useStyles = makeStyles((theme) => ({
-  root: {
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '100%',
-    },
-  },
-}));
-
 const App = () => {
   // https://medium.com/@svinkle/how-to-deploy-a-react-app-to-a-subdirectory-f694d46427c1
   // const root = '/apps/bookmarker';
   const root = '/';
   const [state] = React.useContext(context);
   const appTheme = createMuiTheme(state.theme.isDark ? dark : light);
-  const classes = useStyles();
 
   return (
     <ThemeProvider theme={appTheme}>
       <CssBaseline />
       <BrowserRouter basename={root}>
-        <Container className={classes.root} maxWidth="md" disableGutters={true}>
+        <Container maxWidth="md" disableGutters={true}>
           <HeaderComponent home={root} />
           <Switch>
             {/* root shows popular bookamrks */}

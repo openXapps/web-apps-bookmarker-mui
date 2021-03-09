@@ -4,21 +4,19 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 
-import { useStyles } from './ContentStyles';
 import NavigationComponent from './NavigationComponent';
 import BookmarksComponent from './BookmarksComponent';
 
 // https://medium.com/swlh/taking-material-ui-for-a-spin-79ec46db72e3
 
 const ContentComponent = ({ history }) => {
-  const classes = useStyles();
 
   return (
-    <Box mt={2}>
-      <Grid container spacing={1}>
+    <Box mt={{ sm: 2 }}>
+      <Grid container>
         <Grid item xs={false} sm={3}>
           <Hidden xsDown>
-            <Paper className={classes.paper}>
+            <Paper>
               <NavigationComponent history={history} />
             </Paper>
           </Hidden>
@@ -27,7 +25,7 @@ const ContentComponent = ({ history }) => {
           <BookmarksComponent history={history} />
         </Grid>
       </Grid>
-    </Box>
+    </Box >
   );
 };
 

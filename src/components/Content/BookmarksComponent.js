@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
-// import Link from '@material-ui/core/Link';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -63,7 +63,7 @@ const BookmarksComponent = ({ history }) => {
     };
 
     return (
-        <Box className={classes.root}>
+        <Box width="100%" ml={{sm:1}}>
             <List disablePadding>
                 {bookmarks.statusOK ? (
                     bookmarks.data.map((v, i) => {
@@ -84,8 +84,6 @@ const BookmarksComponent = ({ history }) => {
                                         primaryTypographyProps={matches ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
                                     />
                                     <ListItemSecondaryAction>
-                                        {/* <Link href="https://www.google.co.za" target="_blank" rel="noopener"><EditIcon /></Link> */}
-                                        {/* <Link href={`/edit/${v.siteId}`}><MoreVertIcon /></Link> */}
                                         <IconButton
                                             edge="end"
                                             data-site-id={v.siteId}

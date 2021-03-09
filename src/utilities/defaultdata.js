@@ -18,15 +18,15 @@ export const getDefaultData = () => {
     categories: [
       {
         categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
-        category: 'Default',
+        category: 'Uncategorized ',
       },
       {
         categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
-        category: 'Development Tools',
+        category: 'Social Media',
       },
       {
         categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
-        category: 'Other',
+        category: 'Messaging',
       },
     ],
 
@@ -43,16 +43,48 @@ export const getDefaultData = () => {
       {
         categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
         siteId: '347cf4ca-887b-11e9-bc42-526af7764f02',
-        siteName: 'Material-UI',
-        siteURL: 'https://material-ui.com/',
+        siteName: 'Facebook',
+        siteURL: 'https://www.facebook.com',
         favourite: false,
         lastUsed: '2020-05-23T06:07:30.407Z'
       },
       {
-        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
+        categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
         siteId: '347cfc54-887b-11e9-bc42-526af7764f03',
-        siteName: 'Very long bookmark name growing beyond the limits of its container',
-        siteURL: 'https://www.w3schools.com',
+        siteName: 'Instagram',
+        siteURL: 'https://www.instagram.com',
+        favourite: false,
+        lastUsed: '2020-01-23T06:07:30.407Z'
+      },
+      {
+        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cfc54-887b-11e9-bc42-526af7764f04',
+        siteName: 'WhatsApp',
+        siteURL: 'https://web.whatsapp.com',
+        favourite: true,
+        lastUsed: '2020-01-23T06:07:30.407Z'
+      },
+      {
+        categoryId: '037cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cfc54-887b-11e9-bc42-526af7764f05',
+        siteName: 'GMail',
+        siteURL: 'https://mail.google.com/mail',
+        favourite: false,
+        lastUsed: '2020-01-23T06:07:30.407Z'
+      },
+      {
+        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cfc54-887b-11e9-bc42-526af7764f06',
+        siteName: 'YouTube',
+        siteURL: 'https://www.youtube.com',
+        favourite: false,
+        lastUsed: '2020-01-23T06:07:30.407Z'
+      },
+      {
+        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+        siteId: '347cfc54-887b-11e9-bc42-526af7764f07',
+        siteName: 'Microsoft',
+        siteURL: 'https://www.microsoft.com',
         favourite: false,
         lastUsed: '2020-01-23T06:07:30.407Z'
       },

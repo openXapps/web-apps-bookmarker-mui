@@ -3,11 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    // marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(2),
     // marginTop: theme.spacing(1),
-    // [theme.breakpoints.up('md')]: {
-    //   marginLeft: theme.spacing(0),
-    // },
+    [theme.breakpoints.up('xs')]: {
+      marginLeft: theme.spacing(0),
+    },
   },
   bookmarkContainer: {
     display: 'flex',
