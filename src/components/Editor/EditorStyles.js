@@ -19,6 +19,13 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(0),
     },
   },
+  switchContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: theme.spacing(1),
+    // paddingRight: theme.spacing(1),
+  },
 }));
 
 export default useStyles;

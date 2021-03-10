@@ -1,4 +1,6 @@
 import React from 'react';
+
+import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
@@ -9,10 +11,9 @@ import Divider from '@material-ui/core/Divider';
 import SearchIcon from '@material-ui/icons/Search';
 
 import { useStyles } from './NavigationStyles';
-import { getCategories, saveLocalStorage, getSettings } from '../../utilities/localstorage';
+import { getCategories } from '../../utilities/localstorage';
 
 const NavigationComponent = ({ history }) => {
-    const settings = getSettings();
     const classes = useStyles();
     const [categories, setCategories] = React.useState([]);
     const [active, setActive] = React.useState(0);
@@ -27,23 +28,16 @@ const NavigationComponent = ({ history }) => {
         // console.log('Navigation: innerText....', event);
         switch (event) {
             case 'Popular':
-                // console.log('Navigation: Popular......', event);
-                saveLocalStorage('gd-bm-settings', { ...settings.data, route: '/' });
-                if (history.location.pathname !== '/') history.push('/');
                 setActive(0);
+                if (history.location.pathname !== '/') history.push('/');
                 break;
             case 'Favourites':
-                // console.log('Navigation: Favourites...', event);
-                saveLocalStorage('gd-bm-settings', { ...settings.data, route: '/favourites' });
-                if (history.location.pathname !== '/favourites') history.push('/favourites');
                 setActive(1);
+                if (history.location.pathname !== '/favourites') history.push('/favourites');
                 break;
             default:
-                // console.log('Navigation: Dataset......', e.currentTarget.dataset.catId);
-                saveLocalStorage('gd-bm-settings', { ...settings.data, route: '/category/' + e.currentTarget.dataset.catId });
-                if (history.location.pathname !== '/category/:id') history.push('/category/' + e.currentTarget.dataset.catId);
-                // console.log('Navigation: index....', i);
                 if (i !== undefined) setActive(i + 2);
+                if (history.location.pathname !== '/category/:id') history.push('/category/' + e.currentTarget.dataset.catId);
                 break;
         }
     };
@@ -51,8 +45,8 @@ const NavigationComponent = ({ history }) => {
     // console.log('Nav: location...', history.location);
 
     return (
-        <Box className={classes.root}>
-            <Box display={{ xs: 'none', sm: 'none', md: 'block' }}>
+        <Paper>
+            <Box display={{ xs: 'none', sm: 'block' }}>
                 <Box className={classes.searchContainer}>
                     <InputBase
                         className={classes.searchField}
@@ -87,7 +81,7 @@ const NavigationComponent = ({ history }) => {
                     })
                 ) : (null)}
             </List>
-        </Box >
+        </Paper>
     );
 };
 

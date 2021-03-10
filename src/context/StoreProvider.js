@@ -9,10 +9,10 @@ import {
  * Initial state
  * Loads default site data if first use
  */
-initialUse(false);
+initialUse();
 const data = {
-  isLoading: true,
-  isEmpty: false,
+  // isLoading: true,
+  // isEmpty: false,
   theme: getSettings().data.theme,
 };
 

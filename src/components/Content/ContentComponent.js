@@ -1,7 +1,7 @@
 import React from 'react';
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 
 import NavigationComponent from './NavigationComponent';
@@ -16,9 +16,7 @@ const ContentComponent = ({ history }) => {
       <Grid container>
         <Grid item xs={false} sm={3}>
           <Hidden xsDown>
-            <Paper>
-              <NavigationComponent history={history} />
-            </Paper>
+            <NavigationComponent history={history} />
           </Hidden>
         </Grid>
         <Grid item xs={12} sm={9}>

@@ -1,57 +1,116 @@
 import React from 'react';
 
 import Typography from '@material-ui/core/Typography';
-// import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import Switch from '@material-ui/core/Switch';
 // import Snackbar from '@material-ui/core/Snackbar';
 // import Alert from '@material-ui/lab/Alert';
 
 import useStyles from './EditorStyles';
 
-const EditorComponent = ({ history }) => {
-    const classes = useStyles();
+const initalData = {
+    categoryId: '',
+    favourite: false,
+    siteId: '',
+    siteName: '',
+    siteURL: '',
+};
 
-    console.log('Edit: history.match...', history.match);
+const EditorComponent = ({ history, match }) => {
+    const classes = useStyles();
+    const [fields, setFields] = React.useState(initalData);
+    const [mode, setMode] = React.useState('Loading...');
+    const [isSaved, setIsSaved] = React.useState(false);
+
+    React.useEffect(() => {
+        const route = match.path;
+        switch (route) {
+            case '/edit/:id':
+                setMode('Edit bookmark');
+                break;
+            case '/new':
+                setMode('New bookmark');
+                break;
+            default:
+                break;
+        }
+        // Effect clean-up function
+        return () => true;
+    }, []);
+
+    const handleChange = ({ target: { name, value } }) => {
+        // console.log('Edit: onChange.name/value...', name, value);
+        setFields({
+            ...fields,
+            [name]: value,
+        })
+    };
+
+    const handleFavourite = () => {
+        setFields({
+            ...fields,
+            favourite: !fields.favourite,
+        })
+    };
+
+    const handleSave = () => {
+        return true;
+    };
+
+    // console.log('Edit: history...', history);
+    // console.log('Edit: match.....', match);
 
     return (
-        <div className={classes.container}>
-            <Typography variant="h6" className={classes.hGutter}>Edit</Typography>
-            <Typography className={classes.hGutter}>Copy your site data in the text box below</Typography>
-            <Box className={classes.hGutter}></Box>
-            {/* <TextField
-                multiline
-                id="bm-site-data-download"
-                defaultValue={siteData}
-                inputRef={inputRef}
-                variant="outlined"
-                rows={25}
-                rowsMax={25}
-                fullWidth={true}
-                disabled
-            ></TextField> */}
-            <Grid
-                container
-                alignItems="center"
-                className={classes.hGutter}
-                justify="space-between"
-            ><Grid item>
-                    {/* <Button
-                        variant="outlined"
-                        onClick={handleDataCopy}
-                        disabled={isCopied}
-                    >{isCopied ? 'Copied' : 'Copy'}</Button> */}
+        <Container maxWidth="sm">
+            <Box display="flex" flexDirection="column" mt={2}>
+                <Typography variant="h6" className={classes.hGutter}>{mode}</Typography>
+                <Box className={classes.hGutter}></Box>
+
+                <Paper component="form" autoComplete="off">
+                    <Box p={2}>
+                        <TextField label="Category" variant="outlined" name="category" onChange={handleChange} fullWidth color="secondary" />
+                        <Box className={classes.hGutter}></Box>
+                        <TextField label="Site Name" variant="outlined" name="siteName" onChange={handleChange} fullWidth color="secondary" />
+                        <Box className={classes.hGutter}></Box>
+                        <TextField label="Site URL" variant="outlined" name="siteURL" onChange={handleChange} fullWidth color="secondary" />
+                        <Box className={classes.hGutter}></Box>
+                        <Box className={classes.switchContainer}>
+                            <Typography>Favourite</Typography>
+                            <Switch
+                                name="favourite"
+                                checked={fields.favourite}
+                                onChange={handleFavourite}
+                            />
+                        </Box>
+
+                    </Box>
+                </Paper>
+                <Grid
+                    container
+                    alignItems="center"
+                    className={classes.hGutter}
+                    justify="space-between"
+                ><Grid item>
+                        <Button
+                            variant="outlined"
+                            onClick={handleSave}
+                            disabled={isSaved}
+                        >{isSaved ? 'Saved' : 'Save'}</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="outlined"
+                            onClick={() => history.goBack()}
+                        >{isSaved ? 'Back' : 'Cancel'}</Button>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <Button
-                        variant="outlined"
-                        onClick={() => history.goBack()}
-                    >Back</Button>
-                </Grid>
-            </Grid>
-            {/* <Box className={classes.hGutter}></Box> */}
-            <div className={classes.hGutter}></div>
+            </Box>
+
             {/* <Snackbar
                 anchorOrigin={{
                     vertical: 'top',
@@ -63,7 +122,7 @@ const EditorComponent = ({ history }) => {
             ><Alert onClose={handleSnackState} severity={snackState.severity}>
                     {snackState.message}
                 </Alert></Snackbar> */}
-        </div>
+        </Container>
     );
 };
 
