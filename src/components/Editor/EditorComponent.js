@@ -3,6 +3,7 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -12,9 +13,12 @@ import Switch from '@material-ui/core/Switch';
 // import Alert from '@material-ui/lab/Alert';
 
 import useStyles from './EditorStyles';
+import { getCategories, getCategoryByName } from '../../utilities/localstorage';
 
 const initalData = {
     categoryId: '',
+    categoryValue: '',
+    categoryInputValue: '',
     favourite: false,
     siteId: '',
     siteName: '',
@@ -26,6 +30,8 @@ const EditorComponent = ({ history, match }) => {
     const [fields, setFields] = React.useState(initalData);
     const [mode, setMode] = React.useState('Loading...');
     const [isSaved, setIsSaved] = React.useState(false);
+    const [isValid, setIsValid] = React.useState(true);
+    const [categories, setCategories] = React.useState([]);
 
     React.useEffect(() => {
         const route = match.path;
@@ -39,27 +45,41 @@ const EditorComponent = ({ history, match }) => {
             default:
                 break;
         }
+        setCategories(getCategories().data);
         // Effect clean-up function
         return () => true;
-    }, []);
+    }, [match.path]);
 
     const handleChange = ({ target: { name, value } }) => {
-        // console.log('Edit: onChange.name/value...', name, value);
+        // console.log('Edit: handleChange.name....', name);
+        // console.log('Edit: handleChange.value...', value);
         setFields({
             ...fields,
             [name]: value,
-        })
-    };
-
-    const handleFavourite = () => {
-        setFields({
-            ...fields,
-            favourite: !fields.favourite,
-        })
+        });
+        if (isSaved) setIsSaved(false);
     };
 
     const handleSave = () => {
-        return true;
+        let passedValidation = true;
+        let categoryId = '';
+
+        if (!fields.categoryInputValue) passedValidation = false;
+        if (!fields.siteName) passedValidation = false;
+        if (!fields.siteURL) passedValidation = false;
+
+        if (passedValidation && getCategoryByName(fields.categoryInputValue).statusOK) {
+            if (getCategoryByName(fields.categoryInputValue).data.length > 1) {
+                categoryId = getCategoryByName(fields.categoryInputValue).data[0].categoryId;
+                console.log('Edit: categoryId...', categoryId);
+            } else {
+                // TODO need to generate new UUID
+                console.log('Edit: new category...', fields.categoryInputValue);
+            }
+        }
+
+        setIsValid(passedValidation);
+        setIsSaved(passedValidation);
     };
 
     // console.log('Edit: history...', history);
@@ -68,12 +88,27 @@ const EditorComponent = ({ history, match }) => {
     return (
         <Container maxWidth="sm">
             <Box display="flex" flexDirection="column" mt={2}>
-                <Typography variant="h6" className={classes.hGutter}>{mode}</Typography>
+                <Typography variant="h6">{mode}</Typography>
                 <Box className={classes.hGutter}></Box>
-
                 <Paper component="form" autoComplete="off">
                     <Box p={2}>
-                        <TextField label="Category" variant="outlined" name="category" onChange={handleChange} fullWidth color="secondary" />
+                        <Autocomplete
+                            value={fields.categoryValue}
+                            onChange={(e, v) => handleChange({ target: { name: 'categoryValue', value: v } })}
+                            inputValue={fields.categoryInputValue}
+                            onInputChange={(e, v) => handleChange({ target: { name: 'categoryInputValue', value: v } })}
+                            freeSolo
+                            options={categories.map((v) => v.category)}
+                            renderInput={(params) => (
+                                <TextField {...params}
+                                    name="category"
+                                    label="Category"
+                                    // margin="normal"
+                                    variant="outlined"
+                                    fullWidth
+                                    color="secondary" />
+                            )}
+                        />
                         <Box className={classes.hGutter}></Box>
                         <TextField label="Site Name" variant="outlined" name="siteName" onChange={handleChange} fullWidth color="secondary" />
                         <Box className={classes.hGutter}></Box>
@@ -82,12 +117,10 @@ const EditorComponent = ({ history, match }) => {
                         <Box className={classes.switchContainer}>
                             <Typography>Favourite</Typography>
                             <Switch
-                                name="favourite"
                                 checked={fields.favourite}
-                                onChange={handleFavourite}
+                                onChange={() => handleChange({ target: { name: 'favourite', value: !fields.favourite } })}
                             />
                         </Box>
-
                     </Box>
                 </Paper>
                 <Grid
@@ -98,6 +131,7 @@ const EditorComponent = ({ history, match }) => {
                 ><Grid item>
                         <Button
                             variant="outlined"
+                            color={isValid ? 'default' : 'secondary'}
                             onClick={handleSave}
                             disabled={isSaved}
                         >{isSaved ? 'Saved' : 'Save'}</Button>

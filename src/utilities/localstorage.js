@@ -237,6 +237,31 @@ export const getCategories = () => {
 };
 
 /**
+ * Get CATEGORY by NAME from local storage
+ */
+export const getCategoryByName = (value) => {
+  let response = {
+    statusOK: false,
+    data: []
+  };
+  try {
+    const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
+    if (categories) {
+      response = {
+        statusOK: true,
+        data: categories.filter((v) => v.category === value)
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    console.log(err);
+  }
+  return response;
+};
+
+/**
  * Get BOOKMARKS from local storage
  */
 export const getBookmarks = () => {
