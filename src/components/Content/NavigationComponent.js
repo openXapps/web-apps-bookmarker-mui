@@ -12,11 +12,13 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import { useStyles } from './NavigationStyles';
 import { getCategories } from '../../utilities/localstorage';
+import { context } from '../../context/StoreProvider';
 
 const NavigationComponent = ({ history }) => {
+    const [state, dispatch] = React.useContext(context);
     const classes = useStyles();
     const [categories, setCategories] = React.useState([]);
-    const [active, setActive] = React.useState(0);
+    // const [active, setActive] = React.useState(state.activeNav);
 
     React.useEffect(() => {
         setCategories(getCategories());
@@ -28,15 +30,15 @@ const NavigationComponent = ({ history }) => {
         // console.log('Navigation: innerText....', event);
         switch (event) {
             case 'Popular':
-                setActive(0);
+                dispatch({ type: 'NAV', payload: 0 });
                 if (history.location.pathname !== '/') history.push('/');
                 break;
             case 'Favourites':
-                setActive(1);
+                dispatch({ type: 'NAV', payload: 1 });
                 if (history.location.pathname !== '/favourites') history.push('/favourites');
                 break;
             default:
-                if (i !== undefined) setActive(i + 2);
+                if (i !== undefined) dispatch({ type: 'NAV', payload: i + 2 });
                 if (history.location.pathname !== '/category/:id') history.push('/category/' + e.currentTarget.dataset.catId);
                 break;
         }
@@ -58,10 +60,10 @@ const NavigationComponent = ({ history }) => {
                 </Box>
             </Box>
             <List disablePadding>
-                <ListItem button disableGutters onClick={handleNav} selected={active === 0}>
+                <ListItem button disableGutters onClick={handleNav} selected={state.activeNav === 0}>
                     <ListItemText primary="Popular" className={classes.listItemText} />
                 </ListItem>
-                <ListItem button disableGutters onClick={handleNav} selected={active === 1}>
+                <ListItem button disableGutters onClick={handleNav} selected={state.activeNav === 1}>
                     <ListItemText primary="Favourites" className={classes.listItemText} />
                 </ListItem>
                 <Divider />
@@ -74,7 +76,7 @@ const NavigationComponent = ({ history }) => {
                                     disableGutters
                                     data-cat-id={v.categoryId}
                                     onClick={(e) => handleNav(e, i)}
-                                    selected={active === (i + 2)}
+                                    selected={state.activeNav === (i + 2)}
                                 ><ListItemText primary={v.category} className={classes.listItemText} /></ListItem>
                             </div>
                         );

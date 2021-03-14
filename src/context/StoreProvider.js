@@ -11,9 +11,8 @@ import {
  */
 initialUse();
 const data = {
-  // isLoading: true,
-  // isEmpty: false,
   theme: getSettings().data.theme,
+  activeNav: 0
 };
 
 export const context = React.createContext(data);

@@ -16,8 +16,10 @@ import Hidden from '@material-ui/core/Hidden';
 
 import useStyles from './HeaderStyles';
 import { getDefaultData } from '../../utilities/defaultdata';
+import { context } from '../../context/StoreProvider';
 
 const Header = ({ history }) => {
+  const [state, dispatch] = React.useContext(context);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const localData = getDefaultData();
@@ -30,11 +32,16 @@ const Header = ({ history }) => {
     setAnchorEl(null);
   };
 
+  const handleHomeButton = () => {
+    if (state !== 0) dispatch({ type: 'NAV', payload: 0 });
+    history.push('/');
+  };
+
   const handleRoute = (e) => {
     handleMenuClose();
     // console.log(e.currentTarget.dataset.name);
     history.push(`/${e.currentTarget.dataset.name}`);
-  }
+  };
 
   return (
     <div>
@@ -45,7 +52,7 @@ const Header = ({ history }) => {
             aria-label="home button"
             className={classes.leftButton}
             color="inherit"
-            onClick={() => history.push('/')}
+            onClick={handleHomeButton}
           >{history.location.pathname === '/' ? <HomeIcon /> : <ArrowBackIcon />}</IconButton>
           <Typography
             className={classes.grow}
