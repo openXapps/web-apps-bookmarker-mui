@@ -3,10 +3,10 @@ const dark = {
     type: 'dark',
     primary: {
       // main: '#384d7a',
-      main: '#3a5c7f',
+      main: '#455a64',
     },
     secondary: {
-      main: '#ffa500',
+      main: '#fb8c00',
     },
   },
 };

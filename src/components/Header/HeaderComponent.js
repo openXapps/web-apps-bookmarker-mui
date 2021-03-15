@@ -18,7 +18,7 @@ import useStyles from './HeaderStyles';
 import { getDefaultData } from '../../utilities/defaultdata';
 import { context } from '../../context/StoreProvider';
 
-const Header = ({ history }) => {
+const Header = ({ history, home }) => {
   const [state, dispatch] = React.useContext(context);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -33,8 +33,10 @@ const Header = ({ history }) => {
   };
 
   const handleHomeButton = () => {
-    if (state !== 0) dispatch({ type: 'NAV', payload: 0 });
-    history.push('/');
+    if (history.location.pathname !== home) {
+      if (state !== 0) dispatch({ type: 'NAV', payload: 0 });
+      history.push(home);
+    }
   };
 
   const handleRoute = (e) => {
@@ -53,7 +55,7 @@ const Header = ({ history }) => {
             className={classes.leftButton}
             color="inherit"
             onClick={handleHomeButton}
-          >{history.location.pathname === '/' ? <HomeIcon /> : <ArrowBackIcon />}</IconButton>
+          >{history.location.pathname === home ? <HomeIcon /> : <ArrowBackIcon />}</IconButton>
           <Typography
             className={classes.grow}
             variant="h6"

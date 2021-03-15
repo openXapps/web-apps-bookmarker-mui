@@ -40,7 +40,7 @@ const App = () => {
         <Container maxWidth="md" disableGutters={true}>
           <HeaderComponent home={root} />
           <Switch>
-            {/* root shows popular bookamrks */}
+            {/* home shows popular bookamrks */}
             <Route path="/" exact component={ContentComponent} />
             <Route path="/favourites" component={ContentComponent} />
             <Route path="/category/:id" component={ContentComponent} />
