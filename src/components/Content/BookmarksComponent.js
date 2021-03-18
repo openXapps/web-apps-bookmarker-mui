@@ -63,7 +63,7 @@ const BookmarksComponent = ({ history }) => {
     };
 
     return (
-        <Box width="100%" pl={{sm:1}}>
+        <Box width="100%" pl={{ sm: 1 }}>
             <List disablePadding>
                 {bookmarks.statusOK ? (
                     bookmarks.data.map((v, i) => {
@@ -96,6 +96,7 @@ const BookmarksComponent = ({ history }) => {
                     })
                 ) : (null)}
             </List>
+            <Box className={classes.hGutter} />
         </Box>
     );
 };

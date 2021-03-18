@@ -2,10 +2,12 @@ import React from 'react';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
 
 import { context } from '../../context/StoreProvider';
 import { saveLocalStorage, getSettings } from '../../utilities/localstorage';
 import { useStyles } from './SettingsStyles';
+import { Paper } from '@material-ui/core';
 
 const Settings = () => {
   const classes = useStyles();
@@ -28,26 +30,30 @@ const Settings = () => {
   };
 
   return (
-    <div className={classes.root}>
+    <Container maxWidth="sm">
+      <Box mt={2} />
       <Typography
         className={classes.pageTitle}
         variant="h6"
       >Application settings</Typography>
-      <Box className={classes.container}>
-        <Typography>Dark Mode</Typography>
-        <Switch
-          checked={state.theme.isDark}
-          onChange={handleTheme}
-        />
-      </Box>
-      <Box className={classes.container}>
-        <Typography>Confirm On Delete</Typography>
-        <Switch
-          checked={_confirmDelete}
-          onChange={handleConfirmDelete}
-        />
-      </Box>
-    </div>
+      <Box className={classes.hGutter}></Box>
+      <Paper>
+        <Box className={classes.container}>
+          <Typography>Dark Mode</Typography>
+          <Switch
+            checked={state.theme.isDark}
+            onChange={handleTheme}
+          />
+        </Box>
+        <Box className={classes.container}>
+          <Typography>Confirm On Delete</Typography>
+          <Switch
+            checked={_confirmDelete}
+            onChange={handleConfirmDelete}
+          />
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

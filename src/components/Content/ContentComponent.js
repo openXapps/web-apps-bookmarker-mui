@@ -3,6 +3,7 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
+import Container from '@material-ui/core/Container';
 
 import NavigationComponent from './NavigationComponent';
 import BookmarksComponent from './BookmarksComponent';
@@ -13,16 +14,18 @@ const ContentComponent = ({ history }) => {
 
   return (
     <Box mt={{ sm: 2 }}>
-      <Grid container>
-        <Grid item xs={false} sm={3}>
-          <Hidden xsDown>
-            <NavigationComponent history={history} />
-          </Hidden>
+      <Container maxWidth="md" disableGutters>
+        <Grid container>
+          <Grid item xs={false} sm={3}>
+            <Hidden xsDown>
+              <NavigationComponent history={history} />
+            </Hidden>
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <BookmarksComponent history={history} />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={9}>
-          <BookmarksComponent history={history} />
-        </Grid>
-      </Grid>
+      </Container>
     </Box >
   );
 };

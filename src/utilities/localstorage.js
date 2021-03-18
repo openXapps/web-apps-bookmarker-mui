@@ -262,6 +262,31 @@ export const getCategoryByName = (value) => {
 };
 
 /**
+ * Get CATEGORY by ID from local storage
+ */
+ export const getCategoryById = (id) => {
+  let response = {
+    statusOK: false,
+    data: []
+  };
+  try {
+    const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
+    if (categories) {
+      response = {
+        statusOK: true,
+        data: categories.filter((v) => v.categoryId === id)
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    console.log(err);
+  }
+  return response;
+};
+
+/**
  * Get BOOKMARKS from local storage
  */
 export const getBookmarks = () => {
@@ -275,6 +300,31 @@ export const getBookmarks = () => {
       response = {
         statusOK: true,
         data: bookmarks.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    console.log(err);
+  }
+  return response;
+};
+
+/**
+ * Get BOOKMARK by ID from local storage
+ */
+ export const getBookmarkById = (id) => {
+  let response = {
+    statusOK: false,
+    data: [],
+  };
+  try {
+    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    if (bookmarks) {
+      response = {
+        statusOK: true,
+        data: bookmarks.filter((v) => v.siteId === id)
       };
     } else {
       throw new Error('No items found in localStorage');

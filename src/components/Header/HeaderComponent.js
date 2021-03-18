@@ -13,6 +13,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Hidden from '@material-ui/core/Hidden';
+import Container from '@material-ui/core/Container';
 
 import useStyles from './HeaderStyles';
 import { getDefaultData } from '../../utilities/defaultdata';
@@ -47,53 +48,54 @@ const Header = ({ history, home }) => {
 
   return (
     <div>
-      <AppBar
-        position="static"
-      ><Toolbar disableGutters className={classes.toolboxPadding}>
-          <IconButton
-            aria-label="home button"
-            className={classes.leftButton}
-            color="inherit"
-            onClick={handleHomeButton}
-          >{history.location.pathname === home ? <HomeIcon /> : <ArrowBackIcon />}</IconButton>
-          <Typography
-            className={classes.grow}
-            variant="h6"
-          >BookMARKER <span className={classes.appVersion}><Hidden xsDown>v{localData.settings.version}</Hidden></span>
-          </Typography>
-          {history.location.pathname === '/' ? (
-            <>
-              <IconButton
-                color="inherit"
-                onClick={() => history.push('/new')}
-              ><AddCircleIcon /></IconButton>
-              <IconButton
-                color="inherit"
-                onClick={() => history.push('/settings')}
-              ><SettingsIcon /></IconButton>
-              <IconButton
-                color="inherit"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenuToggle}
-              ><MenuIcon /></IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                getContentAnchorEl={null}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right', }}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <MenuItem onClick={handleRoute} data-name='settings'>Settings</MenuItem>
-                <MenuItem onClick={handleRoute} data-name='download'>Backup my Data</MenuItem>
-                <MenuItem onClick={handleRoute} data-name='upload'>Restore my Backups</MenuItem>
-              </Menu>
-            </>
-          ) : (null)}
-        </Toolbar>
+      <AppBar position="fixed">
+        <Container maxWidth="md" disableGutters>
+          <Toolbar disableGutters className={classes.toolboxPadding}>
+            <IconButton
+              aria-label="home button"
+              className={classes.leftButton}
+              color="inherit"
+              onClick={handleHomeButton}
+            >{history.location.pathname === home ? <HomeIcon /> : <ArrowBackIcon />}</IconButton>
+            <Typography
+              className={classes.grow}
+              variant="h6"
+            >BookMARKER <span className={classes.appVersion}><Hidden xsDown>v{localData.settings.version}</Hidden></span>
+            </Typography>
+            {history.location.pathname === '/' ? (
+              <>
+                <IconButton
+                  color="inherit"
+                  onClick={() => history.push('/new')}
+                ><AddCircleIcon /></IconButton>
+                <IconButton
+                  color="inherit"
+                  onClick={() => history.push('/settings')}
+                ><SettingsIcon /></IconButton>
+                <IconButton
+                  color="inherit"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenuToggle}
+                ><MenuIcon /></IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right', }}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem onClick={handleRoute} data-name='settings'>Settings</MenuItem>
+                  <MenuItem onClick={handleRoute} data-name='download'>Backup my Data</MenuItem>
+                  <MenuItem onClick={handleRoute} data-name='upload'>Restore my Backups</MenuItem>
+                </Menu>
+              </>
+            ) : (null)}
+          </Toolbar>
+        </Container>
       </AppBar>
     </div>
   );

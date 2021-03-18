@@ -9,11 +9,14 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Switch from '@material-ui/core/Switch';
-// import Snackbar from '@material-ui/core/Snackbar';
-// import Alert from '@material-ui/lab/Alert';
 
 import useStyles from './EditorStyles';
-import { getCategories, getCategoryByName } from '../../utilities/localstorage';
+import {
+    getCategories,
+    getCategoryByName,
+    getCategoryById,
+    getBookmarkById,
+} from '../../utilities/localstorage';
 
 const initalData = {
     categoryId: '',
@@ -30,14 +33,35 @@ const EditorComponent = ({ history, match }) => {
     const [fields, setFields] = React.useState(initalData);
     const [mode, setMode] = React.useState('Loading...');
     const [isSaved, setIsSaved] = React.useState(false);
+    const [isDeleted, setIsDeleted] = React.useState(false);
     const [isValid, setIsValid] = React.useState(true);
     const [categories, setCategories] = React.useState([]);
 
     React.useEffect(() => {
         const route = match.path;
+        const id = match.params.id ? match.params.id : '';
+        // console.log('Edit: id...', id);
+        let bookmark = [];
+        let category = '';
         switch (route) {
             case '/edit/:id':
                 setMode('Edit bookmark');
+                bookmark = getBookmarkById(id).data;
+                // console.log('Edit: bookmark...', bookmark);
+                if (Array.isArray(bookmark)) {
+                    if (bookmark.length > 0) {
+                        category = getCategoryById(bookmark[0].categoryId).data[0].category;
+                        setFields({
+                            categoryId: bookmark[0].categoryId,
+                            categoryValue: category,
+                            categoryInputValue: category,
+                            favourite: bookmark[0].favourite,
+                            siteId: bookmark[0].siteId,
+                            siteName: bookmark[0].siteName,
+                            siteURL: bookmark[0].siteURL,
+                        });
+                    }
+                }
                 break;
             case '/new':
                 setMode('New bookmark');
@@ -48,7 +72,7 @@ const EditorComponent = ({ history, match }) => {
         setCategories(getCategories().data);
         // Effect clean-up function
         return () => true;
-    }, [match.path]);
+    }, [match.path, match.params]);
 
     const handleChange = ({ target: { name, value } }) => {
         // console.log('Edit: handleChange.name....', name);
@@ -80,6 +104,16 @@ const EditorComponent = ({ history, match }) => {
 
         setIsValid(passedValidation);
         setIsSaved(passedValidation);
+        setIsDeleted(!passedValidation);
+    };
+
+    const handleSaveAs = () => {
+        setIsSaved(true);
+        setIsDeleted(false);
+    };
+
+    const handleDelete = () => {
+        setIsDeleted(true);
     };
 
     // console.log('Edit: history...', history);
@@ -89,7 +123,7 @@ const EditorComponent = ({ history, match }) => {
         <Container maxWidth="sm">
             <Box display="flex" flexDirection="column" mt={2}>
                 <Typography variant="h6">{mode}</Typography>
-                <Box className={classes.hGutter}></Box>
+                <Box mt={2} />
                 <Paper component="form" autoComplete="off">
                     <Box p={2}>
                         <Autocomplete
@@ -103,17 +137,30 @@ const EditorComponent = ({ history, match }) => {
                                 <TextField {...params}
                                     name="category"
                                     label="Category"
-                                    // margin="normal"
                                     variant="outlined"
                                     fullWidth
-                                    color="secondary" />
+                                />
                             )}
                         />
-                        <Box className={classes.hGutter}></Box>
-                        <TextField label="Site Name" variant="outlined" name="siteName" onChange={handleChange} fullWidth color="secondary" />
-                        <Box className={classes.hGutter}></Box>
-                        <TextField label="Site URL" variant="outlined" name="siteURL" onChange={handleChange} fullWidth color="secondary" />
-                        <Box className={classes.hGutter}></Box>
+                        <Box mt={2} />
+                        <TextField
+                            label="Site Name"
+                            variant="outlined"
+                            name="siteName"
+                            value={fields.siteName}
+                            onChange={handleChange}
+                            fullWidth
+                        />
+                        <Box mt={2} />
+                        <TextField
+                            label="Site URL"
+                            variant="outlined"
+                            name="siteURL"
+                            value={fields.siteURL}
+                            onChange={handleChange}
+                            fullWidth
+                        />
+                        <Box mt={2} />
                         <Box className={classes.switchContainer}>
                             <Typography>Favourite</Typography>
                             <Switch
@@ -133,29 +180,34 @@ const EditorComponent = ({ history, match }) => {
                             variant="outlined"
                             color={isValid ? 'default' : 'secondary'}
                             onClick={handleSave}
-                            disabled={isSaved}
+                            disabled={isSaved || isDeleted}
                         >{isSaved ? 'Saved' : 'Save'}</Button>
                     </Grid>
                     <Grid item>
                         <Button
                             variant="outlined"
+                            color={isValid ? 'default' : 'secondary'}
+                            onClick={handleSaveAs}
+                            disabled={isSaved}
+                        >{isSaved ? 'Saved' : 'Save As'}</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="outlined"
+                            // color={isValid ? 'default' : 'secondary'}
+                            onClick={handleDelete}
+                            disabled={isDeleted}
+                            color="secondary"
+                        >{isDeleted ? 'Deleted' : 'Delete'}</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="outlined"
                             onClick={() => history.goBack()}
-                        >{isSaved ? 'Back' : 'Cancel'}</Button>
+                        >{isSaved || isDeleted ? 'Back' : 'Cancel'}</Button>
                     </Grid>
                 </Grid>
             </Box>
-
-            {/* <Snackbar
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                }}
-                open={snackState.show}
-                autoHideDuration={4000}
-                onClose={handleSnackState}
-            ><Alert onClose={handleSnackState} severity={snackState.severity}>
-                    {snackState.message}
-                </Alert></Snackbar> */}
         </Container>
     );
 };

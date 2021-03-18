@@ -21,4 +21,7 @@ export const useStyles = makeStyles((theme) => ({
       fontSize: 10,
     },
   },
+  hGutter: {
+    marginTop: theme.spacing(2),
+  },
 }));
