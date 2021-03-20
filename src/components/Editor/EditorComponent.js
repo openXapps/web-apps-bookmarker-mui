@@ -34,7 +34,7 @@ const EditorComponent = ({ history, match }) => {
     const [mode, setMode] = React.useState('Loading...');
     const [isSaved, setIsSaved] = React.useState(false);
     const [isDeleted, setIsDeleted] = React.useState(false);
-    const [isValid, setIsValid] = React.useState(true);
+    const [isInvalid, setIsInvalid] = React.useState(false);
     const [categories, setCategories] = React.useState([]);
 
     React.useEffect(() => {
@@ -60,6 +60,7 @@ const EditorComponent = ({ history, match }) => {
                             siteName: bookmark[0].siteName,
                             siteURL: bookmark[0].siteURL,
                         });
+                        setIsSaved(true);
                     }
                 }
                 break;
@@ -82,9 +83,11 @@ const EditorComponent = ({ history, match }) => {
             [name]: value,
         });
         if (isSaved) setIsSaved(false);
+        if (isInvalid) setIsInvalid(false);
+        if (isDeleted) setIsDeleted(false);
     };
 
-    const handleSave = () => {
+    const validateForm = () => {
         let passedValidation = true;
         let categoryId = '';
 
@@ -95,20 +98,30 @@ const EditorComponent = ({ history, match }) => {
         if (passedValidation && getCategoryByName(fields.categoryInputValue).statusOK) {
             if (getCategoryByName(fields.categoryInputValue).data.length > 1) {
                 categoryId = getCategoryByName(fields.categoryInputValue).data[0].categoryId;
-                console.log('Edit: categoryId...', categoryId);
+                // console.log('Edit: validation categoryId...', categoryId);
             } else {
                 // TODO need to generate new UUID
-                console.log('Edit: new category...', fields.categoryInputValue);
+                // console.log('Edit: validation new category...', fields.categoryInputValue);
             }
+        } else {
+            passedValidation = false;
         }
+        return passedValidation;
+    };
 
-        setIsValid(passedValidation);
+    const handleSave = () => {
+        let passedValidation = false;
+        passedValidation = validateForm();
+        setIsInvalid(!passedValidation);
         setIsSaved(passedValidation);
-        setIsDeleted(!passedValidation);
+        setIsDeleted(false);
     };
 
     const handleSaveAs = () => {
-        setIsSaved(true);
+        let passedValidation = false;
+        passedValidation = validateForm();
+        setIsInvalid(!passedValidation);
+        setIsSaved(passedValidation);
         setIsDeleted(false);
     };
 
@@ -174,15 +187,13 @@ const EditorComponent = ({ history, match }) => {
                 <Grid
                     container
                     alignItems="center"
-                // justify="space-between"
                 >
                     <Grid item xs={12} sm={3}>
                         <Button
                             variant="outlined"
                             fullWidth
-                            color={isValid ? 'default' : 'secondary'}
                             onClick={handleSave}
-                            disabled={isSaved || isDeleted}
+                            disabled={isSaved || isDeleted || isInvalid}
                         >{isSaved ? 'Saved' : 'Save'}</Button>
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -190,16 +201,14 @@ const EditorComponent = ({ history, match }) => {
                             <Button
                                 variant="outlined"
                                 fullWidth
-                                color={isValid ? 'default' : 'secondary'}
                                 onClick={handleSaveAs}
-                                disabled={isSaved}
-                            >{isSaved ? 'Saved' : 'Save As'}</Button></Box>
+                                disabled={isInvalid}
+                            >Save As</Button></Box>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
                             <Button
                                 variant="outlined"
-                                // color={isValid ? 'default' : 'secondary'}
                                 fullWidth
                                 color="secondary"
                                 onClick={handleDelete}
