@@ -123,7 +123,7 @@ const EditorComponent = ({ history, match }) => {
         <Container maxWidth="sm">
             <Box display="flex" flexDirection="column" mt={2}>
                 <Typography variant="h6">{mode}</Typography>
-                <Box mt={2} />
+                <Box mt={{ xs: 1, sm: 2 }} />
                 <Paper component="form" autoComplete="off">
                     <Box p={2}>
                         <Autocomplete
@@ -170,41 +170,49 @@ const EditorComponent = ({ history, match }) => {
                         </Box>
                     </Box>
                 </Paper>
+                <Box my={{ xs: 0.5, sm: 2 }} />
                 <Grid
                     container
                     alignItems="center"
-                    className={classes.hGutter}
-                    justify="space-between"
-                ><Grid item>
+                // justify="space-between"
+                >
+                    <Grid item xs={12} sm={3}>
                         <Button
                             variant="outlined"
+                            fullWidth
                             color={isValid ? 'default' : 'secondary'}
                             onClick={handleSave}
                             disabled={isSaved || isDeleted}
                         >{isSaved ? 'Saved' : 'Save'}</Button>
                     </Grid>
-                    <Grid item>
-                        <Button
-                            variant="outlined"
-                            color={isValid ? 'default' : 'secondary'}
-                            onClick={handleSaveAs}
-                            disabled={isSaved}
-                        >{isSaved ? 'Saved' : 'Save As'}</Button>
+                    <Grid item xs={12} sm={3}>
+                        <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
+                            <Button
+                                variant="outlined"
+                                fullWidth
+                                color={isValid ? 'default' : 'secondary'}
+                                onClick={handleSaveAs}
+                                disabled={isSaved}
+                            >{isSaved ? 'Saved' : 'Save As'}</Button></Box>
                     </Grid>
-                    <Grid item>
-                        <Button
-                            variant="outlined"
-                            // color={isValid ? 'default' : 'secondary'}
-                            onClick={handleDelete}
-                            disabled={isDeleted}
-                            color="secondary"
-                        >{isDeleted ? 'Deleted' : 'Delete'}</Button>
+                    <Grid item xs={12} sm={3}>
+                        <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
+                            <Button
+                                variant="outlined"
+                                // color={isValid ? 'default' : 'secondary'}
+                                fullWidth
+                                color="secondary"
+                                onClick={handleDelete}
+                                disabled={isDeleted}
+                            >{isDeleted ? 'Deleted' : 'Delete'}</Button></Box>
                     </Grid>
-                    <Grid item>
-                        <Button
-                            variant="outlined"
-                            onClick={() => history.goBack()}
-                        >{isSaved || isDeleted ? 'Back' : 'Cancel'}</Button>
+                    <Grid item xs={12} sm={3}>
+                        <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
+                            <Button
+                                variant="outlined"
+                                fullWidth
+                                onClick={() => history.goBack()}
+                            >{isSaved || isDeleted ? 'Back' : 'Cancel'}</Button></Box>
                     </Grid>
                 </Grid>
             </Box>

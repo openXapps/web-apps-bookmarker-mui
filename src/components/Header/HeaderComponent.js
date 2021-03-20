@@ -89,6 +89,7 @@ const Header = ({ history, home }) => {
                   onClose={handleMenuClose}
                 >
                   <MenuItem onClick={handleRoute} data-name='settings'>Settings</MenuItem>
+                  <MenuItem onClick={handleRoute} data-name='categories'>Categories</MenuItem>
                   <MenuItem onClick={handleRoute} data-name='download'>Backup my Data</MenuItem>
                   <MenuItem onClick={handleRoute} data-name='upload'>Restore my Backups</MenuItem>
                 </Menu>
