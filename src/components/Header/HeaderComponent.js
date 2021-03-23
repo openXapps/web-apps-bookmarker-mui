@@ -48,7 +48,7 @@ const Header = ({ history, home }) => {
 
   return (
     <div>
-      <AppBar position="fixed">
+      <AppBar position="fixed" color="transparent">
         <Container maxWidth="md" disableGutters>
           <Toolbar disableGutters className={classes.toolboxPadding}>
             <IconButton

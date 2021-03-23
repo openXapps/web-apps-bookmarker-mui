@@ -11,7 +11,7 @@ const FooterComponent = () => {
   const classes = useStyles();
 
   return (
-    <AppBar position="fixed" className={classes.footerBar}>
+    <AppBar position="fixed" color="transparent" className={classes.footerBar}>
       <Container maxWidth="md" disableGutters>
         <Toolbar disableGutters className={classes.toolboxPadding}>
           <Typography variant="body1" color="inherit">Im a FOOTER</Typography>

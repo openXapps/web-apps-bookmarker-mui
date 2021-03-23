@@ -1,4 +1,6 @@
 import React from 'react';
+import { v1 as uuidv1 } from 'uuid';
+// uuidv1()
 
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -28,11 +30,22 @@ const initalData = {
     siteURL: '',
 };
 
+const sceneText = {
+    mode: ['Loading...', 'Edit bookmark', 'New bookmark'],
+    save: ['Saved', 'Update', 'Save New'],
+    delete: ['Delete', 'Deleted'],
+    exit: ['Back', 'Cancel'],
+};
+
 const EditorComponent = ({ history, match }) => {
     const classes = useStyles();
     const [fields, setFields] = React.useState(initalData);
-    const [mode, setMode] = React.useState('Loading...');
-    const [isSaved, setIsSaved] = React.useState(false);
+    const [sceneIndexMode, setSceneIndexMode] = React.useState(0);
+    const [sceneIndexSave, setSceneIndexSave] = React.useState(0);
+    const [sceneIndexDelete, setSceneIndexDelete] = React.useState(0);
+    const [sceneIndexExit, setSceneIndexExit] = React.useState(0);
+    const [isSaved, setIsSaved] = React.useState(true);
+    // const [isSavedAs, setIsSavedAs] = React.useState(false);
     const [isDeleted, setIsDeleted] = React.useState(false);
     const [isInvalid, setIsInvalid] = React.useState(false);
     const [categories, setCategories] = React.useState([]);
@@ -45,7 +58,7 @@ const EditorComponent = ({ history, match }) => {
         let category = '';
         switch (route) {
             case '/edit/:id':
-                setMode('Edit bookmark');
+                setSceneIndexMode(1);
                 bookmark = getBookmarkById(id).data;
                 // console.log('Edit: bookmark...', bookmark);
                 if (Array.isArray(bookmark)) {
@@ -65,7 +78,8 @@ const EditorComponent = ({ history, match }) => {
                 }
                 break;
             case '/new':
-                setMode('New bookmark');
+                setSceneIndexMode(2);
+                setSceneIndexSave(2);
                 break;
             default:
                 break;
@@ -83,38 +97,42 @@ const EditorComponent = ({ history, match }) => {
             [name]: value,
         });
         if (isSaved) setIsSaved(false);
-        if (isInvalid) setIsInvalid(false);
+        if (sceneIndexMode === 1 && sceneIndexSave !== 1) setSceneIndexSave(1);
+        if (sceneIndexMode === 2 && sceneIndexSave !== 2) setSceneIndexSave(2);
         if (isDeleted) setIsDeleted(false);
+        if (sceneIndexDelete !== 0) setSceneIndexSave(0);
+        if (isInvalid) setIsInvalid(false);
     };
 
     const validateForm = () => {
         let passedValidation = true;
-        let categoryId = '';
+        let category = {};
 
         if (!fields.categoryInputValue) passedValidation = false;
         if (!fields.siteName) passedValidation = false;
         if (!fields.siteURL) passedValidation = false;
-
-        if (passedValidation && getCategoryByName(fields.categoryInputValue).statusOK) {
-            if (getCategoryByName(fields.categoryInputValue).data.length > 1) {
-                categoryId = getCategoryByName(fields.categoryInputValue).data[0].categoryId;
-                // console.log('Edit: validation categoryId...', categoryId);
+        if (passedValidation) {
+            category = getCategoryByName(fields.categoryInputValue);
+            if (!category.statusOK) {
+                setFields({ ...fields, categoryId: uuidv1() });
             } else {
-                // TODO need to generate new UUID
-                // console.log('Edit: validation new category...', fields.categoryInputValue);
+                setFields({ ...fields, categoryId: category.data[0].categoryId });
             }
-        } else {
-            passedValidation = false;
         }
+
         return passedValidation;
     };
 
     const handleSave = () => {
         let passedValidation = false;
         passedValidation = validateForm();
+        console.log('Edit: on save pass validation...', passedValidation);
+
         setIsInvalid(!passedValidation);
         setIsSaved(passedValidation);
-        setIsDeleted(false);
+        if (passedValidation) setSceneIndexSave(0);
+        if (isDeleted) setIsDeleted(false);
+        if (sceneIndexDelete !== 0) setSceneIndexDelete(0);
     };
 
     const handleSaveAs = () => {
@@ -131,11 +149,15 @@ const EditorComponent = ({ history, match }) => {
 
     // console.log('Edit: history...', history);
     // console.log('Edit: match.....', match);
+    console.log('Edit: isSaved.......', isSaved);
+    console.log('Edit: isInvalid.....', isInvalid);
+    console.log('Edit: isDeleted.....', isDeleted);
+    console.log('Edit: disable save..', (isSaved || !isDeleted || !isInvalid));
 
     return (
         <Container maxWidth="sm">
             <Box display="flex" flexDirection="column" mt={2}>
-                <Typography variant="h6">{mode}</Typography>
+                <Typography variant="h6">{sceneText.mode[sceneIndexMode]}</Typography>
                 <Box mt={{ xs: 1, sm: 2 }} />
                 <Paper component="form" autoComplete="off">
                     <Box p={2}>
@@ -194,7 +216,7 @@ const EditorComponent = ({ history, match }) => {
                             fullWidth
                             onClick={handleSave}
                             disabled={isSaved || isDeleted || isInvalid}
-                        >{isSaved ? 'Saved' : 'Save'}</Button>
+                        >{sceneText.save[sceneIndexSave]}</Button>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
@@ -202,7 +224,7 @@ const EditorComponent = ({ history, match }) => {
                                 variant="outlined"
                                 fullWidth
                                 onClick={handleSaveAs}
-                                disabled={isInvalid}
+                            // disabled={isInvalid}
                             >Save As</Button></Box>
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -212,8 +234,8 @@ const EditorComponent = ({ history, match }) => {
                                 fullWidth
                                 color="secondary"
                                 onClick={handleDelete}
-                                disabled={isDeleted}
-                            >{isDeleted ? 'Deleted' : 'Delete'}</Button></Box>
+                            // disabled={isDeleted}
+                            >{sceneText.delete[sceneIndexDelete]}</Button></Box>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
@@ -221,10 +243,13 @@ const EditorComponent = ({ history, match }) => {
                                 variant="outlined"
                                 fullWidth
                                 onClick={() => history.goBack()}
-                            >{isSaved || isDeleted ? 'Back' : 'Cancel'}</Button></Box>
+                            >{sceneText.exit[sceneIndexExit]}</Button></Box>
                     </Grid>
                 </Grid>
             </Box>
+            <Box mt={2} />
+            <Typography variant="h6">siteId : {fields.siteId}</Typography>
+            <Typography variant="h6">categoryId : {fields.categoryId}</Typography>
         </Container>
     );
 };
