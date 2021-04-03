@@ -21,9 +21,14 @@ import {
 } from '../../utilities/localstorage';
 
 const initalData = {
-    categoryId: '',
-    categoryValue: '',
-    categoryInputValue: '',
+    // categoryId: '',
+    // categoryValue: '',
+    // categoryInputValue: '',
+    category: {
+        categoryId: '',
+        categoryValue: '',
+        categoryInputValue: '',
+    },
     favourite: false,
     siteId: '',
     siteName: '',
@@ -48,14 +53,20 @@ const EditorComponent = ({ history, match }) => {
     // const [isSavedAs, setIsSavedAs] = React.useState(false);
     const [isDeleted, setIsDeleted] = React.useState(false);
     const [isInvalid, setIsInvalid] = React.useState(false);
-    const [categories, setCategories] = React.useState([]);
+    const [categories, setCategories] = React.useState([
+        {
+            categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+            category: 'Uncategorized ',
+        },
+    ]);
 
     React.useEffect(() => {
         const route = match.path;
         const id = match.params.id ? match.params.id : '';
-        // console.log('Edit: id...', id);
         let bookmark = [];
         let category = '';
+        setCategories(getCategories().data);
+
         switch (route) {
             case '/edit/:id':
                 setSceneIndexMode(1);
@@ -65,9 +76,11 @@ const EditorComponent = ({ history, match }) => {
                     if (bookmark.length > 0) {
                         category = getCategoryById(bookmark[0].categoryId).data[0].category;
                         setFields({
-                            categoryId: bookmark[0].categoryId,
-                            categoryValue: category,
-                            categoryInputValue: category,
+                            category: {
+                                categoryId: bookmark[0].categoryId,
+                                categoryValue: category,
+                                categoryInputValue: category,
+                            },
                             favourite: bookmark[0].favourite,
                             siteId: bookmark[0].siteId,
                             siteName: bookmark[0].siteName,
@@ -84,41 +97,59 @@ const EditorComponent = ({ history, match }) => {
             default:
                 break;
         }
-        setCategories(getCategories().data);
+
         // Effect clean-up function
         return () => true;
     }, [match.path, match.params]);
 
     const handleChange = ({ target: { name, value } }) => {
-        // console.log('Edit: handleChange.name....', name);
-        // console.log('Edit: handleChange.value...', value);
-        setFields({
-            ...fields,
-            [name]: value,
-        });
-        if (isSaved) setIsSaved(false);
-        if (sceneIndexMode === 1 && sceneIndexSave !== 1) setSceneIndexSave(1);
-        if (sceneIndexMode === 2 && sceneIndexSave !== 2) setSceneIndexSave(2);
-        if (isDeleted) setIsDeleted(false);
-        if (sceneIndexDelete !== 0) setSceneIndexSave(0);
-        if (isInvalid) setIsInvalid(false);
+        console.log('Edit: handleChange.name....', name);
+        console.log('Edit: handleChange.value...', value);
+        if (!value) return;
+        switch (name) {
+            case 'categoryValue':
+                setFields({
+                    ...fields,
+                    category: { categoryId: value.categoryId, [name]: value.category },
+                });
+                break;
+            case 'categoryInputValue':
+                setFields({
+                    ...fields,
+                    category: { categoryId: '', [name]: value },
+                });
+                break;
+            default:
+                setFields({
+                    ...fields,
+                    [name]: value,
+                });
+                break;
+        }
+
+        // if (isSaved) setIsSaved(false);
+        // if (sceneIndexMode === 1 && sceneIndexSave !== 1) setSceneIndexSave(1);
+        // if (sceneIndexMode === 2 && sceneIndexSave !== 2) setSceneIndexSave(2);
+        // if (isDeleted) setIsDeleted(false);
+        // if (sceneIndexDelete !== 0) setSceneIndexSave(0);
+        // if (isInvalid) setIsInvalid(false);
     };
 
     const validateForm = () => {
         let passedValidation = true;
-        let category = {};
+        // let category = {};
 
-        if (!fields.categoryInputValue) passedValidation = false;
+        // if (!fields.categoryInputValue) passedValidation = false;
         if (!fields.siteName) passedValidation = false;
         if (!fields.siteURL) passedValidation = false;
-        if (passedValidation) {
-            category = getCategoryByName(fields.categoryInputValue);
-            if (!category.statusOK) {
-                setFields({ ...fields, categoryId: uuidv1() });
-            } else {
-                setFields({ ...fields, categoryId: category.data[0].categoryId });
-            }
-        }
+        // if (passedValidation) {
+        //     category = getCategoryByName(fields.categoryInputValue);
+        //     if (!category.statusOK) {
+        //         setFields({ ...fields, categoryId: uuidv1() });
+        //     } else {
+        //         setFields({ ...fields, categoryId: category.data[0].categoryId });
+        //     }
+        // }
 
         return passedValidation;
     };
@@ -147,12 +178,14 @@ const EditorComponent = ({ history, match }) => {
         setIsDeleted(true);
     };
 
-    // console.log('Edit: history...', history);
-    // console.log('Edit: match.....', match);
-    console.log('Edit: isSaved.......', isSaved);
-    console.log('Edit: isInvalid.....', isInvalid);
-    console.log('Edit: isDeleted.....', isDeleted);
-    console.log('Edit: disable save..', (isSaved || !isDeleted || !isInvalid));
+    // console.log('Edit: history.......', history);
+    // console.log('Edit: match.........', match);
+    console.log('Edit: fields........', fields);
+    console.log('Edit: categories....', categories);
+    // console.log('Edit: isSaved.......', isSaved);
+    // console.log('Edit: isInvalid.....', isInvalid);
+    // console.log('Edit: isDeleted.....', isDeleted);
+    // console.log('Edit: disable save..', (isSaved || !isDeleted || !isInvalid));
 
     return (
         <Container maxWidth="sm">
@@ -162,12 +195,13 @@ const EditorComponent = ({ history, match }) => {
                 <Paper component="form" autoComplete="off">
                     <Box p={2}>
                         <Autocomplete
-                            value={fields.categoryValue}
+                            value={fields.category.categoryValue}
                             onChange={(e, v) => handleChange({ target: { name: 'categoryValue', value: v } })}
-                            inputValue={fields.categoryInputValue}
+                            inputValue={fields.category.categoryInputValue}
                             onInputChange={(e, v) => handleChange({ target: { name: 'categoryInputValue', value: v } })}
                             freeSolo
-                            options={categories.map((v) => v.category)}
+                            options={categories}
+                            getOptionLabel={(option) => option.category}
                             renderInput={(params) => (
                                 <TextField {...params}
                                     name="category"
@@ -249,7 +283,7 @@ const EditorComponent = ({ history, match }) => {
             </Box>
             <Box mt={2} />
             <Typography variant="h6">siteId : {fields.siteId}</Typography>
-            <Typography variant="h6">categoryId : {fields.categoryId}</Typography>
+            <Typography variant="h6">categoryId : {fields.category.categoryId}</Typography>
         </Container>
     );
 };
