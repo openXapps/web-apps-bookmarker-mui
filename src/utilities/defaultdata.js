@@ -18,7 +18,7 @@ export const getDefaultData = () => {
     categories: [
       {
         categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
-        category: 'Uncategorized ',
+        category: 'Uncategorized',
       },
       {
         categoryId: '027cf222-887b-11e9-bc42-526af7764f64',
