@@ -20,7 +20,7 @@ import {
   getBookmarkById,
 } from '../../utilities/localstorage';
 
-const defaultCategories = [
+const defaultCategory = [
   {
     categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
     category: 'Uncategorized',
@@ -28,7 +28,7 @@ const defaultCategories = [
 ];
 
 const initalData = {
-  categoryValue: defaultCategories[0],
+  categoryValue: defaultCategory[0],
   categoryInputValue: '',
   favourite: false,
   siteId: '',
@@ -38,28 +38,29 @@ const initalData = {
 
 const sceneText = {
   mode: ['Loading...', 'Edit bookmark', 'New bookmark'],
-  save: ['Saved', 'Update', 'Save New'],
+  save: ['Update', 'Save New'],
   delete: ['Delete', 'Deleted'],
   exit: ['Back', 'Cancel'],
 };
 
 const EditorComponent = ({ history, match }) => {
   const classes = useStyles();
-  const categories = getCategories().statusOK ? getCategories().data : defaultCategories;
+  const categories = getCategories().statusOK ? getCategories().data : defaultCategory;
   const [fields, setFields] = React.useState(initalData);
   const [sceneIndexMode, setSceneIndexMode] = React.useState(0);
   const [sceneIndexSave, setSceneIndexSave] = React.useState(0);
-  const [sceneIndexDelete, setSceneIndexDelete] = React.useState(0);
-  const [sceneIndexExit, setSceneIndexExit] = React.useState(0);
-  const [isSaved, setIsSaved] = React.useState(true);
-  const [isDeleted, setIsDeleted] = React.useState(false);
-  const [isInvalid, setIsInvalid] = React.useState(false);
+  // const [sceneIndexDelete, setSceneIndexDelete] = React.useState(0);
+  // const [sceneIndexExit, setSceneIndexExit] = React.useState(0);
+  // const [canBeSaved, setCanBeSaved] = React.useState(false);
+  const [canBeSavedAs, setCanBeSavedAs] = React.useState(false);
+  const [canBeDeleted, setCanBeDeleted] = React.useState(false);
+  // const [isInvalid, setIsInvalid] = React.useState(false);
 
+  // Initial effect when component renders based on router match
   React.useEffect(() => {
     const route = match.path;
     const id = match.params.id ? match.params.id : '';
     let bookmark = [];
-
     switch (route) {
       case '/edit/:id':
         bookmark = getBookmarkById(id).data;
@@ -76,10 +77,11 @@ const EditorComponent = ({ history, match }) => {
               siteName: bookmark[0].siteName,
               siteURL: bookmark[0].siteURL,
             });
-            setIsSaved(true);
+            setSceneIndexMode(1);
+            setCanBeSavedAs(true);
+            setCanBeDeleted(true);
           }
         }
-        setSceneIndexMode(1);
         break;
       case '/new':
         setSceneIndexMode(2);
@@ -94,14 +96,14 @@ const EditorComponent = ({ history, match }) => {
   }, [match.path, match.params]);
 
   const handleFieldChange = ({ target: { name, value } }) => {
-    console.log('Edit: on change name........', name);
-    console.log('Edit: on change value.......', value);
+    // console.log('Edit: on change name........', name);
+    // console.log('Edit: on change value.......', value);
     console.log('------------------------------------------------');
     if (name === 'categoryValue' && value === null) {
       setFields({
         ...fields,
-        // [name]: defaultCategories[0],
-        [name]: { categoryId: '', category: '' },
+        // [name]: defaultCategory[0],
+        categoryValue: { categoryId: '', category: '' },
       });
     } else {
       setFields({
@@ -112,57 +114,64 @@ const EditorComponent = ({ history, match }) => {
   };
 
   const validateForm = () => {
-    let passedValidation = true;
-    // let category = {};
+    let validation = {
+      status: true,
+      message: '',
+    };
 
-    // if (!fields.categoryInputValue) passedValidation = false;
-    if (!fields.siteName) passedValidation = false;
-    if (!fields.siteURL) passedValidation = false;
-    // if (passedValidation) {
-    //   category = getCategoryByName(fields.categoryInputValue);
-    //   if (!category.statusOK) {
-    //     setFields({ ...fields, categoryId: uuidv1() });
-    //   } else {
-    //     setFields({ ...fields, categoryId: category.data[0].categoryId });
-    //   }
-    // }
+    // Validate category
+    if (!fields.categoryInputValue) validation = { status: false, message: 'Missing category' };
 
-    return passedValidation;
+    // Continue if still valid
+    if (validation.status) {
+      // Validate site name
+      if (!fields.siteName) validation = { status: false, message: 'Missing site name' };;
+    }
+
+    // Continue if still valid
+    if (validation.status) {
+      // Validate site URL
+      if (!fields.siteURL) validation = { status: false, message: 'Missing site URL' };;
+    }
+
+    return validation;
   };
 
   const handleSave = () => {
-    let passedValidation = false;
-    passedValidation = validateForm();
-    console.log('Edit: on save pass validation...', passedValidation);
+    let validation = false;
+    validation = validateForm();
+    console.log('Edit: on save pass validation...', validation);
 
-    setIsInvalid(!passedValidation);
-    setIsSaved(passedValidation);
-    if (passedValidation) setSceneIndexSave(0);
-    if (isDeleted) setIsDeleted(false);
-    if (sceneIndexDelete !== 0) setSceneIndexDelete(0);
+    // setIsInvalid(!passedValidation);
+    // setCanBeSaved(passedValidation);
+    // if (passedValidation) setSceneIndexSave(0);
+    // if (canBeDeleted) setCanBeDeleted(false);
+    // if (sceneIndexDelete !== 0) setSceneIndexDelete(0);
   };
 
   const handleSaveAs = () => {
-    let passedValidation = false;
-    passedValidation = validateForm();
-    setIsInvalid(!passedValidation);
-    setIsSaved(passedValidation);
-    setIsDeleted(false);
+    let validation = false;
+    validation = validateForm();
+    console.log('Edit: on save as pass validation...', validation);
+    // setIsInvalid(!passedValidation);
+    // setCanBeSaved(passedValidation);
+    // setCanBeDeleted(false);
   };
 
   const handleDelete = () => {
-    setIsDeleted(true);
+    // setCanBeDeleted(true);
   };
 
   // console.log('Edit: JUST BEFORE RENDER...');
   // console.log('Edit: history.......', history);
   // console.log('Edit: match.........', match);
   // console.log('Edit: fields........', fields);
-  // console.log('Edit: categories....', categories);
-  // console.log('Edit: isSaved.......', isSaved);
+  console.log('Edit: categoryInputValue....', fields.categoryInputValue);
+  console.log('Edit: categoryValue.........', fields.categoryValue);
+  // console.log('Edit: canBeSaved.......', canBeSaved);
   // console.log('Edit: isInvalid.....', isInvalid);
-  // console.log('Edit: isDeleted.....', isDeleted);
-  // console.log('Edit: disable save..', (isSaved || !isDeleted || !isInvalid));
+  // console.log('Edit: canBeDeleted.....', canBeDeleted);
+  // console.log('Edit: disable save..', (canBeSaved || !canBeDeleted || !isInvalid));
 
   return (
     <Container maxWidth="sm">
@@ -181,11 +190,7 @@ const EditorComponent = ({ history, match }) => {
               options={categories}
               getOptionLabel={(option) => option.category}
               renderInput={(params) => (
-                <TextField {...params}
-                  label="Category"
-                  variant="outlined"
-                  fullWidth
-                />
+                <TextField {...params} label="Category" variant="outlined" fullWidth />
               )}
             />
             <Box mt={2} />
@@ -217,16 +222,13 @@ const EditorComponent = ({ history, match }) => {
           </Box>
         </Paper>
         <Box my={{ xs: 0.5, sm: 2 }} />
-        <Grid
-          container
-          alignItems="center"
-        >
+        <Grid container alignItems="center">
           <Grid item xs={12} sm={3}>
             <Button
               variant="outlined"
               fullWidth
               onClick={handleSave}
-              disabled={isSaved || isDeleted || isInvalid}
+            // disabled={!canBeSaved}
             >{sceneText.save[sceneIndexSave]}</Button>
           </Grid>
           <Grid item xs={12} sm={3}>
@@ -235,7 +237,7 @@ const EditorComponent = ({ history, match }) => {
                 variant="outlined"
                 fullWidth
                 onClick={handleSaveAs}
-              // disabled={isInvalid}
+                disabled={!canBeSavedAs}
               >Save As</Button></Box>
           </Grid>
           <Grid item xs={12} sm={3}>
@@ -245,8 +247,8 @@ const EditorComponent = ({ history, match }) => {
                 fullWidth
                 color="secondary"
                 onClick={handleDelete}
-              // disabled={isDeleted}
-              >{sceneText.delete[sceneIndexDelete]}</Button></Box>
+                disabled={!canBeDeleted}
+              >Delete</Button></Box>
           </Grid>
           <Grid item xs={12} sm={3}>
             <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
@@ -254,7 +256,7 @@ const EditorComponent = ({ history, match }) => {
                 variant="outlined"
                 fullWidth
                 onClick={() => history.goBack()}
-              >{sceneText.exit[sceneIndexExit]}</Button></Box>
+              >Back</Button></Box>
           </Grid>
         </Grid>
       </Box>

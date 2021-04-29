@@ -1,5 +1,7 @@
 import React from 'react';
+
 import clsx from 'clsx';
+import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -66,7 +68,7 @@ const UploadComponent = ({ history }) => {
   // console.log('Upload: history...', history);
 
   return (
-    <div className={classes.container}>
+    <Container maxWidth="md">
       <Typography variant="h6" className={classes.hGutter}>Upload</Typography>
       <Box className={clsx(classes.validator, classes.hGutter)}>
         <Typography className={classes.grow}>Paste your site data in the text box below</Typography>
@@ -83,8 +85,8 @@ const UploadComponent = ({ history }) => {
         inputRef={inputRef}
         inputProps={{ spellCheck: false }}
         variant="outlined"
-        rows={25}
-        rowsMax={25}
+        rows={15}
+        rowsMax={15}
         fullWidth={true}
         disabled={isValid}
         error={isError}
@@ -115,8 +117,6 @@ const UploadComponent = ({ history }) => {
           >{buttonState.exit}</Button>
         </Grid>
       </Grid>
-      {/* <Box className={classes.hGutter}>
-      </Box> */}
       <div className={classes.hGutter}></div>
       <Snackbar
         anchorOrigin={{
@@ -129,7 +129,7 @@ const UploadComponent = ({ history }) => {
       ><Alert onClose={handleSnackState} severity={snackState.severity}>
           {snackState.message}
         </Alert></Snackbar>
-    </div>
+    </Container>
   );
 };
 
