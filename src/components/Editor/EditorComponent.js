@@ -149,7 +149,6 @@ const EditorComponent = ({ history, match }) => {
   console.log('Edit: categoryInputValue....', fields.categoryInputValue);
   console.log('Edit: categoryValue.........', fields.categoryValue);
   // console.log('Edit: canBeSaved.......', canBeSaved);
-  // console.log('Edit: isInvalid.....', isInvalid);
   // console.log('Edit: canBeDeleted.....', canBeDeleted);
   // console.log('Edit: disable save..', (canBeSaved || !canBeDeleted || !isInvalid));
 
