@@ -87,7 +87,7 @@ const DownloadComponent = ({ history }) => {
         open={snackState.show}
         autoHideDuration={4000}
         onClose={handleSnackState}
-      ><Alert onClose={handleSnackState} severity={snackState.severity}>
+      ><Alert elevation={6} onClose={handleSnackState} severity={snackState.severity}>
           {snackState.message}
         </Alert></Snackbar>
     </Container>

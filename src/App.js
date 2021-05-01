@@ -18,7 +18,7 @@ import light from './themes/light';
 
 // App components
 import HeaderComponent from './components/Header/HeaderComponent';
-import FooterComponent from './components/Footer/FooterComponent';
+// import FooterComponent from './components/Footer/FooterComponent';
 import ContentComponent from './components/Content/ContentComponent';
 import EditorComponent from './components/Editor/EditorComponent';
 import CategoryComponent from './components/Category/CategoryComponent';
@@ -55,7 +55,7 @@ const App = () => {
           <Route component={Error404Component} />
         </Switch>
         <Toolbar />
-        <FooterComponent />
+        {/* <FooterComponent /> */}
       </BrowserRouter>
     </ThemeProvider>
   );

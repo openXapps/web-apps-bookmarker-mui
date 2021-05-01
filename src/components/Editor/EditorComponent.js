@@ -1,6 +1,4 @@
 import React from 'react';
-// import { v1 as uuidv1 } from 'uuid';
-// uuidv1()
 
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -11,11 +9,13 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Switch from '@material-ui/core/Switch';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 import useStyles from './EditorStyles';
+import { validateForm, saveBookmark } from './EditorUtils';
 import {
   getCategories,
-  // getCategoryByName,
   getCategoryById,
   getBookmarkById,
 } from '../../utilities/localstorage';
@@ -39,22 +39,22 @@ const initalData = {
 const sceneText = {
   mode: ['Loading...', 'Edit bookmark', 'New bookmark'],
   save: ['Update', 'Save New'],
-  delete: ['Delete', 'Deleted'],
   exit: ['Back', 'Cancel'],
 };
 
 const EditorComponent = ({ history, match }) => {
   const classes = useStyles();
   const categories = getCategories().statusOK ? getCategories().data : defaultCategory;
+  const [snackState, setSnackState] = React.useState({
+    severity: 'success',
+    message: 'Bookmark saved',
+    show: false
+  });
   const [fields, setFields] = React.useState(initalData);
   const [sceneIndexMode, setSceneIndexMode] = React.useState(0);
   const [sceneIndexSave, setSceneIndexSave] = React.useState(0);
-  // const [sceneIndexDelete, setSceneIndexDelete] = React.useState(0);
-  // const [sceneIndexExit, setSceneIndexExit] = React.useState(0);
-  // const [canBeSaved, setCanBeSaved] = React.useState(false);
   const [canBeSavedAs, setCanBeSavedAs] = React.useState(false);
   const [canBeDeleted, setCanBeDeleted] = React.useState(false);
-  // const [isInvalid, setIsInvalid] = React.useState(false);
 
   // Initial effect when component renders based on router match
   React.useEffect(() => {
@@ -85,7 +85,7 @@ const EditorComponent = ({ history, match }) => {
         break;
       case '/new':
         setSceneIndexMode(2);
-        setSceneIndexSave(2);
+        setSceneIndexSave(1);
         break;
       default:
         break;
@@ -113,45 +113,21 @@ const EditorComponent = ({ history, match }) => {
     }
   };
 
-  const validateForm = () => {
-    let validation = {
-      status: true,
-      message: '',
-    };
-
-    // Validate category
-    if (!fields.categoryInputValue) validation = { status: false, message: 'Missing category' };
-
-    // Continue if still valid
-    if (validation.status) {
-      // Validate site name
-      if (!fields.siteName) validation = { status: false, message: 'Missing site name' };;
-    }
-
-    // Continue if still valid
-    if (validation.status) {
-      // Validate site URL
-      if (!fields.siteURL) validation = { status: false, message: 'Missing site URL' };;
-    }
-
-    return validation;
-  };
-
   const handleSave = () => {
     let validation = false;
-    validation = validateForm();
+    validation = validateForm(fields);
     console.log('Edit: on save pass validation...', validation);
-
-    // setIsInvalid(!passedValidation);
-    // setCanBeSaved(passedValidation);
-    // if (passedValidation) setSceneIndexSave(0);
-    // if (canBeDeleted) setCanBeDeleted(false);
-    // if (sceneIndexDelete !== 0) setSceneIndexDelete(0);
+    if (!validation.status) {
+      setSnackState({ severity: 'error', message: validation.message, show: true });
+      return;
+    }
+    setFields({ ...fields, siteId: saveBookmark(fields) });
+    setSnackState({ severity: 'success', message: 'Bookmark saved', show: true });
   };
 
   const handleSaveAs = () => {
     let validation = false;
-    validation = validateForm();
+    validation = validateForm(fields);
     console.log('Edit: on save as pass validation...', validation);
     // setIsInvalid(!passedValidation);
     // setCanBeSaved(passedValidation);
@@ -160,6 +136,10 @@ const EditorComponent = ({ history, match }) => {
 
   const handleDelete = () => {
     // setCanBeDeleted(true);
+  };
+
+  const handleSnackState = () => {
+    setSnackState({ ...snackState, show: false });
   };
 
   // console.log('Edit: JUST BEFORE RENDER...');
@@ -180,6 +160,7 @@ const EditorComponent = ({ history, match }) => {
         <Box mt={{ xs: 1, sm: 2 }} />
         <Paper component="form" autoComplete="off">
           <Box p={2}>
+            <Box mt={{ xs: 1, sm: 2 }} />
             <Autocomplete
               freeSolo
               value={fields.categoryValue}
@@ -260,6 +241,17 @@ const EditorComponent = ({ history, match }) => {
           </Grid>
         </Grid>
       </Box>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        open={snackState.show}
+        autoHideDuration={4000}
+        onClose={handleSnackState}
+      ><Alert elevation={6} onClose={handleSnackState} severity={snackState.severity}>
+          {snackState.message}
+        </Alert></Snackbar>
       <Box mt={2} />
       <Typography variant="h6">siteId : {fields.siteId}</Typography>
       <Typography variant="h6">categoryId : {fields.categoryValue.categoryId}</Typography>

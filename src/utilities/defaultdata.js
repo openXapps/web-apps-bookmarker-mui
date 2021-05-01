@@ -1,4 +1,13 @@
 /**
+ * Local storage object types
+ */
+export const storageObject = {
+  bookmark: 'gd-bm-bookmarks',
+  category: 'gd-bm-categories',
+  setting: 'gd-bm-settings',
+};
+
+/**
  * DEFAULT DATA FOR INITIAL APP LOAD
  * https://github.com/kelektiv/node-uuid
  */

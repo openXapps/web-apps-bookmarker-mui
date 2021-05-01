@@ -1,6 +1,6 @@
 // Utility module to manage HTML5 localStorage
 
-import { getDefaultData } from './defaultdata';
+import { storageObject, getDefaultData } from './defaultdata';
 
 /**
  * Check whether localStorage is available.
@@ -47,27 +47,27 @@ export const initialUse = () => {
         }
       );
     });
-    saveLocalStorage('gd-bm-bookmarks', newBookmarks);
+    saveLocalStorage(storageObject.bookmark, newBookmarks);
   }
 
   // Bump version if it exists and is not the latest
   if (settings.data.version && settings.data.version !== getDefaultData().settings.version) {
-    saveLocalStorage('gd-bm-settings', { ...settings, version: getDefaultData().settings.version });
+    saveLocalStorage(storageObject.setting, { ...settings, version: getDefaultData().settings.version });
   }
 
   // No settings exist
   if (!settings.statusOK) {
-    saveLocalStorage('gd-bm-settings', getDefaultData().settings);
+    saveLocalStorage(storageObject.setting, getDefaultData().settings);
   }
 
   // No categories exist
   if (!categories.statusOK) {
-    saveLocalStorage('gd-bm-categories', getDefaultData().categories);
+    saveLocalStorage(storageObject.category, getDefaultData().categories);
   }
 
   // No bookamrks exist
   if (!bookmarks.statusOK) {
-    saveLocalStorage('gd-bm-bookmarks', getDefaultData().bookmarks);
+    saveLocalStorage(storageObject.bookmark, getDefaultData().bookmarks);
   }
 
 };
@@ -83,7 +83,6 @@ export const saveLocalStorage = (obj, data) => {
   } catch (error) {
     console.log(error);
   }
-  return true;
 };
 
 /**
@@ -93,7 +92,6 @@ export const saveLocalStorage = (obj, data) => {
 export const updateLastClicked = (siteId) => {
   const bookmarks = getBookmarks();
 
-  // Convert old bookmarks to new version (0.3.0)
   if (bookmarks.statusOK) {
     const newBookmarks = bookmarks.data.map((v, i) => {
       return (v.siteId === siteId ?
@@ -102,9 +100,52 @@ export const updateLastClicked = (siteId) => {
         ) : (v)
       );
     });
-    saveLocalStorage('gd-bm-bookmarks', newBookmarks);
+    saveLocalStorage(storageObject.bookmark, newBookmarks);
   }
-  return true;
+};
+
+/**
+ * Helper function to update a single bookmark object
+ * @param {any} bookmark Bookmark object to update
+ */
+export const updateBookmark = (bookmark) => {
+  const bookmarks = getBookmarks();
+
+  if (bookmarks.statusOK) {
+    const newBookmarks = bookmarks.data.map((v, i) => {
+      return (v.siteId === bookmark.siteId ? (bookmark) : (v));
+    });
+    // console.log('updateBookmark: newBookmarks...', newBookmarks);
+    saveLocalStorage(storageObject.bookmark, newBookmarks);
+  }
+};
+
+/**
+ * Helper function to add a new bookmark object
+ * @param {any} bookmark Bookmark object to add
+ */
+export const addBookmark = (bookmark) => {
+  let bookmarks = getBookmarks();
+
+  if (bookmarks.statusOK) {
+    bookmarks.data.push(bookmark);
+    // console.log('addBookmark: bookmarks.data...', bookmarks.data);
+    saveLocalStorage(storageObject.bookmark, bookmarks.data);
+  }
+};
+
+/**
+ * Helper function to add a new category object
+ * @param {any} category Category object to add
+ */
+export const addCategory = (category) => {
+  let categories = getCategories();
+
+  if (categories.statusOK) {
+    categories.data.push(category);
+    // console.log('addCategory: categories.data...', categories.data);
+    saveLocalStorage(storageObject.category, categories.data);
+  }
 };
 
 /**
@@ -116,7 +157,7 @@ export const getSettings = () => {
     data: getDefaultData().settings,
   };
   try {
-    const settings = JSON.parse(localStorage.getItem('gd-bm-settings'));
+    const settings = JSON.parse(localStorage.getItem(storageObject.setting));
     if (settings) {
       response = {
         statusOK: true,
@@ -142,7 +183,7 @@ export const getFavourites = () => {
   };
   let favourites = [];
   try {
-    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {
       favourites = bookmarks.filter((v) => v.favourite)
       response = {
@@ -168,7 +209,7 @@ export const getPopular = () => {
     data: []
   };
   try {
-    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {
       response = {
         statusOK: true,
@@ -194,7 +235,7 @@ export const getByCategory = (categoryId) => {
   };
   let byCategory = [];
   try {
-    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {
       byCategory = bookmarks.filter((v) => v.categoryId === categoryId);
       response = {
@@ -220,7 +261,7 @@ export const getCategories = () => {
     data: []
   };
   try {
-    const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
+    const categories = JSON.parse(localStorage.getItem(storageObject.category));
     if (categories) {
       response = {
         statusOK: true,
@@ -245,7 +286,7 @@ export const getCategoryByName = (value) => {
     data: []
   };
   try {
-    const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
+    const categories = JSON.parse(localStorage.getItem(storageObject.category));
     if (categories) {
       response = {
         statusOK: true,
@@ -264,13 +305,13 @@ export const getCategoryByName = (value) => {
 /**
  * Get CATEGORY by ID from local storage
  */
- export const getCategoryById = (id) => {
+export const getCategoryById = (id) => {
   let response = {
     statusOK: false,
     data: []
   };
   try {
-    const categories = JSON.parse(localStorage.getItem('gd-bm-categories'));
+    const categories = JSON.parse(localStorage.getItem(storageObject.category));
     if (categories) {
       response = {
         statusOK: true,
@@ -295,7 +336,7 @@ export const getBookmarks = () => {
     data: []
   };
   try {
-    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {
       response = {
         statusOK: true,
@@ -314,13 +355,13 @@ export const getBookmarks = () => {
 /**
  * Get BOOKMARK by ID from local storage
  */
- export const getBookmarkById = (id) => {
+export const getBookmarkById = (id) => {
   let response = {
     statusOK: false,
     data: [],
   };
   try {
-    const bookmarks = JSON.parse(localStorage.getItem('gd-bm-bookmarks'));
+    const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {
       response = {
         statusOK: true,

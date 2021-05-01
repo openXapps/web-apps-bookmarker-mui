@@ -126,7 +126,7 @@ const UploadComponent = ({ history }) => {
         open={snackState.show}
         autoHideDuration={2500}
         onClose={handleSnackState}
-      ><Alert onClose={handleSnackState} severity={snackState.severity}>
+      ><Alert elevation={6} onClose={handleSnackState} severity={snackState.severity}>
           {snackState.message}
         </Alert></Snackbar>
     </Container>
