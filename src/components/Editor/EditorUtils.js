@@ -3,6 +3,7 @@ import {
   updateBookmark,
   addBookmark,
   addCategory,
+  getCategoryByName,
 } from '../../utilities/localstorage';
 
 /**
@@ -39,23 +40,33 @@ export const validateForm = (fields) => {
 /**
  * Helper function to save bookmark data from form fields
  * @param {any} fields Form fields to ave as a bookmark
- * @returns The bookmark site Id
+ * @returns The bookmark site and category Ids
  */
 export const saveBookmark = (fields) => {
   const siteId = fields.siteId ? fields.siteId : uuidv1();
-  const cat = fields.categoryInputValue;
-  let catId = fields.categoryValue.categoryId ? fields.categoryValue.categoryId : 'err';
+  const catInputValue = fields.categoryInputValue ? fields.categoryInputValue.trim() : 'Uncategorized';
+  const catMenuValue = fields.categoryValue.category ? fields.categoryValue.category : 'Uncategorized';
+  let catId = fields.categoryValue.categoryId ? fields.categoryValue.categoryId : '017cf222-887b-11e9-bc42-526af7764f64';
 
-  if (cat.indexOf(fields.categoryValue.category) === -1 || catId === 'err') {
-    catId = uuidv1();
-    addCategory({
-      categoryId: catId,
-      category: cat.trim(),
-    });
+  // MUI Autocomplete solo components are VERY tricky
+  // They hold input and menu values independently
+  // The trick is to know if a user typed a value or selected it from the menu
+  if (catInputValue !== catMenuValue) {
+    const catByName = getCategoryByName(catInputValue);
+    // console.log('saveBookmark: catByName.......', catByName);
+    if (catByName.statusOK && catByName.data.length > 0) catId = catByName.data[0].categoryId;
+    if (catByName.statusOK && catByName.data.length < 1) {
+      catId = uuidv1();
+      addCategory({
+        categoryId: catId,
+        category: catInputValue,
+      });
+    }
   }
 
-  console.log('saveBookmark: cat.....', cat);
-  console.log('saveBookmark: catId...', catId);
+  // console.log('saveBookmark: catInputValue.....', catInputValue);
+  // console.log('saveBookmark: catMenuValue......', catMenuValue);
+  // console.log('saveBookmark: catId.............', catId);
 
   const bookmark = {
     categoryId: catId,
@@ -66,9 +77,9 @@ export const saveBookmark = (fields) => {
     lastUsed: new Date(),
   };
   // Update existing
-  // if (fields.siteId) updateBookmark(bookmark);
+  if (fields.siteId) updateBookmark(bookmark);
   // Create new
-  // if (!fields.siteId) addBookmark(bookmark);
+  if (!fields.siteId) addBookmark(bookmark);
 
-  return siteId;
+  return { siteId: siteId, categoryId: catId };
 };

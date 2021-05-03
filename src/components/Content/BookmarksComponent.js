@@ -96,7 +96,7 @@ const BookmarksComponent = ({ history }) => {
                     })
                 ) : (null)}
             </List>
-            <Box className={classes.hGutter} />
+            {/* <Box className={classes.hGutter} /> */}
         </Box>
     );
 };

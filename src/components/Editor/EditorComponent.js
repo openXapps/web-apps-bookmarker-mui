@@ -98,11 +98,10 @@ const EditorComponent = ({ history, match }) => {
   const handleFieldChange = ({ target: { name, value } }) => {
     // console.log('Edit: on change name........', name);
     // console.log('Edit: on change value.......', value);
-    console.log('------------------------------------------------');
+    // console.log('------------------------------------------------');
     if (name === 'categoryValue' && value === null) {
       setFields({
         ...fields,
-        // [name]: defaultCategory[0],
         categoryValue: { categoryId: '', category: '' },
       });
     } else {
@@ -115,23 +114,64 @@ const EditorComponent = ({ history, match }) => {
 
   const handleSave = () => {
     let validation = false;
+    let ids = { siteId: '', categoryId: '' };
     validation = validateForm(fields);
-    console.log('Edit: on save pass validation...', validation);
+    // console.log('Edit: on save pass validation...', validation);
     if (!validation.status) {
       setSnackState({ severity: 'error', message: validation.message, show: true });
       return;
     }
-    setFields({ ...fields, siteId: saveBookmark(fields) });
+    ids = saveBookmark(fields);
+    if (fields.siteId !== ids.siteId || fields.categoryValue.categoryId !== ids.categoryId) {
+      setFields({
+        ...fields,
+        siteId: ids.siteId,
+        categoryValue:
+        {
+          category: fields.categoryInputValue,
+          categoryId: ids.categoryId,
+        },
+      });
+    }
+    if (sceneIndexMode === 2) {
+      setSceneIndexMode(1);
+      setSceneIndexSave(0);
+      setCanBeSavedAs(true);
+      setCanBeDeleted(true);
+    }
     setSnackState({ severity: 'success', message: 'Bookmark saved', show: true });
   };
 
   const handleSaveAs = () => {
     let validation = false;
+    let ids = { siteId: '', categoryId: '' };
+    const oldBookmark = getBookmarkById(fields.siteId);
     validation = validateForm(fields);
-    console.log('Edit: on save as pass validation...', validation);
-    // setIsInvalid(!passedValidation);
-    // setCanBeSaved(passedValidation);
-    // setCanBeDeleted(false);
+    // console.log('Edit: on save as pass validation...', validation);
+    if (!validation.status) {
+      setSnackState({ severity: 'error', message: validation.message, show: true });
+      return;
+    }
+    // console.log('Edit: on save as fields.siteURL........', fields.siteURL);
+    // console.log('Edit: on save as oldBookmark.siteURL...', oldBookmark.data[0].siteURL);
+    if (fields.siteURL.trim() === oldBookmark.data[0].siteURL) {
+      setSnackState({ severity: 'error', message: 'Site URL not unique', show: true });
+      return;
+    }
+    // Sending an empty siteId for Save As
+    ids = saveBookmark({ ...fields, siteId: '' });
+    if (fields.siteId !== ids.siteId || fields.categoryValue.categoryId !== ids.categoryId) {
+      setFields({
+        ...fields,
+        siteId: ids.siteId,
+        categoryValue:
+        {
+          category: fields.categoryInputValue,
+          categoryId: ids.categoryId,
+        },
+      });
+    }
+    setSnackState({ severity: 'success', message: 'Bookmark saved', show: true });
   };
 
   const handleDelete = () => {
@@ -146,8 +186,8 @@ const EditorComponent = ({ history, match }) => {
   // console.log('Edit: history.......', history);
   // console.log('Edit: match.........', match);
   // console.log('Edit: fields........', fields);
-  console.log('Edit: categoryInputValue....', fields.categoryInputValue);
-  console.log('Edit: categoryValue.........', fields.categoryValue);
+  // console.log('Edit: categoryInputValue....', fields.categoryInputValue);
+  // console.log('Edit: categoryValue.........', fields.categoryValue);
   // console.log('Edit: canBeSaved.......', canBeSaved);
   // console.log('Edit: canBeDeleted.....', canBeDeleted);
   // console.log('Edit: disable save..', (canBeSaved || !canBeDeleted || !isInvalid));
@@ -251,9 +291,9 @@ const EditorComponent = ({ history, match }) => {
       ><Alert elevation={6} onClose={handleSnackState} severity={snackState.severity}>
           {snackState.message}
         </Alert></Snackbar>
-      <Box mt={2} />
+      {/* <Box mt={2} />
       <Typography variant="h6">siteId : {fields.siteId}</Typography>
-      <Typography variant="h6">categoryId : {fields.categoryValue.categoryId}</Typography>
+      <Typography variant="h6">categoryId : {fields.categoryValue.categoryId}</Typography> */}
     </Container>
   );
 };
