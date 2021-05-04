@@ -18,6 +18,7 @@ import {
   getCategories,
   getCategoryById,
   getBookmarkById,
+  deleteBookmark,
 } from '../../utilities/localstorage';
 
 const defaultCategory = [
@@ -39,7 +40,6 @@ const initalData = {
 const sceneText = {
   mode: ['Loading...', 'Edit bookmark', 'New bookmark'],
   save: ['Update', 'Save New'],
-  exit: ['Back', 'Cancel'],
 };
 
 const EditorComponent = ({ history, match }) => {
@@ -175,7 +175,13 @@ const EditorComponent = ({ history, match }) => {
   };
 
   const handleDelete = () => {
-    // setCanBeDeleted(true);
+    deleteBookmark(fields.siteId);
+    setFields(initalData);
+    setSceneIndexMode(2);
+    setSceneIndexSave(1);
+    setCanBeSavedAs(false);
+    setCanBeDeleted(false);
+    setSnackState({ severity: 'success', message: 'Bookmark deleted', show: true });
   };
 
   const handleSnackState = () => {

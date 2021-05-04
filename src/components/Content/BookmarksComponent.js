@@ -21,7 +21,7 @@ import { useStyles } from './BookmarksStyles';
 
 const BookmarksComponent = ({ history }) => {
     const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    const breakpointSM = useMediaQuery(theme.breakpoints.down('sm'));
     const classes = useStyles();
     const { id } = useParams();
     const [bookmarks, setBookmarks] = React.useState([]);
@@ -81,7 +81,8 @@ const BookmarksComponent = ({ history }) => {
                                     <ListItemText
                                         className={classes.bookmarkText}
                                         primary={v.siteName}
-                                        primaryTypographyProps={matches ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
+                                        primaryTypographyProps={breakpointSM ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
+                                        secondary={v.category ? v.category : null}
                                     />
                                     <ListItemSecondaryAction>
                                         <IconButton

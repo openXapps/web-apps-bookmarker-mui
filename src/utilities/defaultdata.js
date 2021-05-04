@@ -101,3 +101,12 @@ export const getDefaultData = () => {
   };
   return response;
 };
+
+// export const emptyBookmark = {
+//   categoryId: '',
+//   siteId: '',
+//   siteName: '',
+//   siteURL: '',
+//   favourite: false,
+//   lastUsed: new Date(),
+// }

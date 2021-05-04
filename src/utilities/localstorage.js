@@ -135,6 +135,27 @@ export const addBookmark = (bookmark) => {
 };
 
 /**
+ * Helper function to delete a single bookmark object
+ * @param {string} id Bookmark Id to delete
+ */
+export const deleteBookmark = (id) => {
+  const bookmarks = getBookmarks();
+  let splicePoint = -1;
+
+  if (bookmarks.statusOK) {
+    const newBookmarks = bookmarks.data;
+    bookmarks.data.forEach((v, i, a) => {
+      if (v.siteId === id) splicePoint = i;
+      return;
+    });
+    newBookmarks.splice(splicePoint, 1);
+    // console.log('deleteBookmark: splicePoint....', splicePoint);
+    // console.log('deleteBookmark: newBookmarks...', newBookmarks);
+    saveLocalStorage(storageObject.bookmark, newBookmarks);
+  }
+};
+
+/**
  * Helper function to add a new category object
  * @param {any} category Category object to add
  */
@@ -150,6 +171,7 @@ export const addCategory = (category) => {
 
 /**
  * Get SETTINGS from local storage
+ * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getSettings = () => {
   let response = {
@@ -175,21 +197,26 @@ export const getSettings = () => {
 
 /**
  * Get FAVOURITES from local storage
+ * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getFavourites = () => {
   let response = {
     statusOK: false,
     data: []
   };
-  let favourites = [];
   try {
     const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {
-      favourites = bookmarks.filter((v) => v.favourite)
-      response = {
-        statusOK: true,
-        data: favourites.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
-      };
+      const favourites = bookmarks.filter((v) => v.favourite);
+      if (favourites.length > 0) {
+        const newBookmarks = favourites.map((v) => {
+          return { ...v, category: getCategoryById(v.categoryId).data[0].category };
+        });
+        response = {
+          statusOK: true,
+          data: newBookmarks.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
+        };
+      }
     } else {
       throw new Error('No items found in localStorage');
     }
@@ -202,6 +229,7 @@ export const getFavourites = () => {
 
 /**
  * Get POPULAR from local storage
+ * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getPopular = () => {
   let response = {
@@ -211,9 +239,12 @@ export const getPopular = () => {
   try {
     const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {
+      const newBookmarks = bookmarks.map((v) => {
+        return { ...v, category: getCategoryById(v.categoryId).data[0].category };
+      });
       response = {
         statusOK: true,
-        data: bookmarks.sort((a, b) => (a.lastUsed < b.lastUsed) ? 1 : -1)
+        data: newBookmarks.sort((a, b) => (a.lastUsed < b.lastUsed) ? 1 : -1)
       };
     } else {
       throw new Error('No items found in localStorage');
@@ -227,6 +258,8 @@ export const getPopular = () => {
 
 /**
  * Get by CATEGORY from local storage
+ * @param {string} categoryId Category Id to search for
+ * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getByCategory = (categoryId) => {
   let response = {
@@ -254,6 +287,7 @@ export const getByCategory = (categoryId) => {
 
 /**
  * Get CATEGORIES from local storage
+ * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getCategories = () => {
   let response = {
@@ -279,6 +313,8 @@ export const getCategories = () => {
 
 /**
  * Get CATEGORY by NAME from local storage
+ * @param {string} value Category name to search for
+ * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getCategoryByName = (value) => {
   let response = {
@@ -304,6 +340,8 @@ export const getCategoryByName = (value) => {
 
 /**
  * Get CATEGORY by ID from local storage
+ * @param {string} id Category Id to search for
+ * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getCategoryById = (id) => {
   let response = {
@@ -329,6 +367,7 @@ export const getCategoryById = (id) => {
 
 /**
  * Get BOOKMARKS from local storage
+ * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getBookmarks = () => {
   let response = {
@@ -354,6 +393,8 @@ export const getBookmarks = () => {
 
 /**
  * Get BOOKMARK by ID from local storage
+ * @param {string} id Bookmark Id to search for
+ * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getBookmarkById = (id) => {
   let response = {

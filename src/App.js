@@ -54,7 +54,7 @@ const App = () => {
           <Route path="/settings" component={SettingsComponent} />
           <Route component={Error404Component} />
         </Switch>
-        <Toolbar />
+        {/* <Toolbar /> */}
         {/* <FooterComponent /> */}
       </BrowserRouter>
     </ThemeProvider>
