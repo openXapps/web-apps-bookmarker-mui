@@ -22,6 +22,7 @@ import HeaderComponent from './components/Header/HeaderComponent';
 import ContentComponent from './components/Content/ContentComponent';
 import EditorComponent from './components/Editor/EditorComponent';
 import CategoryComponent from './components/Category/CategoryComponent';
+import CategoryEditComponent from './components/Category/CategoryEditComponent';
 import DownloadComponent from './components/Download/DownloadComponent';
 import UploadComponent from './components/Upload/UploadComponent';
 import SettingsComponent from './components/Settings/SettingsComponent';
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="/new" component={EditorComponent} />
           <Route path="/edit/:id" component={EditorComponent} />
           <Route path="/categories" component={CategoryComponent} />
+          <Route path="/categoryedit/:id" component={CategoryEditComponent} />
           <Route path="/download" component={DownloadComponent} />
           <Route path="/upload" component={UploadComponent} />
           <Route path="/settings" component={SettingsComponent} />

@@ -15,7 +15,7 @@ import {
 } from '../../utilities/localstorage';
 import useStyles from './CategoryStyles';
 
-const CategoryComponent = () => {
+const CategoryComponent = ({ history }) => {
     const classes = useStyles();
     const [categories, setCategories] = React.useState([]);
 
@@ -24,8 +24,9 @@ const CategoryComponent = () => {
         return () => true;
     }, []);
 
-    const handleEdit = () => {
-
+    const handleEdit = (e) => {
+        const categoryId = e.currentTarget.dataset.categoryId;
+        history.push('/categoryedit/' + categoryId);
     };
 
     return (

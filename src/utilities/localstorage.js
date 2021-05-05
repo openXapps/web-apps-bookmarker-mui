@@ -35,19 +35,22 @@ export const initialUse = () => {
 
   // Convert old bookmarks to new version (0.3.0)
   if (!settings.statusOK && bookmarks.data.length > 0) {
-    const newBookmarks = bookmarks.data.map((v, i) => {
-      return (
-        {
-          categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
-          siteId: v.siteId,
-          siteName: v.siteName,
-          siteURL: v.siteURL,
-          favourite: false,
-          lastUsed: new Date()
-        }
-      );
-    });
-    saveLocalStorage(storageObject.bookmark, newBookmarks);
+    // Make sure bookmarks are from older version
+    if (!bookmarks.data[0].categoryId) {
+      const newBookmarks = bookmarks.data.map((v, i) => {
+        return (
+          {
+            categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+            siteId: v.siteId,
+            siteName: v.siteName,
+            siteURL: v.siteURL,
+            favourite: false,
+            lastUsed: new Date()
+          }
+        );
+      });
+      saveLocalStorage(storageObject.bookmark, newBookmarks);
+    }
   }
 
   // Bump version if it exists and is not the latest

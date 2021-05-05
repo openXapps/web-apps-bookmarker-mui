@@ -20,7 +20,8 @@ export const getDefaultData = () => {
         isDark: false,
         template: 'light'
       },
-      confirmDelete: true,
+      confirmOnDelete: true,
+      hideEmptyCategories: true,
     },
 
     // gd-bm-categories
@@ -102,11 +103,3 @@ export const getDefaultData = () => {
   return response;
 };
 
-// export const emptyBookmark = {
-//   categoryId: '',
-//   siteId: '',
-//   siteName: '',
-//   siteURL: '',
-//   favourite: false,
-//   lastUsed: new Date(),
-// }

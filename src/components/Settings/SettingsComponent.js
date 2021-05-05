@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 
 import { context } from '../../context/StoreProvider';
 import { saveLocalStorage, getSettings } from '../../utilities/localstorage';
+import { storageObject } from '../../utilities/defaultdata';
 import { useStyles } from './SettingsStyles';
 import { Paper } from '@material-ui/core';
 
@@ -14,19 +15,25 @@ const Settings = () => {
   const [state, dispatch] = React.useContext(context);
   const settings = getSettings().data;
   const [_confirmDelete, setConfirmDelete] = React.useState(settings.confirmDelete);
+  const [_hideEmptyCategories, setHideEmptyCategories] = React.useState(settings.hideEmptyCategories);
 
   // Managed by state and persistence
   const handleTheme = () => {
     const _isDark = !state.theme.isDark;
     const _template = _isDark ? 'dark' : 'light';
-    saveLocalStorage('gd-bm-settings', { ...settings, theme: { isDark: _isDark, template: _template } });
+    saveLocalStorage(storageObject.setting, { ...settings, theme: { isDark: _isDark, template: _template } });
     dispatch({ type: 'THEME', payload: { isDark: _isDark, template: _template } });
   };
 
   // // Managed by persistence only
   const handleConfirmDelete = () => {
-    saveLocalStorage('gd-bm-settings', { ...settings, confirmDelete: !_confirmDelete })
+    saveLocalStorage(storageObject.setting, { ...settings, confirmOnDelete: !_confirmDelete });
     setConfirmDelete(!_confirmDelete);
+  };
+
+  const handleHideEmptyCategories = () => {
+    saveLocalStorage(storageObject.setting, { ...settings, hideEmptyCategories: !_hideEmptyCategories });
+    setHideEmptyCategories(!_hideEmptyCategories);
   };
 
   return (
@@ -50,6 +57,13 @@ const Settings = () => {
           <Switch
             checked={_confirmDelete}
             onChange={handleConfirmDelete}
+          />
+        </Box>
+        <Box className={classes.container}>
+          <Typography>Hide Empty Categories</Typography>
+          <Switch
+            checked={_hideEmptyCategories}
+            onChange={handleHideEmptyCategories}
           />
         </Box>
       </Paper>
