@@ -31,37 +31,36 @@ const CategoryComponent = ({ history }) => {
 
     return (
         <Container maxWidth="sm">
-            <Box display="flex" flexDirection="column" mt={2}>
-                <Typography variant="h6">Categories</Typography>
-                <Box mt={2} />
-                <List disablePadding>
-                    {categories.statusOK ? (
-                        categories.data.map((v, i) => {
-                            return (
-                                <div key={i}>
-                                    <ListItem
-                                        disableGutters
-                                        data-category-id={v.categoryId}
-                                    >
-                                        <ListItemText
-                                            primary={v.category}
-                                            primaryTypographyProps={{ variant: 'h5' }}
-                                        />
-                                        <ListItemSecondaryAction>
-                                            <IconButton
-                                                edge="end"
-                                                data-category-id={v.categoryId}
-                                                onClick={handleEdit}
-                                            ><MoreVertIcon /></IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                </div>
-                            );
-                        })
-                    ) : (null)}
-                </List>
-                <Box className={classes.hGutter} />
-            </Box>
+            <Box mt={2} />
+            <Typography variant="h6">Categories</Typography>
+            <Box mt={2} />
+            <List disablePadding>
+                {categories.statusOK ? (
+                    categories.data.map((v, i) => {
+                        return (
+                            <div key={i}>
+                                <ListItem
+                                    disableGutters
+                                    data-category-id={v.categoryId}
+                                >
+                                    <ListItemText
+                                        primary={v.category}
+                                        primaryTypographyProps={{ variant: 'h6' }}
+                                    />
+                                    <ListItemSecondaryAction>
+                                        <IconButton
+                                            edge="end"
+                                            data-category-id={v.categoryId}
+                                            onClick={handleEdit}
+                                        ><MoreVertIcon /></IconButton>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            </div>
+                        );
+                    })
+                ) : (null)}
+            </List>
+            <Box className={classes.hGutter} />
         </Container>
     );
 };

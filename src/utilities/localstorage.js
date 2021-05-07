@@ -124,6 +124,22 @@ export const updateBookmark = (bookmark) => {
 };
 
 /**
+ * Helper function to update a single category object
+ * @param {any} category Category object to update
+ */
+ export const updateCategory = (category) => {
+  const categories = getCategories();
+
+  if (categories.statusOK) {
+    const newCategories = categories.data.map((v, i) => {
+      return (v.categoryId === category.categoryId ? (category) : (v));
+    });
+    // console.log('updateCategory: newCategories...', newCategories);
+    saveLocalStorage(storageObject.category, newCategories);
+  }
+};
+
+/**
  * Helper function to add a new bookmark object
  * @param {any} bookmark Bookmark object to add
  */
@@ -155,6 +171,27 @@ export const deleteBookmark = (id) => {
     // console.log('deleteBookmark: splicePoint....', splicePoint);
     // console.log('deleteBookmark: newBookmarks...', newBookmarks);
     saveLocalStorage(storageObject.bookmark, newBookmarks);
+  }
+};
+
+/**
+ * Helper function to delete a single category object
+ * @param {string} id Category Id to delete
+ */
+ export const deleteCategory = (id) => {
+  const categories = getCategories();
+  let splicePoint = -1;
+
+  if (categories.statusOK) {
+    const newCategories = categories.data;
+    categories.data.forEach((v, i, a) => {
+      if (v.categoryId === id) splicePoint = i;
+      return;
+    });
+    newCategories.splice(splicePoint, 1);
+    // console.log('deleteCategory: splicePoint.....', splicePoint);
+    // console.log('deleteCategory: newCategories...', newCategories);
+    saveLocalStorage(storageObject.category, newCategories);
   }
 };
 

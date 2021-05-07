@@ -20,8 +20,8 @@ export const getDefaultData = () => {
         isDark: false,
         template: 'light'
       },
-      confirmOnDelete: true,
-      hideEmptyCategories: true,
+      confirmOnDelete: false,
+      hideEmptyCategories: false,
     },
 
     // gd-bm-categories

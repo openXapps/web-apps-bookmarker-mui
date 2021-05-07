@@ -14,14 +14,17 @@ import Alert from '@material-ui/lab/Alert';
 import {
   // getCategories,
   getCategoryById,
+  updateCategory,
+  getBookmarks,
+  deleteCategory,
 } from '../../utilities/localstorage';
 
-const initalFieldData = {
+const initialFieldData = {
   categoryId: '',
   category: '',
 };
 
-const CategoryEdit = ({ history, match }) => {
+const CategoryEditComponent = ({ history, match }) => {
   // const classes = useStyles();
   // const categories = getCategories().statusOK ? getCategories().data : [];
   const [snackState, setSnackState] = React.useState({
@@ -29,19 +32,22 @@ const CategoryEdit = ({ history, match }) => {
     message: 'Category saved',
     show: false
   });
-  const [fields, setFields] = React.useState(initalFieldData);
+  const [fields, setFields] = React.useState(initialFieldData);
+  const [canBeSaved, setCanBeSaved] = React.useState(true);
+  const [canBeDeleted, setCanBeDeleted] = React.useState(true);
 
   // Initial effect when component renders
   React.useEffect(() => {
-    const id = match.params.id;
     let _category = [];
     // Route should be /categories/:id
-    _category = getCategoryById(id).data;
+    _category = getCategoryById(match.params.id).data;
     if (Array.isArray(_category)) {
+      // console.log('Effect: _category........', _category);
       if (_category.length === 1) {
         setFields({
-          categoryId: _category.categoryId,
-          category: _category.category
+          ...initialFieldData,
+          categoryId: _category[0].categoryId,
+          category: _category[0].category,
         });
       }
     }
@@ -51,8 +57,8 @@ const CategoryEdit = ({ history, match }) => {
   }, [match.params.id]);
 
   const handleFieldChange = ({ target: { name, value } }) => {
-    // console.log('CategoryEdit: on change name........', name);
-    // console.log('CategoryEdit: on change value.......', value);
+    // console.log('CategoryEditComponent: on change name........', name);
+    // console.log('CategoryEditComponent: on change value.......', value);
     // console.log('------------------------------------------------');
     setFields({
       ...fields,
@@ -65,67 +71,85 @@ const CategoryEdit = ({ history, match }) => {
       setSnackState({ severity: 'error', message: 'Category cannot be blank', show: true });
       return;
     }
-    // TODO - save category here
+    updateCategory(fields);
     setSnackState({ severity: 'success', message: 'Category saved', show: true });
   };
 
   const handleDelete = () => {
-    // TODO - delete category here, but move all attached
-    // bookmarks to Uncategorized first
-    setFields(initalFieldData);
-    setSnackState({ severity: 'success', message: 'Category deleted', show: true });
+    let counter = 0;
+    const bookmarks = getBookmarks();
+    if (bookmarks.statusOK) {
+      bookmarks.data.forEach((v) => {
+        // console.log('CategoryEditComponent: bookmark.siteName...', v.siteName);
+        counter += v.categoryId === fields.categoryId ? 1 : 0;
+      });
+      if (counter > 0) {
+        setSnackState({ severity: 'error', message: 'Cannot delete category. First remove ' + counter + ' attached bookmarks', show: true });
+      } else {
+        deleteCategory(fields.categoryId);
+        setCanBeSaved(false);
+        setFields(initialFieldData);
+        setSnackState({ severity: 'success', message: 'Category deleted', show: true });
+      }
+      setCanBeDeleted(false);
+    }
+    // console.log('CategoryEditComponent: handleDelete.counter...', counter);
   };
 
   const handleSnackState = () => {
     setSnackState({ ...snackState, show: false });
   };
 
+  // console.log('CategoryEditComponent: fields........', fields);
+
   return (
     <Container maxWidth="sm">
-      <Box display="flex" flexDirection="column" mt={2}>
-        <Typography variant="h6">Edit category</Typography>
-        <Box mt={{ xs: 1, sm: 2 }} />
-        <Paper component="form" autoComplete="off">
-          <Box p={2}>
-            <Box mt={{ xs: 1, sm: 2 }} />
-            <TextField
-              label="Category"
-              variant="outlined"
-              name="category"
-              value={fields.category}
-              onChange={handleFieldChange}
-              fullWidth
-            />
-          </Box>
-        </Paper>
-        <Box my={{ xs: 0.5, sm: 2 }} />
-        <Grid container alignItems="center">
-          <Grid item xs={12} sm={3}>
+      <Box mt={2} />
+      <Typography variant="h6">Edit category</Typography>
+      <Box mt={{ xs: 1, sm: 2 }} />
+      <Paper component="form" autoComplete="off">
+        <Box p={2}>
+          <Box mt={{ xs: 1, sm: 2 }} />
+          <TextField
+            label="Category"
+            variant="outlined"
+            name="category"
+            value={fields.category}
+            onChange={handleFieldChange}
+            fullWidth
+          />
+          <Box mt={2} />
+        </Box>
+      </Paper>
+      <Box my={{ xs: 1, sm: 2 }} />
+      <Grid container alignItems="center">
+        <Grid item xs={12} sm={3}>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={handleSave}
+            disabled={!canBeSaved}
+          >Save</Button>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
             <Button
               variant="outlined"
               fullWidth
-              onClick={handleSave}
-            >Save</Button>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
-              <Button
-                variant="outlined"
-                fullWidth
-                color="secondary"
-                onClick={handleDelete}
-              >Delete</Button></Box>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
-              <Button
-                variant="outlined"
-                fullWidth
-                onClick={() => history.goBack()}
-              >Back</Button></Box>
-          </Grid>
+              color="secondary"
+              onClick={handleDelete}
+              disabled={!canBeDeleted}
+            >Delete</Button></Box>
         </Grid>
-      </Box>
+        <Grid item xs={12} sm={3}>
+          <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => history.goBack()}
+            >Back</Button></Box>
+        </Grid>
+      </Grid>
       <Snackbar
         anchorOrigin={{
           vertical: 'top',
@@ -141,4 +165,4 @@ const CategoryEdit = ({ history, match }) => {
   );
 };
 
-export default CategoryEdit;
+export default CategoryEditComponent;

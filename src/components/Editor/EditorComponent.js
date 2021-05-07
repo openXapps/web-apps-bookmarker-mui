@@ -28,7 +28,7 @@ const defaultCategory = [
   },
 ];
 
-const initalData = {
+const initialFieldData = {
   categoryValue: defaultCategory[0],
   categoryInputValue: '',
   favourite: false,
@@ -50,7 +50,7 @@ const EditorComponent = ({ history, match }) => {
     message: 'Bookmark saved',
     show: false
   });
-  const [fields, setFields] = React.useState(initalData);
+  const [fields, setFields] = React.useState(initialFieldData);
   const [sceneIndexMode, setSceneIndexMode] = React.useState(0);
   const [sceneIndexSave, setSceneIndexSave] = React.useState(0);
   const [canBeSavedAs, setCanBeSavedAs] = React.useState(false);
@@ -176,7 +176,7 @@ const EditorComponent = ({ history, match }) => {
 
   const handleDelete = () => {
     deleteBookmark(fields.siteId);
-    setFields(initalData);
+    setFields(initialFieldData);
     setSceneIndexMode(2);
     setSceneIndexSave(1);
     setCanBeSavedAs(false);
@@ -200,92 +200,91 @@ const EditorComponent = ({ history, match }) => {
 
   return (
     <Container maxWidth="sm">
-      <Box display="flex" flexDirection="column" mt={2}>
-        <Typography variant="h6">{sceneText.mode[sceneIndexMode]}</Typography>
-        <Box mt={{ xs: 1, sm: 2 }} />
-        <Paper component="form" autoComplete="off">
-          <Box p={2}>
-            <Box mt={{ xs: 1, sm: 2 }} />
-            <Autocomplete
-              freeSolo
-              value={fields.categoryValue}
-              onChange={(e, v) => handleFieldChange({ target: { name: 'categoryValue', value: v } })}
-              inputValue={fields.categoryInputValue}
-              onInputChange={(e, v) => handleFieldChange({ target: { name: 'categoryInputValue', value: v } })}
-              // options={categories.map((option) => option.category)}
-              options={categories}
-              getOptionLabel={(option) => option.category}
-              renderInput={(params) => (
-                <TextField {...params} label="Category" variant="outlined" fullWidth />
-              )}
+      <Box mt={2} />
+      <Typography variant="h6">{sceneText.mode[sceneIndexMode]}</Typography>
+      <Box mt={{ xs: 1, sm: 2 }} />
+      <Paper component="form" autoComplete="off">
+        <Box p={2}>
+          <Box mt={{ xs: 1, sm: 2 }} />
+          <Autocomplete
+            freeSolo
+            value={fields.categoryValue}
+            onChange={(e, v) => handleFieldChange({ target: { name: 'categoryValue', value: v } })}
+            inputValue={fields.categoryInputValue}
+            onInputChange={(e, v) => handleFieldChange({ target: { name: 'categoryInputValue', value: v } })}
+            // options={categories.map((option) => option.category)}
+            options={categories}
+            getOptionLabel={(option) => option.category}
+            renderInput={(params) => (
+              <TextField {...params} label="Category" variant="outlined" fullWidth />
+            )}
+          />
+          <Box mt={2} />
+          <TextField
+            label="Site Name"
+            variant="outlined"
+            name="siteName"
+            value={fields.siteName}
+            onChange={handleFieldChange}
+            fullWidth
+          />
+          <Box mt={2} />
+          <TextField
+            label="Site URL"
+            variant="outlined"
+            name="siteURL"
+            value={fields.siteURL}
+            onChange={handleFieldChange}
+            fullWidth
+          />
+          <Box mt={2} />
+          <Box className={classes.switchContainer}>
+            <Typography>Favourite</Typography>
+            <Switch
+              checked={fields.favourite}
+              onChange={() => handleFieldChange({ target: { name: 'favourite', value: !fields.favourite } })}
             />
-            <Box mt={2} />
-            <TextField
-              label="Site Name"
-              variant="outlined"
-              name="siteName"
-              value={fields.siteName}
-              onChange={handleFieldChange}
-              fullWidth
-            />
-            <Box mt={2} />
-            <TextField
-              label="Site URL"
-              variant="outlined"
-              name="siteURL"
-              value={fields.siteURL}
-              onChange={handleFieldChange}
-              fullWidth
-            />
-            <Box mt={2} />
-            <Box className={classes.switchContainer}>
-              <Typography>Favourite</Typography>
-              <Switch
-                checked={fields.favourite}
-                onChange={() => handleFieldChange({ target: { name: 'favourite', value: !fields.favourite } })}
-              />
-            </Box>
           </Box>
-        </Paper>
-        <Box my={{ xs: 0.5, sm: 2 }} />
-        <Grid container alignItems="center">
-          <Grid item xs={12} sm={3}>
+        </Box>
+      </Paper>
+      <Box my={{ xs: 1, sm: 2 }} />
+      <Grid container alignItems="center">
+        <Grid item xs={12} sm={3}>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={handleSave}
+          // disabled={!canBeSaved}
+          >{sceneText.save[sceneIndexSave]}</Button>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
             <Button
               variant="outlined"
               fullWidth
-              onClick={handleSave}
-            // disabled={!canBeSaved}
-            >{sceneText.save[sceneIndexSave]}</Button>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
-              <Button
-                variant="outlined"
-                fullWidth
-                onClick={handleSaveAs}
-                disabled={!canBeSavedAs}
-              >Save As</Button></Box>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
-              <Button
-                variant="outlined"
-                fullWidth
-                color="secondary"
-                onClick={handleDelete}
-                disabled={!canBeDeleted}
-              >Delete</Button></Box>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
-              <Button
-                variant="outlined"
-                fullWidth
-                onClick={() => history.goBack()}
-              >Back</Button></Box>
-          </Grid>
+              onClick={handleSaveAs}
+              disabled={!canBeSavedAs}
+            >Save As</Button></Box>
         </Grid>
-      </Box>
+        <Grid item xs={12} sm={3}>
+          <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
+            <Button
+              variant="outlined"
+              fullWidth
+              color="secondary"
+              onClick={handleDelete}
+              disabled={!canBeDeleted}
+            >Delete</Button></Box>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => history.goBack()}
+            >Back</Button></Box>
+        </Grid>
+      </Grid>
       <Snackbar
         anchorOrigin={{
           vertical: 'top',
