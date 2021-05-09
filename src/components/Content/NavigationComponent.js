@@ -1,14 +1,14 @@
 import React from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
+// import Box from '@material-ui/core/Box';
+// import InputBase from '@material-ui/core/InputBase';
+// import IconButton from '@material-ui/core/IconButton';
+// import SearchIcon from '@material-ui/icons/Search';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import SearchIcon from '@material-ui/icons/Search';
 
 import { useStyles } from './NavigationStyles';
 import { getCategories } from '../../utilities/localstorage';
@@ -18,7 +18,7 @@ const NavigationComponent = ({ history }) => {
   const [state, dispatch] = React.useContext(context);
   const classes = useStyles();
   const [categories, setCategories] = React.useState([]);
-  const [search, setSearch] = React.useState('');
+  // const [search, setSearch] = React.useState('');
   // const [active, setActive] = React.useState(state.activeNav);
 
   React.useEffect(() => {
@@ -45,16 +45,17 @@ const NavigationComponent = ({ history }) => {
     }
   };
 
-  const handleSearch = (e) => {
+  // const handleSearch = (e) => {
+    // https://levelup.gitconnected.com/how-to-search-filter-through-data-in-react-26f1545fe3a1
     // console.log('Nav: search...', e.currentTarget.value);
-    setSearch(e.currentTarget.value);
-  };
+    // setSearch(e.currentTarget.value);
+  // };
 
   // console.log('Nav: location...', history.location);
 
   return (
     <Paper>
-      <Box display={{ xs: 'none', sm: 'block' }}>
+      {/* <Box display={{ xs: 'none', sm: 'block' }}>
         <Box className={classes.searchContainer}>
           <InputBase
             className={classes.searchField}
@@ -66,7 +67,7 @@ const NavigationComponent = ({ history }) => {
             <SearchIcon />
           </IconButton>
         </Box>
-      </Box>
+      </Box> */}
       <List disablePadding>
         <ListItem button disableGutters onClick={handleNav} selected={state.activeNav === 0}>
           <ListItemText primary="Popular" className={classes.listItemText} />

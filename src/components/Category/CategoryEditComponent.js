@@ -84,7 +84,11 @@ const CategoryEditComponent = ({ history, match }) => {
         counter += v.categoryId === fields.categoryId ? 1 : 0;
       });
       if (counter > 0) {
-        setSnackState({ severity: 'error', message: 'Cannot delete category. First remove ' + counter + ' attached bookmarks', show: true });
+        setSnackState({
+          severity: 'error',
+          message: 'Cannot delete category. First remove ' + counter + ' attached bookmark' + (counter > 1 ? 's' : ''),
+          show: true
+        });
       } else {
         deleteCategory(fields.categoryId);
         setCanBeSaved(false);
