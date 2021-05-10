@@ -11,14 +11,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-import {
-  getCategories
-} from '../../utilities/localstorage';
-// import useStyles from './CategoryStyles';
+import { getCategories } from '../../utilities/localstorage';
 
 const CategoryComponent = ({ history }) => {
-  // const classes = useStyles();
-  const [categories, setCategories] = React.useState([]);
+  const [categories, setCategories] = React.useState({ statusOK: true, data: [] });
 
   React.useEffect(() => {
     setCategories(getCategories());
@@ -46,13 +42,15 @@ const CategoryComponent = ({ history }) => {
                       primary={v.category}
                       primaryTypographyProps={{ variant: 'h6' }}
                     />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        edge="end"
-                        data-category-id={v.categoryId}
-                        onClick={handleEdit}
-                      ><MoreVertIcon /></IconButton>
-                    </ListItemSecondaryAction>
+                    {v.categoryId !== '017cf222-887b-11e9-bc42-526af7764f64' ? (
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          edge="end"
+                          data-category-id={v.categoryId}
+                          onClick={handleEdit}
+                        ><MoreVertIcon /></IconButton>
+                      </ListItemSecondaryAction>
+                    ) : (null)}
                   </ListItem>
                 </div>
               );

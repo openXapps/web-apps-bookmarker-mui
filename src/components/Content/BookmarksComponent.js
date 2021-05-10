@@ -3,13 +3,16 @@ import { useParams } from 'react-router-dom';
 
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Hidden from '@material-ui/core/Hidden';
 import Box from '@material-ui/core/Box';
-import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import InputBase from '@material-ui/core/InputBase';
+import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import ClearIcon from '@material-ui/icons/Clear';
 
 import {
   updateLastClicked,
@@ -24,7 +27,10 @@ const BookmarksComponent = ({ history }) => {
   const breakpointSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
   const { id } = useParams();
-  const [bookmarks, setBookmarks] = React.useState([]);
+  const [bookmarks, setBookmarks] = React.useState({ statusOK: true, data: [] });
+  const [search, setSearch] = React.useState('');
+  const [showSearch, setShowSearch] = React.useState(false);
+  const [reload, setReload] = React.useState(false);
 
   React.useEffect(() => {
     const route = history.location.pathname;
@@ -32,72 +38,131 @@ const BookmarksComponent = ({ history }) => {
     switch (route) {
       case '/':
         data = getPopular();
+        setShowSearch(true);
         if (data.statusOK) setBookmarks(data);
         break;
       case '/favourites':
         data = getFavourites();
+        setShowSearch(false);
         if (data.statusOK) setBookmarks(data);
         break;
       default:
         data = getByCategory(id);
+        setShowSearch(false);
         if (data.statusOK) setBookmarks(data);
         break;
     }
-    // console.log('Bookmarks: route...', route);
-    // console.log('Bookmarks: id......', id);
-    // console.log('Bookmarks: data....', data);
+    setSearch('');
+
+    // Clean-up function
+    return () => setReload(false);
+  }, [history.location.pathname, id, reload]);
+
+  // Reset search on empty string
+  React.useEffect(() => {
+    if (search.length === 0) setReload(true);
 
     // Clean-up function
     return () => true;
-  }, [history.location.pathname, id]);
+  }, [search]);
 
+  // Handle search field persistence
+  const handleSearch = (e) => {
+    setSearch(e.currentTarget.value);
+  };
+
+  // Perform search from search field
+  const doSearch = (e) => {
+    e.preventDefault();
+    let data = [];
+    if (search.length > 0) {
+      data = bookmarks.data.filter((v) => {
+        return (
+          v.siteName.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
+          v.siteURL.toLowerCase().indexOf(search.toLowerCase()) > -1
+        );
+      });
+      if (data.length > 0) setBookmarks({ ...bookmarks, data: data });
+    } else {
+      setReload(true);
+    }
+  };
+
+  // Clear the search field and reload bookmarks
+  const handleSearchClear = () => {
+    setSearch('');
+    setReload(true);
+  };
+
+  // Route to bookmark editor
   const handleEdit = (e) => {
-    // console.log('Bookmarks: edit.siteId...', e.currentTarget.dataset.siteId);
     const siteId = e.currentTarget.dataset.siteId;
     history.push('/edit/' + siteId);
   };
 
+  // Record last accessed bookmark
   const handleLastClicked = (e) => {
     console.log(e.currentTarget.dataset.siteId);
     updateLastClicked(e.currentTarget.dataset.siteId);
   };
 
   return (
-    <Box width="100%" pl={{ sm: 1 }}>
-      <List disablePadding>
-        {bookmarks.statusOK ? (
-          bookmarks.data.map((v, i) => {
-            return (
-              <div key={i}>
-                <ListItem
-                  disableGutters
-                  button
-                  component="a"
-                  href={v.siteURL}
-                  target="_blank"
-                  rel="noopener"
-                  data-site-id={v.siteId}
-                  onClick={handleLastClicked}>
-                  <ListItemText
-                    className={classes.bookmarkText}
-                    primary={v.siteName}
-                    primaryTypographyProps={breakpointSM ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
-                    secondary={v.category ? v.category : null}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      data-site-id={v.siteId}
-                      onClick={handleEdit}
-                    ><MoreVertIcon /></IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </div>
-            );
-          })
+    <Box>
+      <Hidden smDown>
+        {showSearch ? (
+          <form onSubmit={doSearch} noValidate autoComplete="off">
+            <Box className={classes.searchContainer}>
+              <InputBase
+                className={classes.searchField}
+                placeholder="Search..."
+                value={search}
+                onChange={handleSearch}
+                inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
+              />
+              <IconButton
+                className={classes.searchButton}
+                aria-label="clear search"
+                onClick={handleSearchClear}
+              ><ClearIcon /></IconButton>
+            </Box>
+          </form>
         ) : (null)}
-      </List>
-      {/* <Box className={classes.hGutter} /> */}
+      </Hidden>
+      <Box width="100%" pl={{ sm: 1 }}>
+        <List disablePadding>
+          {bookmarks.statusOK ? (
+            bookmarks.data.map((v, i) => {
+              return (
+                <div key={i}>
+                  <ListItem
+                    disableGutters
+                    button
+                    component="a"
+                    href={v.siteURL}
+                    target="_blank"
+                    rel="noopener"
+                    data-site-id={v.siteId}
+                    onClick={handleLastClicked}>
+                    <ListItemText
+                      className={classes.bookmarkText}
+                      primary={v.siteName}
+                      primaryTypographyProps={breakpointSM ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
+                      secondary={v.category ? v.category : null}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        data-site-id={v.siteId}
+                        onClick={handleEdit}
+                      ><MoreVertIcon /></IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </div>
+              );
+            })
+          ) : (null)}
+        </List>
+      </Box>
     </Box>
   );
 };
