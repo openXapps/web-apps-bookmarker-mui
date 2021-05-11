@@ -147,13 +147,10 @@ const EditorComponent = ({ history, match }) => {
     let ids = { siteId: '', categoryId: '' };
     const oldBookmark = getBookmarkById(fields.siteId);
     validation = validateForm(fields);
-    // console.log('Edit: on save as pass validation...', validation);
     if (!validation.status) {
       setSnackState({ severity: 'error', message: validation.message, show: true });
       return;
     }
-    // console.log('Edit: on save as fields.siteURL........', fields.siteURL);
-    // console.log('Edit: on save as oldBookmark.siteURL...', oldBookmark.data[0].siteURL);
     if (fields.siteURL.trim() === oldBookmark.data[0].siteURL) {
       setSnackState({ severity: 'error', message: 'Site URL not unique', show: true });
       return;
@@ -189,14 +186,14 @@ const EditorComponent = ({ history, match }) => {
   };
 
   // console.log('Edit: JUST BEFORE RENDER...');
-  // console.log('Edit: history.......', history);
-  // console.log('Edit: match.........', match);
-  // console.log('Edit: fields........', fields);
+  // console.log('Edit: history...............', history);
+  // console.log('Edit: match.................', match);
+  // console.log('Edit: fields................', fields);
   // console.log('Edit: categoryInputValue....', fields.categoryInputValue);
   // console.log('Edit: categoryValue.........', fields.categoryValue);
-  // console.log('Edit: canBeSaved.......', canBeSaved);
-  // console.log('Edit: canBeDeleted.....', canBeDeleted);
-  // console.log('Edit: disable save..', (canBeSaved || !canBeDeleted || !isInvalid));
+  // console.log('Edit: canBeSaved............', canBeSaved);
+  // console.log('Edit: canBeDeleted..........', canBeDeleted);
+  // console.log('Edit: disable save..........', (canBeSaved || !canBeDeleted || !isInvalid));
 
   return (
     <Container maxWidth="sm">
@@ -296,9 +293,6 @@ const EditorComponent = ({ history, match }) => {
       ><Alert elevation={6} onClose={handleSnackState} severity={snackState.severity}>
           {snackState.message}
         </Alert></Snackbar>
-      {/* <Box mt={2} />
-      <Typography variant="h6">siteId : {fields.siteId}</Typography>
-      <Typography variant="h6">categoryId : {fields.categoryValue.categoryId}</Typography> */}
     </Container>
   );
 };
