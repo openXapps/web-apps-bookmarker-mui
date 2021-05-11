@@ -55,12 +55,16 @@ const UploadComponent = ({ history }) => {
       setButtonState({ ...buttonState, locked: false, merge: 'Merge Error' });
       setSnackState({ severity: 'error', message: 'Data merge FAILED', show: true });
     }
-  }
+  };
 
   const handleOverwriteData = () => {
-    overwriteData(inputRef.current.value);
-    setButtonState({ ...buttonState, locked: true, overwrite: 'Overwrite Done', exit: 'Back' });
-    setSnackState({ severity: 'success', message: 'Data overwrite SUCCESS', show: true });
+    if (overwriteData(inputRef.current.value)) {
+      setButtonState({ ...buttonState, locked: true, overwrite: 'Overwrite Done', exit: 'Back' });
+      setSnackState({ severity: 'success', message: 'Data overwrite SUCCESS', show: true });
+    } else {
+      setButtonState({ ...buttonState, locked: false, overwrite: 'Overwrite Error' });
+      setSnackState({ severity: 'error', message: 'Data overwrite FAILED', show: true });
+    }
   };
 
   return (
@@ -84,7 +88,6 @@ const UploadComponent = ({ history }) => {
           >{isValid ? 'Done' : 'Validate'}</Button>
         </Grid>
       </Grid>
-      {/* </Box> */}
       <Box mt={2} />
       <TextField
         multiline

@@ -7,8 +7,8 @@ export const mergeData = (data) => {
   let objs = {};
   try {
     objs = JSON.parse(data);
-    saveLocalStorage('gd-bm-categories', objs.categories);
-    saveLocalStorage('gd-bm-bookmarks', objs.bookmarks);
+    // saveLocalStorage('gd-bm-categories', objs.categories);
+    // saveLocalStorage('gd-bm-bookmarks', objs.bookmarks);
     return true;
   } catch (err) {
     return false;
@@ -18,6 +18,14 @@ export const mergeData = (data) => {
 /**
  * Helper function to overwrite site data
  */
-export const overwriteData = (obj) => {
-  return true;
+export const overwriteData = (data) => {
+  let objs = {};
+  try {
+    objs = JSON.parse(data);
+    saveLocalStorage('gd-bm-categories', objs.categories);
+    saveLocalStorage('gd-bm-bookmarks', objs.bookmarks);
+    return true;
+  } catch (err) {
+    return false;
+  }
 };
