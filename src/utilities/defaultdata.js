@@ -8,6 +8,16 @@ export const storageObject = {
 };
 
 /**
+ * Default category that CANNOT be deleted
+ */
+export const defaultCategory = [
+  {
+    categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+    category: 'Uncategorized',
+  },
+];
+
+/**
  * DEFAULT DATA FOR INITIAL APP LOAD
  * https://github.com/kelektiv/node-uuid
  */
@@ -20,15 +30,15 @@ export const getDefaultData = () => {
         isDark: false,
         template: 'light'
       },
-      confirmOnDelete: false,
-      hideEmptyCategories: false,
+      confirmOnDelete: true,
+      // hideEmptyCategories: false,
     },
 
     // gd-bm-categories
     categories: [
       {
-        categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
-        category: 'Uncategorized',
+        categoryId: defaultCategory[0].categoryId,
+        category: defaultCategory[0].category,
       },
       {
         categoryId: '027cf222-887b-11e9-bc42-526af7764f64',

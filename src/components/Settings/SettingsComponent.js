@@ -14,8 +14,8 @@ const Settings = () => {
   const classes = useStyles();
   const [state, dispatch] = React.useContext(context);
   const settings = getSettings().data;
-  const [_confirmDelete, setConfirmDelete] = React.useState(settings.confirmDelete);
-  const [_hideEmptyCategories, setHideEmptyCategories] = React.useState(settings.hideEmptyCategories);
+  const [_confirmOnDelete, setConfirmOnDelete] = React.useState(settings.confirmOnDelete);
+  // const [_hideEmptyCategories, setHideEmptyCategories] = React.useState(settings.hideEmptyCategories);
 
   // Managed by state and persistence
   const handleTheme = () => {
@@ -25,16 +25,17 @@ const Settings = () => {
     dispatch({ type: 'THEME', payload: { isDark: _isDark, template: _template } });
   };
 
-  // // Managed by persistence only
-  const handleConfirmDelete = () => {
-    saveLocalStorage(storageObject.setting, { ...settings, confirmOnDelete: !_confirmDelete });
-    setConfirmDelete(!_confirmDelete);
+  // Managed by persistence only
+  const handleConfirmOnDelete = () => {
+    saveLocalStorage(storageObject.setting, { ...settings, confirmOnDelete: !_confirmOnDelete });
+    setConfirmOnDelete(!_confirmOnDelete);
   };
 
-  const handleHideEmptyCategories = () => {
-    saveLocalStorage(storageObject.setting, { ...settings, hideEmptyCategories: !_hideEmptyCategories });
-    setHideEmptyCategories(!_hideEmptyCategories);
-  };
+  // Managed by persistence only
+  // const handleHideEmptyCategories = () => {
+  //   saveLocalStorage(storageObject.setting, { ...settings, hideEmptyCategories: !_hideEmptyCategories });
+  //   setHideEmptyCategories(!_hideEmptyCategories);
+  // };
 
   return (
     <Container maxWidth="sm">
@@ -55,17 +56,17 @@ const Settings = () => {
         <Box className={classes.container}>
           <Typography>Confirm On Delete</Typography>
           <Switch
-            checked={_confirmDelete}
-            onChange={handleConfirmDelete}
+            checked={_confirmOnDelete}
+            onChange={handleConfirmOnDelete}
           />
         </Box>
-        <Box className={classes.container}>
+        {/* <Box className={classes.container}>
           <Typography>Hide Empty Categories</Typography>
           <Switch
             checked={_hideEmptyCategories}
             onChange={handleHideEmptyCategories}
           />
-        </Box>
+        </Box> */}
       </Paper>
     </Container>
   );

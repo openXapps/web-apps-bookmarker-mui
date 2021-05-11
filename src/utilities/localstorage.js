@@ -1,6 +1,6 @@
 // Utility module to manage HTML5 localStorage
 
-import { storageObject, getDefaultData } from './defaultdata';
+import { storageObject, getDefaultData, defaultCategory } from './defaultdata';
 
 /**
  * Check whether localStorage is available.
@@ -40,7 +40,7 @@ export const initialUse = () => {
       const newBookmarks = bookmarks.data.map((v, i) => {
         return (
           {
-            categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
+            categoryId: defaultCategory[0].categoryId,
             siteId: v.siteId,
             siteName: v.siteName,
             siteURL: v.siteURL,
@@ -230,7 +230,7 @@ export const getSettings = () => {
     }
   } catch (err) {
     // Life goes on ...
-    console.log(err);
+    // console.log(err);
   }
   return response;
 };
@@ -262,7 +262,7 @@ export const getFavourites = () => {
     }
   } catch (err) {
     // Life goes on ...
-    console.log(err);
+    // console.log(err);
   }
   return response;
 };
@@ -291,7 +291,7 @@ export const getPopular = () => {
     }
   } catch (err) {
     // Life goes on ...
-    console.log(err);
+    // console.log(err);
   }
   return response;
 };
@@ -320,7 +320,7 @@ export const getByCategory = (categoryId) => {
     }
   } catch (err) {
     // Life goes on ...
-    console.log(err);
+    // console.log(err);
   }
   return response;
 };
@@ -346,7 +346,7 @@ export const getCategories = () => {
     }
   } catch (err) {
     // Life goes on ...
-    console.log(err);
+    // console.log(err);
   }
   return response;
 };
@@ -373,7 +373,7 @@ export const getCategoryByName = (value) => {
     }
   } catch (err) {
     // Life goes on ...
-    console.log(err);
+    // console.log(err);
   }
   return response;
 };
@@ -400,7 +400,7 @@ export const getCategoryById = (id) => {
     }
   } catch (err) {
     // Life goes on ...
-    console.log(err);
+    // console.log(err);
   }
   return response;
 };
@@ -426,7 +426,7 @@ export const getBookmarks = () => {
     }
   } catch (err) {
     // Life goes on ...
-    console.log(err);
+    // console.log(err);
   }
   return response;
 };
@@ -453,7 +453,7 @@ export const getBookmarkById = (id) => {
     }
   } catch (err) {
     // Life goes on ...
-    console.log(err);
+    // console.log(err);
   }
   return response;
 };

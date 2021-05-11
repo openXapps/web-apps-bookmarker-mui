@@ -11,22 +11,22 @@ import Container from '@material-ui/core/Container';
 import Switch from '@material-ui/core/Switch';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import useStyles from './EditorStyles';
 import { validateForm, saveBookmark } from './EditorUtils';
+import { defaultCategory } from '../../utilities/defaultdata';
 import {
   getCategories,
   getCategoryById,
   getBookmarkById,
   deleteBookmark,
+  getSettings,
 } from '../../utilities/localstorage';
-
-const defaultCategory = [
-  {
-    categoryId: '017cf222-887b-11e9-bc42-526af7764f64',
-    category: 'Uncategorized',
-  },
-];
 
 const initialFieldData = {
   categoryValue: defaultCategory[0],
@@ -50,6 +50,7 @@ const EditorComponent = ({ history, match }) => {
     message: 'Bookmark saved',
     show: false
   });
+  const [dialogDeleteOpen, setDialogDeleteOpen] = React.useState(false);
   const [fields, setFields] = React.useState(initialFieldData);
   const [sceneIndexMode, setSceneIndexMode] = React.useState(0);
   const [sceneIndexSave, setSceneIndexSave] = React.useState(0);
@@ -172,6 +173,24 @@ const EditorComponent = ({ history, match }) => {
   };
 
   const handleDelete = () => {
+    const settings = getSettings();
+    if (settings.statusOK) {
+      if (settings.data.confirmOnDelete) {
+        setDialogDeleteOpen(true);
+      } else {
+        deleteBookmark(fields.siteId);
+        setFields(initialFieldData);
+        setSceneIndexMode(2);
+        setSceneIndexSave(1);
+        setCanBeSavedAs(false);
+        setCanBeDeleted(false);
+        setSnackState({ severity: 'success', message: 'Bookmark deleted', show: true });
+      }
+    }
+  };
+
+  const handleDeleteYes = () => {
+    setDialogDeleteOpen(false);
     deleteBookmark(fields.siteId);
     setFields(initialFieldData);
     setSceneIndexMode(2);
@@ -179,6 +198,10 @@ const EditorComponent = ({ history, match }) => {
     setCanBeSavedAs(false);
     setCanBeDeleted(false);
     setSnackState({ severity: 'success', message: 'Bookmark deleted', show: true });
+  };
+
+  const handleDialogDeleteClose = () => {
+    setDialogDeleteOpen(false);
   };
 
   const handleSnackState = () => {
@@ -282,6 +305,23 @@ const EditorComponent = ({ history, match }) => {
             >Back</Button></Box>
         </Grid>
       </Grid>
+      <Dialog
+        open={dialogDeleteOpen}
+        onClose={handleDialogDeleteClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirm Delete Action</DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id="alert-dialog-description"
+          >Continue to delete this bookmark?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteYes} color="primary">Yes</Button>
+          <Button onClick={handleDialogDeleteClose} color="primary" autoFocus>No</Button>
+        </DialogActions>
+      </Dialog>
       <Snackbar
         anchorOrigin={{
           vertical: 'top',

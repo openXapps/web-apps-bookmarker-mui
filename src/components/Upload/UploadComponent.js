@@ -1,6 +1,5 @@
 import React from 'react';
 
-import clsx from 'clsx';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -11,7 +10,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 
 import { useStyles } from './UploadStyles';
-// import { saveLocalStorage } from '../utilities/localstorage';
 import { validator } from './UploadValidator';
 import { mergeData, overwriteData } from './UploadLoader';
 
@@ -65,20 +63,29 @@ const UploadComponent = ({ history }) => {
     setSnackState({ severity: 'success', message: 'Data overwrite SUCCESS', show: true });
   };
 
-  // console.log('Upload: history...', history);
-
   return (
     <Container maxWidth="md">
-      <Typography variant="h6" className={classes.hGutter}>Upload</Typography>
-      <Box className={clsx(classes.validator, classes.hGutter)}>
-        <Typography className={classes.grow}>Paste your site data in the text box below</Typography>
-        <Button
-          variant="outlined"
-          onClick={handleValidation}
-          disabled={isValid}
-        >{isValid ? 'Done' : 'Validate'}</Button>
-      </Box>
-      <div className={classes.hGutter}></div>
+      <Box mt={2} />
+      <Typography variant="h6">Upload</Typography>
+      <Box mt={2} />
+      <Grid
+        container
+        alignItems="center"
+        justify="space-between"
+        wrap="nowrap"
+      ><Grid item>
+          <Typography className={classes.grow}>Paste your site data in the text box below</Typography>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="outlined"
+            onClick={handleValidation}
+            disabled={isValid}
+          >{isValid ? 'Done' : 'Validate'}</Button>
+        </Grid>
+      </Grid>
+      {/* </Box> */}
+      <Box mt={2} />
       <TextField
         multiline
         id="bm-site-data-upload"
@@ -91,10 +98,10 @@ const UploadComponent = ({ history }) => {
         disabled={isValid}
         error={isError}
       ></TextField>
+      <Box mt={2} />
       <Grid
         container
         alignItems="center"
-        className={classes.hGutter}
         justify="space-between"
       ><Grid item>
           <Button
@@ -117,7 +124,6 @@ const UploadComponent = ({ history }) => {
           >{buttonState.exit}</Button>
         </Grid>
       </Grid>
-      <div className={classes.hGutter}></div>
       <Snackbar
         anchorOrigin={{
           vertical: 'top',

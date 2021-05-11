@@ -9,6 +9,11 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 // import useStyles from './CategoryStyles';
 import {
@@ -17,6 +22,7 @@ import {
   updateCategory,
   getBookmarks,
   deleteCategory,
+  getSettings,
 } from '../../utilities/localstorage';
 
 const initialFieldData = {
@@ -32,6 +38,7 @@ const CategoryEditComponent = ({ history, match }) => {
     message: 'Category saved',
     show: false
   });
+  const [dialogDeleteOpen, setDialogDeleteOpen] = React.useState(false);
   const [fields, setFields] = React.useState(initialFieldData);
   const [canBeSaved, setCanBeSaved] = React.useState(true);
   const [canBeDeleted, setCanBeDeleted] = React.useState(true);
@@ -75,7 +82,7 @@ const CategoryEditComponent = ({ history, match }) => {
     setSnackState({ severity: 'success', message: 'Category saved', show: true });
   };
 
-  const handleDelete = () => {
+  const doDeleteAction = () => {
     let counter = 0;
     const bookmarks = getBookmarks();
     if (bookmarks.statusOK) {
@@ -97,14 +104,31 @@ const CategoryEditComponent = ({ history, match }) => {
       }
       setCanBeDeleted(false);
     }
-    // console.log('CategoryEditComponent: handleDelete.counter...', counter);
+  };
+
+  const handleDelete = () => {
+    const settings = getSettings();
+    if (settings.statusOK) {
+      if (settings.data.confirmOnDelete) {
+        setDialogDeleteOpen(true);
+      } else {
+        doDeleteAction();
+      }
+    }
+  };
+
+  const handleDeleteYes = () => {
+    setDialogDeleteOpen(false);
+    doDeleteAction();
+  };
+
+  const handleDialogDeleteClose = () => {
+    setDialogDeleteOpen(false);
   };
 
   const handleSnackState = () => {
     setSnackState({ ...snackState, show: false });
   };
-
-  // console.log('CategoryEditComponent: fields........', fields);
 
   return (
     <Container maxWidth="sm">
@@ -153,7 +177,23 @@ const CategoryEditComponent = ({ history, match }) => {
               onClick={() => history.goBack()}
             >Back</Button></Box>
         </Grid>
-      </Grid>
+      </Grid><Dialog
+        open={dialogDeleteOpen}
+        onClose={handleDialogDeleteClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirm Delete Action</DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id="alert-dialog-description"
+          >Continue to delete this category?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteYes} color="primary">Yes</Button>
+          <Button onClick={handleDialogDeleteClose} color="primary" autoFocus>No</Button>
+        </DialogActions>
+      </Dialog>
       <Snackbar
         anchorOrigin={{
           vertical: 'top',

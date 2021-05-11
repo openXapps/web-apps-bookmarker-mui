@@ -12,6 +12,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { getCategories } from '../../utilities/localstorage';
+import { defaultCategory } from '../../utilities/defaultdata';
 
 const CategoryComponent = ({ history }) => {
   const [categories, setCategories] = React.useState({ statusOK: true, data: [] });
@@ -42,7 +43,7 @@ const CategoryComponent = ({ history }) => {
                       primary={v.category}
                       primaryTypographyProps={{ variant: 'h6' }}
                     />
-                    {v.categoryId !== '017cf222-887b-11e9-bc42-526af7764f64' ? (
+                    {v.categoryId !== defaultCategory[0].categoryId ? (
                       <ListItemSecondaryAction>
                         <IconButton
                           edge="end"
