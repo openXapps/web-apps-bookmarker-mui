@@ -10,7 +10,7 @@ import BookmarksComponent from './BookmarksComponent';
 
 // https://medium.com/swlh/taking-material-ui-for-a-spin-79ec46db72e3
 
-const ContentComponent = ({ history }) => {
+const ContentComponent = ({ history, location }) => {
 
   return (
     <Box mt={{ sm: 2 }}>
@@ -18,7 +18,7 @@ const ContentComponent = ({ history }) => {
         <Grid container>
           <Grid item xs={false} sm={3}>
             <Hidden xsDown>
-              <NavigationComponent history={history} />
+              <NavigationComponent history={history} location={location} />
             </Hidden>
           </Grid>
           <Grid item xs={12} sm={9}>

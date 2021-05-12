@@ -10,7 +10,7 @@ import { useStyles } from './NavigationStyles';
 import { getCategories } from '../../utilities/localstorage';
 import { context } from '../../context/StoreProvider';
 
-const NavigationComponent = ({ history }) => {
+const NavigationComponent = ({ history, location }) => {
   const [state, dispatch] = React.useContext(context);
   const classes = useStyles();
   const [categories, setCategories] = React.useState({ statusOK: true, data: [] });
@@ -25,15 +25,15 @@ const NavigationComponent = ({ history }) => {
     switch (event) {
       case 'Popular':
         dispatch({ type: 'NAV', payload: 0 });
-        if (history.location.pathname !== '/') history.push('/');
+        if (location.pathname !== '/') history.push('/');
         break;
       case 'Favourites':
         dispatch({ type: 'NAV', payload: 1 });
-        if (history.location.pathname !== '/favourites') history.push('/favourites');
+        if (location.pathname !== '/favourites') history.push('/favourites');
         break;
       default:
         if (i !== undefined) dispatch({ type: 'NAV', payload: i + 2 });
-        if (history.location.pathname !== '/category/:id') history.push('/category/' + e.currentTarget.dataset.catId);
+        if (location.pathname !== '/category/:id') history.push('/category/' + e.currentTarget.dataset.catId);
         break;
     }
   };
