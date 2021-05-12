@@ -39,28 +39,23 @@ const Settings = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box mt={2} />
-      <Typography
-        className={classes.pageTitle}
-        variant="h6"
-      >Application settings</Typography>
-      <Box className={classes.hGutter}></Box>
+      <Box my={2}><Typography variant="h6">Application settings</Typography></Box>
       <Paper>
-        <Box className={classes.container}>
+        <Box className={classes.fieldContainer}>
           <Typography>Dark Mode</Typography>
           <Switch
             checked={state.theme.isDark}
             onChange={handleTheme}
           />
         </Box>
-        <Box className={classes.container}>
+        <Box className={classes.fieldContainer}>
           <Typography>Confirm On Delete</Typography>
           <Switch
             checked={_confirmOnDelete}
             onChange={handleConfirmOnDelete}
           />
         </Box>
-        {/* <Box className={classes.container}>
+        {/* <Box className={classes.fieldContainer}>
           <Typography>Hide Empty Categories</Typography>
           <Switch
             checked={_hideEmptyCategories}

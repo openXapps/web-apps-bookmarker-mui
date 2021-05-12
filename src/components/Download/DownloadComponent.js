@@ -9,11 +9,11 @@ import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 
-import { useStyles } from './DownloadStyles';
+// import { useStyles } from './DownloadStyles';
 import { getDownloadableData } from '../../utilities/localstorage';
 
 const DownloadComponent = ({ history }) => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const inputRef = React.useRef(null);
   const [snackState, setSnackState] = React.useState({
     severity: 'success',
@@ -45,40 +45,43 @@ const DownloadComponent = ({ history }) => {
 
   return (
     <Container maxWidth="md">
-      <Typography variant="h6" className={classes.hGutter}>Download</Typography>
-      <Typography className={classes.hGutter}>Copy your site data in the text box below</Typography>
-      <Box className={classes.hGutter} />
-      <TextField
-        multiline
-        id="bm-site-data-download"
-        defaultValue={siteData}
-        inputRef={inputRef}
-        variant="outlined"
-        rows={15}
-        rowsMax={15}
-        fullWidth={true}
-        disabled
-      ></TextField>
+      <Box my={2}>
+        <Typography variant="h6">Download</Typography>
+      </Box>
+      <Typography>Copy your site data in the text box below</Typography>
+      <Box my={2}>
+        <TextField
+          multiline
+          id="bm-site-data-download"
+          defaultValue={siteData}
+          inputRef={inputRef}
+          variant="outlined"
+          rows={15}
+          rowsMax={15}
+          fullWidth={true}
+          disabled
+        ></TextField></Box>
       <Grid
         container
         alignItems="center"
-        className={classes.hGutter}
+        spacing={1}
         justify="space-between"
-      ><Grid item>
+      ><Grid item xs={12} sm={6}>
           <Button
             variant="outlined"
+            fullWidth
             onClick={handleDataCopy}
             disabled={isCopied}
           >{isCopied ? 'Copied' : 'Copy'}</Button>
         </Grid>
-        <Grid item>
+        <Grid item xs={12} sm={6}>
           <Button
             variant="outlined"
+            fullWidth
             onClick={() => history.goBack()}
           >Back</Button>
         </Grid>
       </Grid>
-      <div className={classes.hGutter}></div>
       <Snackbar
         anchorOrigin={{
           vertical: 'top',

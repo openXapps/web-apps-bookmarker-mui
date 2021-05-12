@@ -5,9 +5,10 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import {
-  // createMuiTheme,
+  createMuiTheme,
   // Fixes forward Ref issue - NOT FOR PRODUCTION USE
-  unstable_createMuiStrictModeTheme as createMuiTheme,
+  // https://material-ui.com/customization/theming/#unstable-createmuistrictmodetheme-options-args-theme
+  // unstable_createMuiStrictModeTheme as createMuiTheme,
 } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 
@@ -42,7 +43,7 @@ const App = () => {
         <HeaderComponent home={root} />
         <Toolbar />
         <Switch>
-          {/* home shows popular bookamrks */}
+          {/* root shows popular bookamrks */}
           <Route path="/" exact component={ContentComponent} />
           <Route path="/favourites" component={ContentComponent} />
           <Route path="/category/:id" component={ContentComponent} />
@@ -66,6 +67,8 @@ const App = () => {
 export default App;
 
 /*
+This new structure does NOT work for me. Keeping to the old
+structure.
 <Route path="/" exact     ><ContentComponent /></Route>
 <Route path="/filter/:id" ><ContentComponent /></Route>
 <Route path="/edit/:id"   ><EditorComponent /></Route>

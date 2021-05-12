@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Box from '@material-ui/core/Box';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
@@ -47,23 +48,23 @@ const Header = ({ history, home }) => {
   };
 
   return (
-    <div>
+    <>
       <AppBar position="fixed" color="inherit">
         <Container maxWidth="md" disableGutters>
-          <Toolbar disableGutters className={classes.toolboxPadding}>
-            <IconButton
-              aria-label="home button"
-              className={classes.leftButton}
-              color="inherit"
-              onClick={handleHomeButton}
-            >{history.location.pathname === home ? <HomeIcon /> : <ArrowBackIcon />}</IconButton>
+          <Toolbar disableGutters>
+            <Box mr={1}>
+              <IconButton
+                aria-label="home button"
+                color="inherit"
+                onClick={handleHomeButton}
+              >{history.location.pathname === home ? <HomeIcon /> : <ArrowBackIcon />}</IconButton></Box>
             <Typography
               className={classes.grow}
               variant="h6"
             >BookMARKER <span className={classes.appVersion}><Hidden xsDown>v{localData.settings.version}</Hidden></span>
             </Typography>
             {history.location.pathname === '/' ? (
-              <>
+              <Box>
                 <IconButton
                   color="inherit"
                   onClick={() => history.push('/new')}
@@ -93,12 +94,12 @@ const Header = ({ history, home }) => {
                   <MenuItem onClick={handleRoute} data-name='download'>Backup my Data</MenuItem>
                   <MenuItem onClick={handleRoute} data-name='upload'>Restore my Backups</MenuItem>
                 </Menu>
-              </>
+              </Box>
             ) : (null)}
           </Toolbar>
         </Container>
       </AppBar>
-    </div>
+    </>
   );
 };
 

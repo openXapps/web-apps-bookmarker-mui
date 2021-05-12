@@ -222,7 +222,7 @@ const EditorComponent = ({ history, match }) => {
     <Container maxWidth="sm">
       <Box mt={2} />
       <Typography variant="h6">{sceneText.mode[sceneIndexMode]}</Typography>
-      <Box mt={{ xs: 1, sm: 2 }} />
+      <Box my={{ xs: 1, sm: 2 }} />
       <Paper component="form" autoComplete="off">
         <Box p={2}>
           <Box mt={{ xs: 1, sm: 2 }} />

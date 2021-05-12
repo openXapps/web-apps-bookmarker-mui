@@ -69,9 +69,7 @@ const UploadComponent = ({ history }) => {
 
   return (
     <Container maxWidth="md">
-      <Box mt={2} />
-      <Typography variant="h6">Upload</Typography>
-      <Box mt={2} />
+      <Box my={2}><Typography variant="h6">Upload</Typography></Box>
       <Grid
         container
         alignItems="center"
@@ -88,20 +86,19 @@ const UploadComponent = ({ history }) => {
           >{isValid ? 'Done' : 'Validate'}</Button>
         </Grid>
       </Grid>
-      <Box mt={2} />
-      <TextField
-        multiline
-        id="bm-site-data-upload"
-        inputRef={inputRef}
-        inputProps={{ spellCheck: false }}
-        variant="outlined"
-        rows={15}
-        rowsMax={15}
-        fullWidth={true}
-        disabled={isValid}
-        error={isError}
-      ></TextField>
-      <Box mt={2} />
+      <Box my={2}>
+        <TextField
+          multiline
+          id="bm-site-data-upload"
+          inputRef={inputRef}
+          inputProps={{ spellCheck: false }}
+          variant="outlined"
+          rows={15}
+          rowsMax={15}
+          fullWidth={true}
+          disabled={isValid}
+          error={isError}
+        ></TextField></Box>
       <Grid
         container
         alignItems="center"

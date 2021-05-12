@@ -1,13 +1,7 @@
 import { makeStyles } from '@material-ui/styles';
 
 export const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: theme.spacing(5),
-  },
-  hGutter: {
-    marginTop: theme.spacing(2),
-  },
-  container: {
+  fieldContainer: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
