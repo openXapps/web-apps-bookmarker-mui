@@ -106,23 +106,27 @@ const UploadComponent = ({ history }) => {
         container
         alignItems="center"
         justify="space-between"
-      ><Grid item>
+        spacing={1}
+      ><Grid item xs={12} sm={4}>
           <Button
             variant="outlined"
+            fullWidth
             disabled={buttonState.locked}
             onClick={handleMergeData}
           >{buttonState.merge}</Button>
         </Grid>
-        <Grid item>
+        <Grid item xs={12} sm={4}>
           <Button
             variant="outlined"
+            fullWidth
             disabled={buttonState.locked}
             onClick={handleOverwriteData}
           >{buttonState.overwrite}</Button>
         </Grid>
-        <Grid item>
+        <Grid item xs={12} sm={4}>
           <Button
             variant="outlined"
+            fullWidth
             onClick={() => history.goBack()}
           >{buttonState.exit}</Button>
         </Grid>

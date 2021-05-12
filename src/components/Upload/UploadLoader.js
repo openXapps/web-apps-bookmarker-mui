@@ -7,6 +7,7 @@ export const mergeData = (data) => {
   let objs = {};
   try {
     objs = JSON.parse(data);
+    console.log('mergeData: objs...', objs);
     // saveLocalStorage('gd-bm-categories', objs.categories);
     // saveLocalStorage('gd-bm-bookmarks', objs.bookmarks);
     return true;

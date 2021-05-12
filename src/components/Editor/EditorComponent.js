@@ -234,7 +234,9 @@ const EditorComponent = ({ history, match }) => {
             onInputChange={(e, v) => handleFieldChange({ target: { name: 'categoryInputValue', value: v } })}
             // options={categories.map((option) => option.category)}
             options={categories}
-            getOptionLabel={(option) => option.category}
+            // getOptionLabel={(option) => option.category}
+            // https://github.com/mui-org/material-ui/issues/18344
+            getOptionLabel={option => typeof option === 'string' ? option : option.category}
             renderInput={(params) => (
               <TextField {...params} label="Category" variant="outlined" fullWidth />
             )}

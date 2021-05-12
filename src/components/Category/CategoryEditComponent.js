@@ -31,13 +31,11 @@ const initialFieldData = {
 };
 
 const CategoryEditComponent = ({ history, match }) => {
-  // const classes = useStyles();
-  // const categories = getCategories().statusOK ? getCategories().data : [];
   const [snackState, setSnackState] = React.useState({
     severity: 'success',
-    message: 'Category saved',
-    show: false
+    message: 'Category saved'
   });
+  const [snackShow, setSnackShow] = React.useState(false);
   const [dialogDeleteOpen, setDialogDeleteOpen] = React.useState(false);
   const [fields, setFields] = React.useState(initialFieldData);
   const [canBeSaved, setCanBeSaved] = React.useState(true);
@@ -49,7 +47,6 @@ const CategoryEditComponent = ({ history, match }) => {
     // Route should be /categories/:id
     _category = getCategoryById(match.params.id).data;
     if (Array.isArray(_category)) {
-      // console.log('Effect: _category........', _category);
       if (_category.length === 1) {
         setFields({
           ...initialFieldData,
@@ -63,47 +60,26 @@ const CategoryEditComponent = ({ history, match }) => {
     return () => true;
   }, [match.params.id]);
 
+  // Control input fields
   const handleFieldChange = ({ target: { name, value } }) => {
-    // console.log('CategoryEditComponent: on change name........', name);
-    // console.log('CategoryEditComponent: on change value.......', value);
-    // console.log('------------------------------------------------');
     setFields({
       ...fields,
       [name]: value,
     });
   };
 
+  // Save category to storage
   const handleSave = () => {
+    if (snackShow) setSnackShow(!snackShow);
     if (!fields.category) {
-      setSnackState({ severity: 'error', message: 'Category cannot be blank', show: true });
+      setSnackState({ severity: 'error', message: 'Category cannot be blank' });
+      setSnackShow(true);
+      setFields({ ...fields, category: getCategoryById(fields.categoryId).data[0].category });
       return;
     }
     updateCategory(fields);
-    setSnackState({ severity: 'success', message: 'Category saved', show: true });
-  };
-
-  const doDeleteAction = () => {
-    let counter = 0;
-    const bookmarks = getBookmarks();
-    if (bookmarks.statusOK) {
-      bookmarks.data.forEach((v) => {
-        // console.log('CategoryEditComponent: bookmark.siteName...', v.siteName);
-        counter += v.categoryId === fields.categoryId ? 1 : 0;
-      });
-      if (counter > 0) {
-        setSnackState({
-          severity: 'error',
-          message: 'Cannot delete category. First remove ' + counter + ' attached bookmark' + (counter > 1 ? 's' : ''),
-          show: true
-        });
-      } else {
-        deleteCategory(fields.categoryId);
-        setCanBeSaved(false);
-        setFields(initialFieldData);
-        setSnackState({ severity: 'success', message: 'Category deleted', show: true });
-      }
-      setCanBeDeleted(false);
-    }
+    setSnackState({ severity: 'success', message: 'Category saved' });
+    setSnackShow(true);
   };
 
   const handleDelete = () => {
@@ -122,36 +98,67 @@ const CategoryEditComponent = ({ history, match }) => {
     doDeleteAction();
   };
 
+  // Check for any attached bookmarks, then delete category
+  // else snack on an error message
+  const doDeleteAction = () => {
+    let counter = 0;
+    const bookmarks = getBookmarks();
+    if (snackShow) setSnackShow(!snackShow);
+    if (bookmarks.statusOK) {
+      bookmarks.data.forEach((v) => {
+        // console.log('CategoryEditComponent: bookmark.siteName...', v.siteName);
+        counter += v.categoryId === fields.categoryId ? 1 : 0;
+      });
+      if (counter > 0) {
+        setSnackState({
+          severity: 'error',
+          message: 'Cannot delete category. First remove ' + counter + ' attached bookmark' + (counter > 1 ? 's' : '')
+        });
+      } else {
+        deleteCategory(fields.categoryId);
+        setCanBeSaved(false);
+        setFields(initialFieldData);
+        setSnackState({ severity: 'success', message: 'Category deleted' });
+      }
+      setSnackShow(true);
+      setCanBeDeleted(false);
+    }
+  };
+
   const handleDialogDeleteClose = () => {
     setDialogDeleteOpen(false);
   };
 
-  const handleSnackState = () => {
-    setSnackState({ ...snackState, show: false });
+  const handleSnackShow = () => {
+    setSnackShow(!snackShow);
   };
 
   return (
     <Container maxWidth="sm">
-      <Box mt={2} />
-      <Typography variant="h6">Edit category</Typography>
-      <Box mt={{ xs: 1, sm: 2 }} />
+      <Box my={2}>
+        <Typography variant="h6">Edit category</Typography>
+      </Box>
       <Paper component="form" autoComplete="off">
         <Box p={2}>
-          <Box mt={{ xs: 1, sm: 2 }} />
-          <TextField
-            label="Category"
-            variant="outlined"
-            name="category"
-            value={fields.category}
-            onChange={handleFieldChange}
-            fullWidth
-          />
-          <Box mt={2} />
+          <Box my={2}>
+            <TextField
+              label="Category"
+              variant="outlined"
+              name="category"
+              value={fields.category}
+              onChange={handleFieldChange}
+              fullWidth
+            />
+          </Box>
         </Box>
       </Paper>
-      <Box my={{ xs: 1, sm: 2 }} />
-      <Grid container alignItems="center">
-        <Grid item xs={12} sm={3}>
+      <Box mt={3} />
+      <Grid
+        container
+        alignItems="center"
+        justify="space-between"
+        spacing={1}
+      ><Grid item xs={12} sm={4}>
           <Button
             variant="outlined"
             fullWidth
@@ -159,25 +166,24 @@ const CategoryEditComponent = ({ history, match }) => {
             disabled={!canBeSaved}
           >Save</Button>
         </Grid>
-        <Grid item xs={12} sm={3}>
-          <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
-            <Button
-              variant="outlined"
-              fullWidth
-              color="secondary"
-              onClick={handleDelete}
-              disabled={!canBeDeleted}
-            >Delete</Button></Box>
+        <Grid item xs={12} sm={4}>
+          <Button
+            variant="outlined"
+            fullWidth
+            color="secondary"
+            onClick={handleDelete}
+            disabled={!canBeDeleted}
+          >Delete</Button>
         </Grid>
-        <Grid item xs={12} sm={3}>
-          <Box pl={{ xs: 0, sm: 1 }} pt={{ xs: 0.5, sm: 0 }}>
-            <Button
-              variant="outlined"
-              fullWidth
-              onClick={() => history.goBack()}
-            >Back</Button></Box>
+        <Grid item xs={12} sm={4}>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={() => history.goBack()}
+          >Back</Button>
         </Grid>
-      </Grid><Dialog
+      </Grid>
+      <Dialog
         open={dialogDeleteOpen}
         onClose={handleDialogDeleteClose}
         aria-labelledby="alert-dialog-title"
@@ -199,10 +205,10 @@ const CategoryEditComponent = ({ history, match }) => {
           vertical: 'top',
           horizontal: 'center',
         }}
-        open={snackState.show}
+        open={snackShow}
         autoHideDuration={4000}
-        onClose={handleSnackState}
-      ><Alert elevation={6} onClose={handleSnackState} severity={snackState.severity}>
+        onClose={handleSnackShow}
+      ><Alert elevation={6} onClose={handleSnackShow} severity={snackState.severity}>
           {snackState.message}
         </Alert></Snackbar>
     </Container>
