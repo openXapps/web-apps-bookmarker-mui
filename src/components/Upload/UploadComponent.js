@@ -108,7 +108,8 @@ const UploadComponent = ({ history }) => {
           <Button
             variant="outlined"
             fullWidth
-            disabled={buttonState.locked}
+            // Merge option not implemented yet
+            disabled={true}
             onClick={handleMergeData}
           >{buttonState.merge}</Button>
         </Grid>
