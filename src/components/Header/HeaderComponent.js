@@ -20,7 +20,7 @@ import useStyles from './HeaderStyles';
 import { getDefaultData } from '../../utilities/defaultdata';
 import { context } from '../../context/StoreProvider';
 
-const Header = ({ history, home }) => {
+const Header = ({ history, location }) => {
   const [state, dispatch] = React.useContext(context);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -35,9 +35,11 @@ const Header = ({ history, home }) => {
   };
 
   const handleHomeButton = () => {
-    if (history.location.pathname !== home) {
-      if (state !== 0) dispatch({ type: 'NAV', payload: 0 });
-      history.push(home);
+    if (location.pathname !== '/') {
+      if (state.activeNav !== 0) dispatch({ type: 'NAV', payload: 0 });
+      history.push('/');
+    } else {
+      window.location.assign('https://www.openapps.co.za');
     }
   };
 
@@ -57,7 +59,7 @@ const Header = ({ history, home }) => {
                 aria-label="home button"
                 color="inherit"
                 onClick={handleHomeButton}
-              >{history.location.pathname === home ? <HomeIcon /> : <ArrowBackIcon />}</IconButton></Box>
+              >{history.location.pathname === '/' ? <HomeIcon /> : <ArrowBackIcon />}</IconButton></Box>
             <Typography
               className={classes.grow}
               variant="h6"

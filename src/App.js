@@ -30,17 +30,16 @@ import SettingsComponent from './components/Settings/SettingsComponent';
 import Error404Component from './components/Error/Error404Component';
 
 const App = () => {
-  // https://medium.com/@svinkle/how-to-deploy-a-react-app-to-a-subdirectory-f694d46427c1
-  // const root = '/apps/bookmarker';
-  const root = '/';
   const [state] = React.useContext(context);
   const appTheme = createMuiTheme(state.theme.isDark ? dark : light);
 
   return (
     <ThemeProvider theme={appTheme}>
       <CssBaseline />
-      <BrowserRouter basename={root}>
-        <HeaderComponent home={root} />
+      {/* https://medium.com/@svinkle/how-to-deploy-a-react-app-to-a-subdirectory-f694d46427c1 */}
+      <BrowserRouter basename={'/apps/bookmarker'}>
+        {/* <BrowserRouter basename={'/'}> */}
+        <HeaderComponent />
         <Toolbar />
         <Switch>
           {/* root shows popular bookamrks */}
