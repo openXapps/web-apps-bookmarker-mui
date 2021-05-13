@@ -37,7 +37,9 @@ const Header = ({ history, location }) => {
   const handleHomeButton = () => {
     if (location.pathname !== '/') {
       if (state.activeNav !== 0) dispatch({ type: 'NAV', payload: 0 });
-      history.push('/');
+      // Causes extra stack in history, not good for PWA
+      // history.push('/');
+      history.goBack();
     } else {
       window.location.assign('https://www.openapps.co.za');
     }
