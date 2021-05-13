@@ -39,7 +39,7 @@ const Header = ({ history, location }) => {
       if (state.activeNav !== 0) dispatch({ type: 'NAV', payload: 0 });
       // Causes extra stack in history, not good for PWA
       // history.push('/');
-      history.goBack();
+      history.replace('/');
     } else {
       window.location.assign('https://www.openapps.co.za');
     }
@@ -49,6 +49,7 @@ const Header = ({ history, location }) => {
     handleMenuClose();
     // console.log(e.currentTarget.dataset.name);
     history.push(`/${e.currentTarget.dataset.name}`);
+    // history.replace(`/${e.currentTarget.dataset.name}`);
   };
 
   return (

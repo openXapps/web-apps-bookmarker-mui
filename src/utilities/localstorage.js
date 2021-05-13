@@ -55,7 +55,7 @@ export const initialUse = () => {
 
   // Bump version if it exists and is not the latest
   if (settings.data.version && settings.data.version !== getDefaultData().settings.version) {
-    saveLocalStorage(storageObject.setting, { ...settings, version: getDefaultData().settings.version });
+    saveLocalStorage(storageObject.setting, { ...settings.data, version: getDefaultData().settings.version });
   }
 
   // No settings exist
