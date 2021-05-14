@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -59,6 +60,12 @@ const CategoryComponent = ({ history }) => {
           ) : (null)}
         </List>
       </Paper>
+      <Box mt={2} />
+      <Button
+        variant="outlined"
+        fullWidth
+        onClick={() => history.goBack()}
+      >Back</Button>
     </Container>
   );
 };

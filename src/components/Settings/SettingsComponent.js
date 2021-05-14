@@ -1,7 +1,9 @@
 import React from 'react';
+
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 
 import { context } from '../../context/StoreProvider';
@@ -10,7 +12,7 @@ import { storageObject } from '../../utilities/defaultdata';
 import { useStyles } from './SettingsStyles';
 import { Paper } from '@material-ui/core';
 
-const Settings = () => {
+const Settings = ({ history }) => {
   const classes = useStyles();
   const [state, dispatch] = React.useContext(context);
   const settings = getSettings().data;
@@ -63,6 +65,12 @@ const Settings = () => {
           />
         </Box> */}
       </Paper>
+      <Box mt={2} />
+      <Button
+        variant="outlined"
+        fullWidth
+        onClick={() => history.goBack()}
+      >Back</Button>
     </Container>
   );
 };
