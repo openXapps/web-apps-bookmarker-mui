@@ -22,44 +22,45 @@ import {
 } from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
 
-const BookmarksComponent = ({ history }) => {
+const BookmarksComponent = ({ history, location }) => {
   const theme = useTheme();
   const breakpointSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
   const { id } = useParams();
-  const [bookmarks, setBookmarks] = React.useState({ statusOK: true, data: [] });
+  const [bookmarks, setBookmarks] = React.useState({ statusOK: false, data: [] });
   const [search, setSearch] = React.useState('');
   const [showSearch, setShowSearch] = React.useState(false);
   const [reload, setReload] = React.useState(false);
 
   React.useEffect(() => {
-    const route = history.location.pathname;
-    let data = {};
-    switch (route) {
+    let result = { statusOK: false, data: [] };
+    switch (location.pathname) {
       case '/':
-        data = getPopular();
+        result = getPopular();
         setShowSearch(true);
-        if (data.statusOK) setBookmarks(data);
+        if (result.statusOK) setBookmarks(result);
         break;
       case '/favourites':
-        data = getFavourites();
+        result = getFavourites();
         setShowSearch(false);
-        if (data.statusOK) setBookmarks(data);
+        if (result.statusOK) setBookmarks(result);
         break;
       default:
-        data = getByCategory(id);
+        result = getByCategory(id);
         setShowSearch(false);
-        if (data.statusOK) setBookmarks(data);
+        if (result.statusOK) setBookmarks(result);
         break;
     }
     setSearch('');
+    // console.log('BookmarksComponent: Reload effect ran...');
 
     // Clean-up function
     return () => setReload(false);
-  }, [history.location.pathname, id, reload]);
+  }, [location.pathname, id, reload]);
 
   // Reset search on empty string
   React.useEffect(() => {
+    // console.log('BookmarksComponent: Search effect ran...');
     if (search.length === 0) setReload(true);
 
     // Clean-up function

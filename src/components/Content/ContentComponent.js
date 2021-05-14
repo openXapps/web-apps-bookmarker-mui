@@ -22,7 +22,7 @@ const ContentComponent = ({ history, location }) => {
             </Hidden>
           </Grid>
           <Grid item xs={12} sm={9}>
-            <BookmarksComponent history={history} />
+            <BookmarksComponent history={history} location={location} />
           </Grid>
         </Grid>
       </Container>
