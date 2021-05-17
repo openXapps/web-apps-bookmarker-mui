@@ -103,7 +103,7 @@ const BookmarksComponent = ({ history, location }) => {
 
   // Record last accessed bookmark
   const handleLastClicked = (e) => {
-    console.log(e.currentTarget.dataset.siteId);
+    // console.log(e.currentTarget.dataset.siteId);
     updateLastClicked(e.currentTarget.dataset.siteId);
   };
 
