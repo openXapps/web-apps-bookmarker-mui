@@ -24,4 +24,7 @@ export const useStyles = makeStyles((theme) => ({
   searchButton: {
     paddingRight: theme.spacing(2),
   },
+  favIcon: {
+    marginRight: theme.spacing(1),
+  },
 }));

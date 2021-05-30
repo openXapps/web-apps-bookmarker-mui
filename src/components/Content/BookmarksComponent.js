@@ -13,6 +13,7 @@ import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ClearIcon from '@material-ui/icons/Clear';
+import StarIcon from '@material-ui/icons/Star';
 
 import {
   updateLastClicked,
@@ -150,6 +151,9 @@ const BookmarksComponent = ({ history, location }) => {
                       primaryTypographyProps={breakpointSM ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
                       secondary={v.category ? v.category : null}
                     />
+                    {v.favourite ? (
+                      <StarIcon className={classes.favIcon} color="primary" fontSize="small" />
+                    ) : (null)}
                     <ListItemSecondaryAction>
                       <IconButton
                         edge="end"
