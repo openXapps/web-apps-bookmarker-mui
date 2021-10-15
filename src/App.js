@@ -4,12 +4,13 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 // Material UI
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
-import {
-  createMuiTheme,
+// import {
+//   createMuiTheme,
   // Fixes forward Ref issue - NOT FOR PRODUCTION USE
   // https://material-ui.com/customization/theming/#unstable-createmuistrictmodetheme-options-args-theme
   // unstable_createMuiStrictModeTheme as createMuiTheme,
-} from '@material-ui/core/styles';
+// } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 
 // App assets
@@ -31,7 +32,7 @@ import Error404Component from './components/Error/Error404Component';
 
 const App = () => {
   const [state] = React.useContext(context);
-  const appTheme = createMuiTheme(state.theme.isDark ? dark : light);
+  const appTheme = createTheme(state.theme.isDark ? dark : light);
 
   return (
     <ThemeProvider theme={appTheme}>
@@ -66,8 +67,7 @@ const App = () => {
 export default App;
 
 /*
-This new structure does NOT work for me. Keeping to the old
-structure.
+This new structure does NOT work for me. Keeping to the old structure.
 <Route path="/" exact     ><ContentComponent /></Route>
 <Route path="/filter/:id" ><ContentComponent /></Route>
 <Route path="/edit/:id"   ><EditorComponent /></Route>

@@ -11,7 +11,6 @@
 # production
 package-lock.json
 /build
-/sandbox
 .~*
 
 # misc
