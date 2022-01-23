@@ -12,7 +12,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import ClearIcon from '@material-ui/icons/Clear';
+import SearchIcon from '@material-ui/icons/Search';
 import StarIcon from '@material-ui/icons/Star';
 
 import {
@@ -90,12 +90,6 @@ const BookmarksComponent = ({ history, location }) => {
     }
   };
 
-  // Clear the search field and reload bookmarks
-  const handleSearchClear = () => {
-    setSearch('');
-    setReload(true);
-  };
-
   // Route to bookmark editor
   const handleEdit = (e) => {
     const siteId = e.currentTarget.dataset.siteId;
@@ -113,7 +107,7 @@ const BookmarksComponent = ({ history, location }) => {
       <Hidden smDown>
         {showSearch ? (
           <form onSubmit={doSearch} noValidate autoComplete="off">
-            <Box className={classes.searchContainer}>
+            <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
               <InputBase
                 className={classes.searchField}
                 placeholder="Search..."
@@ -122,10 +116,9 @@ const BookmarksComponent = ({ history, location }) => {
                 inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
               />
               <IconButton
-                className={classes.searchButton}
-                aria-label="clear search"
-                onClick={handleSearchClear}
-              ><ClearIcon /></IconButton>
+                type="submit"
+                aria-label="search"
+              ><SearchIcon /></IconButton>
             </Box>
           </form>
         ) : (null)}

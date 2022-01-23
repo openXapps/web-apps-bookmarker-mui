@@ -12,17 +12,8 @@ export const useStyles = makeStyles((theme) => ({
       fontSize: 10,
     },
   },
-  searchContainer: {
-    display: 'flex',
-    flexWrap: 'nowrap',
-    alignItems: 'center',
-    marginLeft: theme.spacing(2),
-  },
   searchField: {
     flexGrow: 1,
-  },
-  searchButton: {
-    paddingRight: theme.spacing(2),
   },
   favIcon: {
     marginRight: theme.spacing(1),
