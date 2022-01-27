@@ -1,19 +1,19 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Hidden from '@material-ui/core/Hidden';
-import Box from '@material-ui/core/Box';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import SearchIcon from '@material-ui/icons/Search';
-import StarIcon from '@material-ui/icons/Star';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Hidden from '@mui/material/Hidden';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import InputBase from '@mui/material/InputBase';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SearchIcon from '@mui/icons-material/Search';
+import StarIcon from '@mui/icons-material/Star';
 
 import {
   updateLastClicked,
@@ -23,19 +23,21 @@ import {
 } from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
 
-const BookmarksComponent = ({ history, location }) => {
+const BookmarksComponent = () => {
   const theme = useTheme();
   const breakpointSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
-  const { id } = useParams();
-  const [bookmarks, setBookmarks] = React.useState({ statusOK: false, data: [] });
-  const [search, setSearch] = React.useState('');
-  const [showSearch, setShowSearch] = React.useState(false);
-  const [reload, setReload] = React.useState(false);
+  const rrParams = useParams();
+  const rrLocation = useLocation();
+  const rrNavigate = useNavigate();
+  const [bookmarks, setBookmarks] = useState({ statusOK: false, data: [] });
+  const [search, setSearch] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const [reload, setReload] = useState(false);
 
-  React.useEffect(() => {
+  const memorizedContent = useCallback(() => {
     let result = { statusOK: false, data: [] };
-    switch (location.pathname) {
+    switch (rrLocation.pathname) {
       case '/':
         result = getPopular();
         setShowSearch(true);
@@ -47,20 +49,43 @@ const BookmarksComponent = ({ history, location }) => {
         if (result.statusOK) setBookmarks(result);
         break;
       default:
-        result = getByCategory(id);
+        result = getByCategory(rrParams.id);
         setShowSearch(false);
         if (result.statusOK) setBookmarks(result);
         break;
     }
     setSearch('');
+  }, [rrLocation.pathname, rrParams.id]);
+
+  useEffect(() => {
+    // let result = { statusOK: false, data: [] };
+    // switch (rrLocation.pathname) {
+    //   case '/':
+    //     result = getPopular();
+    //     setShowSearch(true);
+    //     if (result.statusOK) setBookmarks(result);
+    //     break;
+    //   case '/favourites':
+    //     result = getFavourites();
+    //     setShowSearch(false);
+    //     if (result.statusOK) setBookmarks(result);
+    //     break;
+    //   default:
+    //     result = getByCategory(rrParams.id);
+    //     setShowSearch(false);
+    //     if (result.statusOK) setBookmarks(result);
+    //     break;
+    // }
+    // setSearch('');
     // console.log('BookmarksComponent: Reload effect ran...');
+    memorizedContent();
 
     // Clean-up function
     return () => setReload(false);
-  }, [location.pathname, id, reload]);
+  }, [memorizedContent, reload]);
 
   // Reset search on empty string
-  React.useEffect(() => {
+  useEffect(() => {
     // console.log('BookmarksComponent: Search effect ran...');
     if (search.length === 0) setReload(true);
 
@@ -93,7 +118,7 @@ const BookmarksComponent = ({ history, location }) => {
   // Route to bookmark editor
   const handleEdit = (e) => {
     const siteId = e.currentTarget.dataset.siteId;
-    history.push('/edit/' + siteId);
+    rrNavigate('/edit/' + siteId);
   };
 
   // Record last accessed bookmark

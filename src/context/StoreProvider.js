@@ -7,18 +7,20 @@ import {
 
 /**
  * Initial state
- * Loads default site data if first use
+ * Loads default site data on first use
  */
 initialUse();
-const data = {
+
+// Initialize context data
+const contextData = {
   theme: getSettings().data.theme,
   activeNav: 0
 };
 
-export const context = React.createContext(data);
+export const context = React.createContext(contextData);
 
 const StoreProvider = (props) => {
-  const [state, dispatch] = React.useReducer(StoreReducer, data);
+  const [state, dispatch] = React.useReducer(StoreReducer, contextData);
   return (
     <context.Provider value={[state, dispatch]}>
       {props.children}

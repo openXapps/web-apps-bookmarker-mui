@@ -29,7 +29,7 @@ export const validateForm = (fields) => {
   // Continue if still valid
   if (validation.status) {
     // Validate site URL
-    const rx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/i;
+    const rx = /(https?:\/\/){1}([a-z0-9._]{0,256}){1}(:[0-9]{4})?([/?a-zA-Z0-9$( )\-_.,=@&%'"]){0,1024}/g;
     if (!fields.siteURL) validation = { status: false, message: 'Missing site URL' };
     if (fields.siteURL && !rx.test(fields.siteURL)) validation = { status: false, message: 'Site URL invalid' };
   }

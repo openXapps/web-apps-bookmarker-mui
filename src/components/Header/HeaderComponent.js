@@ -1,29 +1,31 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Box from '@material-ui/core/Box';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import IconButton from '@material-ui/core/IconButton';
-import HomeIcon from '@material-ui/icons/Home';
-import MenuIcon from '@material-ui/icons/Menu';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import SettingsIcon from '@material-ui/icons/Settings';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import Hidden from '@material-ui/core/Hidden';
-import Container from '@material-ui/core/Container';
+import Typography from '@mui/material/Typography';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import IconButton from '@mui/material/IconButton';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Hidden from '@mui/material/Hidden';
+import Container from '@mui/material/Container';
 
 import useStyles from './HeaderStyles';
 import { getDefaultData } from '../../utilities/defaultdata';
 import { context } from '../../context/StoreProvider';
 
-const Header = ({ history, location }) => {
-  const [state, dispatch] = React.useContext(context);
+const Header = () => {
+  const [state, dispatch] = useContext(context);
+  const navigate = useNavigate();
+  const rrLocation = useLocation();
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const localData = getDefaultData();
 
   const handleMenuToggle = (e) => {
@@ -35,11 +37,11 @@ const Header = ({ history, location }) => {
   };
 
   const handleHomeButton = () => {
-    if (location.pathname !== '/') {
+    if (rrLocation.pathname !== '/') {
       if (state.activeNav !== 0) dispatch({ type: 'NAV', payload: 0 });
       // Causes extra stack in history, not good for PWA
-      // history.push('/');
-      history.replace('/');
+      // navigate('/');
+      navigate('/', {replace: true});
     } else {
       window.location.assign('https://www.openapps.co.za');
     }
@@ -48,8 +50,8 @@ const Header = ({ history, location }) => {
   const handleRoute = (e) => {
     handleMenuClose();
     // console.log(e.currentTarget.dataset.name);
-    history.push(`/${e.currentTarget.dataset.name}`);
-    // history.replace(`/${e.currentTarget.dataset.name}`);
+    navigate(`/${e.currentTarget.dataset.name}`);
+    // navigate(`/${e.currentTarget.dataset.name}`, {replace: true});
   };
 
   return (
@@ -61,21 +63,21 @@ const Header = ({ history, location }) => {
               aria-label="home button"
               color="inherit"
               onClick={handleHomeButton}
-            >{history.location.pathname === '/' ? <HomeIcon /> : <ArrowBackIcon />}</IconButton></Box>
+            >{rrLocation.pathname === '/' ? <HomeIcon /> : <ArrowBackIcon />}</IconButton></Box>
           <Typography
             className={classes.grow}
             variant="h6"
           >BookMARKER <span className={classes.appVersion}><Hidden xsDown>v{localData.settings.version}</Hidden></span>
           </Typography>
-          {history.location.pathname === '/' ? (
+          {rrLocation.pathname === '/' ? (
             <Box>
               <IconButton
                 color="inherit"
-                onClick={() => history.push('/new')}
+                onClick={() => navigate('/new')}
               ><AddCircleIcon /></IconButton>
               <IconButton
                 color="inherit"
-                onClick={() => history.push('/settings')}
+                onClick={() => navigate('/settings')}
               ><SettingsIcon /></IconButton>
               <IconButton
                 color="inherit"
@@ -86,7 +88,6 @@ const Header = ({ history, location }) => {
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
-                getContentAnchorEl={null}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}
                 transformOrigin={{ vertical: 'top', horizontal: 'right', }}
                 keepMounted
@@ -106,4 +107,4 @@ const Header = ({ history, location }) => {
   );
 };
 
-export default withRouter(Header);
+export default Header;

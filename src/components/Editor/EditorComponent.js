@@ -1,21 +1,22 @@
-import React from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Switch from '@material-ui/core/Switch';
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import Switch from '@mui/material/Switch';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 import useStyles from './EditorStyles';
 import { validateForm, saveBookmark } from './EditorUtils';
@@ -42,29 +43,30 @@ const sceneText = {
   save: ['Update', 'Save New'],
 };
 
-const EditorComponent = ({ history, match }) => {
+const EditorComponent = () => {
   const classes = useStyles();
+  const rrNavigate = useNavigate();
+  const rrLocation = useLocation();
+  const rrParams = useParams();
   const categories = getCategories().statusOK ? getCategories().data : defaultCategory;
-  const [snackState, setSnackState] = React.useState({
+  const [snackState, setSnackState] = useState({
     severity: 'success',
     message: 'Bookmark saved',
     show: false
   });
-  const [dialogDeleteOpen, setDialogDeleteOpen] = React.useState(false);
-  const [fields, setFields] = React.useState(initialFieldData);
-  const [sceneIndexMode, setSceneIndexMode] = React.useState(0);
-  const [sceneIndexSave, setSceneIndexSave] = React.useState(0);
-  const [canBeSavedAs, setCanBeSavedAs] = React.useState(false);
-  const [canBeDeleted, setCanBeDeleted] = React.useState(false);
+  const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
+  const [fields, setFields] = useState(initialFieldData);
+  const [sceneIndexMode, setSceneIndexMode] = useState(0);
+  const [sceneIndexSave, setSceneIndexSave] = useState(0);
+  const [canBeSavedAs, setCanBeSavedAs] = useState(false);
+  const [canBeDeleted, setCanBeDeleted] = useState(false);
 
-  // Initial effect when component renders based on router match
-  React.useEffect(() => {
-    const route = match.path;
-    const id = match.params.id ? match.params.id : '';
+  // Trying to optimize the component so it doesn't re-render ... WTF not working!
+  const memorizedPath = useCallback(() => {
     let bookmark = [];
-    switch (route) {
-      case '/edit/:id':
-        bookmark = getBookmarkById(id).data;
+    switch (rrLocation.pathname) {
+      case '/edit/' + rrParams.id:
+        bookmark = getBookmarkById(rrParams.id).data;
         if (Array.isArray(bookmark)) {
           if (bookmark.length === 1) {
             setFields({
@@ -91,10 +93,15 @@ const EditorComponent = ({ history, match }) => {
       default:
         break;
     }
+  }, [rrLocation.pathname, rrParams.id]);
+
+  // Initial effect when component renders based on router match
+  useEffect(() => {
+    memorizedPath();
 
     // Effect clean-up function
     return () => true;
-  }, [match.path, match.params]);
+  }, [memorizedPath]);
 
   const handleFieldChange = ({ target: { name, value } }) => {
     // console.log('Edit: on change name........', name);
@@ -209,8 +216,9 @@ const EditorComponent = ({ history, match }) => {
   };
 
   // console.log('Edit: JUST BEFORE RENDER...');
-  // console.log('Edit: history...............', history);
-  // console.log('Edit: match.................', match);
+  // console.log('Edit: path..................', path);
+  // console.log('Edit: rrLocation............', rrLocation);
+  // console.log('Edit: rrParams..............', rrParams);
   // console.log('Edit: fields................', fields);
   // console.log('Edit: categoryInputValue....', fields.categoryInputValue);
   // console.log('Edit: categoryValue.........', fields.categoryValue);
@@ -303,7 +311,7 @@ const EditorComponent = ({ history, match }) => {
             <Button
               variant="outlined"
               fullWidth
-              onClick={() => history.goBack()}
+              onClick={() => rrNavigate(-1)}
             >Back</Button></Box>
         </Grid>
       </Grid>

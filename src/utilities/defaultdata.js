@@ -25,7 +25,8 @@ export const getDefaultData = () => {
   const response = {
     // gd-bm-settings
     settings: {
-      version: '0.3.2',
+      version: '0.4.0',
+      // version: '0.3.2',
       theme: {
         isDark: false,
         template: 'light'

@@ -1,21 +1,24 @@
-import React from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
+import Paper from '@mui/material/Paper';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
 
 import { useStyles } from './NavigationStyles';
 import { getCategories } from '../../utilities/localstorage';
 import { context } from '../../context/StoreProvider';
 
-const NavigationComponent = ({ history, location }) => {
-  const [state, dispatch] = React.useContext(context);
+const NavigationComponent = () => {
+  const [state, dispatch] = useContext(context);
   const classes = useStyles();
-  const [categories, setCategories] = React.useState({ statusOK: true, data: [] });
+  const rrLocation = useLocation();
+  const rrNavigate = useNavigate();
+  const [categories, setCategories] = useState({ statusOK: true, data: [] });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCategories(getCategories());
     return () => true;
   }, []);
@@ -25,15 +28,15 @@ const NavigationComponent = ({ history, location }) => {
     switch (event) {
       case 'Popular':
         dispatch({ type: 'NAV', payload: 0 });
-        if (location.pathname !== '/') history.push('/');
+        if (rrLocation.pathname !== '/') rrNavigate('/');
         break;
       case 'Favourites':
         dispatch({ type: 'NAV', payload: 1 });
-        if (location.pathname !== '/favourites') history.push('/favourites');
+        if (rrLocation.pathname !== '/favourites') rrNavigate('/favourites');
         break;
       default:
         if (i !== undefined) dispatch({ type: 'NAV', payload: i + 2 });
-        if (location.pathname !== '/category/:id') history.push('/category/' + e.currentTarget.dataset.catId);
+        if (rrLocation.pathname !== '/category/:id') rrNavigate('/category/' + e.currentTarget.dataset.catId);
         break;
     }
   };

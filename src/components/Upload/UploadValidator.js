@@ -7,13 +7,14 @@ export const validator = (data) => {
   let obj = {};
 
   try {
+    if (!data) throw new Error('Nothing to validate');
     obj = JSON.parse(data);
     if (!obj.categories) throw new Error('Missing categories');
     if (!Array.isArray(obj.categories)) throw new Error('Categories not an array');
     if (!obj.bookmarks) throw new Error('Missing bookmarks');
     if (!Array.isArray(obj.bookmarks)) throw new Error('Bookmarks not an array');
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     results = { hasError: true, message: error };
   }
 

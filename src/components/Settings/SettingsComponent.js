@@ -1,23 +1,25 @@
-import React from 'react';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import Switch from '@material-ui/core/Switch';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
+import Switch from '@mui/material/Switch';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
 
 import { context } from '../../context/StoreProvider';
 import { saveLocalStorage, getSettings } from '../../utilities/localstorage';
 import { storageObject } from '../../utilities/defaultdata';
 import { useStyles } from './SettingsStyles';
-import { Paper } from '@material-ui/core';
 
-const Settings = ({ history }) => {
+const Settings = () => {
   const classes = useStyles();
-  const [state, dispatch] = React.useContext(context);
+  const rrNavigate = useNavigate();
+  const [state, dispatch] = useContext(context);
   const settings = getSettings().data;
-  const [_confirmOnDelete, setConfirmOnDelete] = React.useState(settings.confirmOnDelete);
-  // const [_hideEmptyCategories, setHideEmptyCategories] = React.useState(settings.hideEmptyCategories);
+  const [_confirmOnDelete, setConfirmOnDelete] = useState(settings.confirmOnDelete);
+  // const [_hideEmptyCategories, setHideEmptyCategories] = useState(settings.hideEmptyCategories);
 
   // Managed by state and persistence
   const handleTheme = () => {
@@ -69,7 +71,7 @@ const Settings = ({ history }) => {
       <Button
         variant="outlined"
         fullWidth
-        onClick={() => history.goBack()}
+        onClick={() => rrNavigate(-1)}
       >Back</Button>
     </Container>
   );
