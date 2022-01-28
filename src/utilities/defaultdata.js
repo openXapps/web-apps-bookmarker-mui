@@ -25,6 +25,7 @@ export const getDefaultData = () => {
   const response = {
     // gd-bm-settings
     settings: {
+      // Remember to update package.json too
       version: '0.4.0',
       // version: '0.3.2',
       theme: {
@@ -33,6 +34,12 @@ export const getDefaultData = () => {
       },
       confirmOnDelete: true,
       // hideEmptyCategories: false,
+    },
+
+    // Navigator bar defaults
+    navState: {
+      activeNav: -1,
+      categoryId: ''
     },
 
     // gd-bm-categories

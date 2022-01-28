@@ -15,7 +15,8 @@ const StoreReducer = (state, action) => {
     case 'NAV':
       return {
         ...state,
-        activeNav: action.payload
+        navState: action.payload
+        // activeNav: action.payload
       };
     default:
       throw new Error(`Reducer action type not defined: ${action.type}`);

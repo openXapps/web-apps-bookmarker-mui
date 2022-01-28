@@ -52,9 +52,9 @@ const App = () => {
           {/* root shows popular bookamrks */}
           <Route path="/" exact element={<ContentComponent />} />
           {/* Perhaps add a filter route here and wrap it arounf the next three routes */}
-          <Route path="/favourites" element={<ContentComponent />} />
+          {/* <Route path="/favourites" element={<ContentComponent />} />
           <Route path="/category/:id" element={<ContentComponent />} />
-          <Route path="/search/:name" exact element={<ContentComponent />} />
+          <Route path="/search/:name" exact element={<ContentComponent />} /> */}
           {/* Perhaps add a editor route here and wrap it arounf the next two routes */}
           <Route path="/new" element={<EditorComponent />} />
           <Route path="/edit/:id" element={<EditorComponent />} />

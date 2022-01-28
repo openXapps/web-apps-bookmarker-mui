@@ -236,6 +236,59 @@ export const getSettings = () => {
 };
 
 /**
+ * Get FILTERED BOOKMARKS from local storage
+ * @returns Returns an object {statusOk: boolean, data: any}
+ */
+// {
+//   "activeNav": 0,
+//   "categoryId": "037cf222-887b-11e9-bc42-526af7764f64"
+// }
+export const filteredBookmarks = (filter) => {
+  let response = { statusOK: false, data: [] };
+  let result = [];
+  const { activeNav, categoryId } = filter;
+  // console.log('filteredBookmarks: filter...', activeNav, categoryId);
+  try {
+    const data = JSON.parse(localStorage.getItem(storageObject.bookmark));
+    if (data) {
+      if (activeNav === -1) {
+        result = data.map((v) => {
+          return { ...v, category: getCategoryById(v.categoryId).data[0].category };
+        });
+        response = {
+          statusOK: true,
+          data: result.sort((a, b) => (a.lastUsed < b.lastUsed) ? 1 : -1)
+        };
+      }
+      if (activeNav === -2) {
+        result = data.filter((v) => v.favourite);
+        result = result.map((v) => {
+          return { ...v, category: getCategoryById(v.categoryId).data[0].category };
+        });
+        response = {
+          statusOK: true,
+          data: result.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
+        };
+      }
+      if (activeNav > -1 && categoryId) {
+        result = data.filter((v) => v.categoryId === categoryId);
+        response = {
+          statusOK: true,
+          data: result.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
+        };
+      }
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    // console.log(err);
+  }
+  // console.log('filteredBookmarks: response...', response);
+  return response;
+};
+
+/**
  * Get FAVOURITES from local storage
  * @returns Returns an object {statusOk: boolean, data: any}
  */

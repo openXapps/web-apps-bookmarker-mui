@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -15,83 +15,30 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SearchIcon from '@mui/icons-material/Search';
 import StarIcon from '@mui/icons-material/Star';
 
-import {
-  updateLastClicked,
-  getPopular,
-  getByCategory,
-  getFavourites,
-} from '../../utilities/localstorage';
+import { updateLastClicked, filteredBookmarks } from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
+import { context } from '../../context/StoreProvider';
 
 const BookmarksComponent = () => {
+  const [state,] = useContext(context);
   const theme = useTheme();
   const breakpointSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
-  const rrParams = useParams();
-  const rrLocation = useLocation();
   const rrNavigate = useNavigate();
   const [bookmarks, setBookmarks] = useState({ statusOK: false, data: [] });
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
-  const [reload, setReload] = useState(false);
 
-  const memorizedContent = useCallback(() => {
-    let result = { statusOK: false, data: [] };
-    switch (rrLocation.pathname) {
-      case '/':
-        result = getPopular();
-        setShowSearch(true);
-        if (result.statusOK) setBookmarks(result);
-        break;
-      case '/favourites':
-        result = getFavourites();
-        setShowSearch(false);
-        if (result.statusOK) setBookmarks(result);
-        break;
-      default:
-        result = getByCategory(rrParams.id);
-        setShowSearch(false);
-        if (result.statusOK) setBookmarks(result);
-        break;
-    }
-    setSearch('');
-  }, [rrLocation.pathname, rrParams.id]);
+  // console.log('BookmarksComponent: Rendering...');
 
   useEffect(() => {
-    // let result = { statusOK: false, data: [] };
-    // switch (rrLocation.pathname) {
-    //   case '/':
-    //     result = getPopular();
-    //     setShowSearch(true);
-    //     if (result.statusOK) setBookmarks(result);
-    //     break;
-    //   case '/favourites':
-    //     result = getFavourites();
-    //     setShowSearch(false);
-    //     if (result.statusOK) setBookmarks(result);
-    //     break;
-    //   default:
-    //     result = getByCategory(rrParams.id);
-    //     setShowSearch(false);
-    //     if (result.statusOK) setBookmarks(result);
-    //     break;
-    // }
-    // setSearch('');
-    // console.log('BookmarksComponent: Reload effect ran...');
-    memorizedContent();
-
-    // Clean-up function
-    return () => setReload(false);
-  }, [memorizedContent, reload]);
-
-  // Reset search on empty string
-  useEffect(() => {
-    // console.log('BookmarksComponent: Search effect ran...');
-    if (search.length === 0) setReload(true);
+    // console.log('BookmarksComponent: State effect ran...');
+    setBookmarks(filteredBookmarks(state.navState));
+    setShowSearch(state.navState.activeNav === -1);
 
     // Clean-up function
     return () => true;
-  }, [search]);
+  }, [state.navState]);
 
   // Handle search field persistence
   const handleSearch = (e) => {
@@ -111,19 +58,17 @@ const BookmarksComponent = () => {
       });
       if (data.length > 0) setBookmarks({ ...bookmarks, data: data });
     } else {
-      setReload(true);
+      setBookmarks(filteredBookmarks(state.navState));
     }
   };
 
   // Route to bookmark editor
   const handleEdit = (e) => {
-    const siteId = e.currentTarget.dataset.siteId;
-    rrNavigate('/edit/' + siteId);
+    rrNavigate('/edit/' + e.currentTarget.dataset.siteId);
   };
 
-  // Record last accessed bookmark
+  // Set last accessed bookmark
   const handleLastClicked = (e) => {
-    // console.log(e.currentTarget.dataset.siteId);
     updateLastClicked(e.currentTarget.dataset.siteId);
   };
 

@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,7 +14,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import Hidden from '@mui/material/Hidden';
 import Container from '@mui/material/Container';
 
 import useStyles from './HeaderStyles';
@@ -22,11 +22,14 @@ import { context } from '../../context/StoreProvider';
 
 const Header = () => {
   const [state, dispatch] = useContext(context);
+  const hidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   const rrLocation = useLocation();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const localData = getDefaultData();
+
+  // console.log('HeaderComponent: Rendering...');
 
   const handleMenuToggle = (e) => {
     setAnchorEl(e.currentTarget);
@@ -39,9 +42,7 @@ const Header = () => {
   const handleHomeButton = () => {
     if (rrLocation.pathname !== '/') {
       if (state.activeNav !== 0) dispatch({ type: 'NAV', payload: 0 });
-      // Causes extra stack in history, not good for PWA
-      // navigate('/');
-      navigate('/', {replace: true});
+      navigate('/', { replace: true });
     } else {
       window.location.assign('https://www.openapps.co.za');
     }
@@ -67,7 +68,9 @@ const Header = () => {
           <Typography
             className={classes.grow}
             variant="h6"
-          >BookMARKER <span className={classes.appVersion}><Hidden xsDown>v{localData.settings.version}</Hidden></span>
+          >BookMARKER {hidden ? null : (
+            <span className={classes.appVersion}>v{localData.settings.version}</span>
+          )}
           </Typography>
           {rrLocation.pathname === '/' ? (
             <Box>

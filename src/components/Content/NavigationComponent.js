@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 import Paper from '@mui/material/Paper';
 import List from '@mui/material/List';
@@ -14,42 +13,46 @@ import { context } from '../../context/StoreProvider';
 const NavigationComponent = () => {
   const [state, dispatch] = useContext(context);
   const classes = useStyles();
-  const rrLocation = useLocation();
-  const rrNavigate = useNavigate();
   const [categories, setCategories] = useState({ statusOK: true, data: [] });
+
+  // console.log('NavigationComponent: Rendering...');
 
   useEffect(() => {
     setCategories(getCategories());
+
     return () => true;
   }, []);
 
-  const handleNav = (e, i) => {
-    const event = e.currentTarget.innerText;
-    switch (event) {
-      case 'Popular':
-        dispatch({ type: 'NAV', payload: 0 });
-        if (rrLocation.pathname !== '/') rrNavigate('/');
-        break;
-      case 'Favourites':
-        dispatch({ type: 'NAV', payload: 1 });
-        if (rrLocation.pathname !== '/favourites') rrNavigate('/favourites');
-        break;
-      default:
-        if (i !== undefined) dispatch({ type: 'NAV', payload: i + 2 });
-        if (rrLocation.pathname !== '/category/:id') rrNavigate('/category/' + e.currentTarget.dataset.catId);
-        break;
-    }
+  const handleNav = (e, index) => {
+    // console.log('NavigationComponent: menu........', e.currentTarget.innerText);
+    // console.log('NavigationComponent: index.......', index);
+    // console.log('NavigationComponent: categoryId..', e.currentTarget.dataset.catId);
+    dispatch({ type: 'NAV', payload: {
+      menu: e.currentTarget.innerText,
+      activeNav: index,
+      categoryId: e.currentTarget.dataset.catId
+    } });
   };
+
+  // console.log('NavigationComponent: state.navState.....', state.navState);
 
   return (
     <Paper>
       <List disablePadding>
-        <ListItem button disableGutters onClick={handleNav} selected={state.activeNav === 0}>
-          <ListItemText primary="Popular" className={classes.listItemText} />
-        </ListItem>
-        <ListItem button disableGutters onClick={handleNav} selected={state.activeNav === 1}>
-          <ListItemText primary="Favourites" className={classes.listItemText} />
-        </ListItem>
+        <ListItem
+          button
+          disableGutters
+          data-cat-id=""
+          onClick={(e) => handleNav(e, -1)}
+          selected={state.navState.activeNav === -1}
+        ><ListItemText primary="Popular" className={classes.listItemText} /></ListItem>
+        <ListItem
+          button
+          disableGutters
+          data-cat-id=""
+          onClick={(e) => handleNav(e, -2)}
+          selected={state.navState.activeNav === -2}
+        ><ListItemText primary="Favourites" className={classes.listItemText} /></ListItem>
         <Divider />
         {categories.statusOK ? (
           categories.data.map((v, i) => {
@@ -60,7 +63,7 @@ const NavigationComponent = () => {
                   disableGutters
                   data-cat-id={v.categoryId}
                   onClick={(e) => handleNav(e, i)}
-                  selected={state.activeNav === (i + 2)}
+                  selected={state.navState.activeNav === (i)}
                 ><ListItemText primary={v.category} className={classes.listItemText} /></ListItem>
               </div>
             );
