@@ -1,4 +1,5 @@
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
@@ -9,15 +10,16 @@ import BookmarksComponent from './BookmarksComponent';
 // https://medium.com/swlh/taking-material-ui-for-a-spin-79ec46db72e3
 
 const ContentComponent = () => {
-  const hidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
+  const smallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
   // console.log('ContentComponent: Rendering...');
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" disableGutters>
+      <Toolbar disableGutters/>
       <Box mt={{ sm: 2 }}>
         <Grid container>
-          {hidden ? null : (
+          {smallScreen ? null : (
             <Grid item xs={false} sm={3}>
               <NavigationComponent />
             </Grid>

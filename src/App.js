@@ -11,7 +11,6 @@ import { ThemeProvider } from '@mui/material/styles';
 // unstable_createMuiStrictModeTheme as createMuiTheme,
 // } from '@material-ui/core/styles';
 import { createTheme } from '@mui/material/styles';
-import Toolbar from '@mui/material/Toolbar';
 
 // App assets
 import { context } from './context/StoreProvider';
@@ -47,7 +46,6 @@ const App = () => {
       {/* https://medium.com/@svinkle/how-to-deploy-a-react-app-to-a-subdirectory-f694d46427c1 */}
       <BrowserRouter basename={home}>
         <HeaderComponent />
-        <Toolbar />
         <Routes>
           {/* root shows popular bookamrks */}
           <Route path="/" exact element={<ContentComponent />} />

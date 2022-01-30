@@ -22,7 +22,7 @@ import { context } from '../../context/StoreProvider';
 
 const Header = () => {
   const [state, dispatch] = useContext(context);
-  const hidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
+  const smallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   const rrLocation = useLocation();
   const classes = useStyles();
@@ -56,7 +56,7 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="fixed" color="inherit">
+    <AppBar color="inherit">
       <Container maxWidth="md" disableGutters>
         <Toolbar disableGutters>
           <Box mr={1}>
@@ -68,7 +68,7 @@ const Header = () => {
           <Typography
             className={classes.grow}
             variant="h6"
-          >BookMARKER {hidden ? null : (
+          >BookMARKER {smallScreen ? null : (
             <span className={classes.appVersion}>v{localData.settings.version}</span>
           )}
           </Typography>
@@ -83,6 +83,7 @@ const Header = () => {
                 onClick={() => navigate('/settings')}
               ><SettingsIcon /></IconButton>
               <IconButton
+                sx={smallScreen && { mr: 0.5 }}
                 color="inherit"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"

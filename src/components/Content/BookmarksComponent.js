@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Hidden from '@mui/material/Hidden';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -22,7 +21,7 @@ import { context } from '../../context/StoreProvider';
 const BookmarksComponent = () => {
   const [state,] = useContext(context);
   const theme = useTheme();
-  const breakpointSM = useMediaQuery(theme.breakpoints.down('sm'));
+  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
   const rrNavigate = useNavigate();
   const [bookmarks, setBookmarks] = useState({ statusOK: false, data: [] });
@@ -74,25 +73,23 @@ const BookmarksComponent = () => {
 
   return (
     <Box>
-      <Hidden smDown>
-        {showSearch ? (
-          <form onSubmit={doSearch} noValidate autoComplete="off">
-            <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
-              <InputBase
-                className={classes.searchField}
-                placeholder="Search..."
-                value={search}
-                onChange={handleSearch}
-                inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
-              />
-              <IconButton
-                type="submit"
-                aria-label="search"
-              ><SearchIcon /></IconButton>
-            </Box>
-          </form>
-        ) : (null)}
-      </Hidden>
+      {!smallScreen && showSearch ? (
+        <form onSubmit={doSearch} noValidate autoComplete="off">
+          <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
+            <InputBase
+              className={classes.searchField}
+              placeholder="Search..."
+              value={search}
+              onChange={handleSearch}
+              inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
+            />
+            <IconButton
+              type="submit"
+              aria-label="search"
+            ><SearchIcon /></IconButton>
+          </Box>
+        </form>
+      ) : (null)}
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
           {bookmarks.statusOK ? (
@@ -111,7 +108,7 @@ const BookmarksComponent = () => {
                     <ListItemText
                       className={classes.bookmarkText}
                       primary={v.siteName}
-                      primaryTypographyProps={breakpointSM ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
+                      primaryTypographyProps={smallScreen ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
                       secondary={v.category ? v.category : null}
                     />
                     {v.favourite ? (
@@ -119,7 +116,7 @@ const BookmarksComponent = () => {
                     ) : (null)}
                     <ListItemSecondaryAction>
                       <IconButton
-                        edge="end"
+                        // edge="end"
                         data-site-id={v.siteId}
                         onClick={handleEdit}
                       ><MoreVertIcon /></IconButton>

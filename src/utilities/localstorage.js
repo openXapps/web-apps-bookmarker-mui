@@ -284,7 +284,7 @@ export const filteredBookmarks = (filter) => {
     // Life goes on ...
     // console.log(err);
   }
-  // console.log('filteredBookmarks: response...', response);
+  console.log('filteredBookmarks: response...', response);
   return response;
 };
 
