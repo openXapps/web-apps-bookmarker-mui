@@ -14,7 +14,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SearchIcon from '@mui/icons-material/Search';
 import StarIcon from '@mui/icons-material/Star';
 
-import { updateLastClicked, filteredBookmarks } from '../../utilities/localstorage';
+import { updateLastClicked, filterBookmarks } from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
 import { context } from '../../context/StoreProvider';
 
@@ -24,45 +24,47 @@ const BookmarksComponent = () => {
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
   const rrNavigate = useNavigate();
-  const [bookmarks, setBookmarks] = useState({ statusOK: false, data: [] });
+  const [storedBookmarks, setStoredBookmarks] = useState({ statusOK: false, data: [] });
+  // const [filteredBookmarks, setFilteredBookmarks] = useState({ statusOK: false, data: [] });
   const [search, setSearch] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
+  const showSearch = state.navState.activeNav === -1;
 
-  // console.log('BookmarksComponent: Rendering...');
+  console.log('BookmarksComponent: Rendering...');
 
   useEffect(() => {
     // console.log('BookmarksComponent: State effect ran...');
-    setBookmarks(filteredBookmarks(state.navState));
-    setShowSearch(state.navState.activeNav === -1);
+    // setFilteredBookmarks(storedBookmarks);
+    setStoredBookmarks(filterBookmarks(state.navState));
 
     // Clean-up function
     return () => true;
   }, [state.navState]);
+  // }, [storedBookmarks]);
 
   // Handle search field persistence
-  const handleSearch = (e) => {
+  const handleSearchFields = (e) => {
     setSearch(e.currentTarget.value);
   };
 
   // Perform search from search field
-  const doSearch = (e) => {
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
     let data = [];
     if (search.length > 0) {
-      data = bookmarks.data.filter((v) => {
+      data = storedBookmarks.data.filter((v) => {
         return (
           v.siteName.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
           v.siteURL.toLowerCase().indexOf(search.toLowerCase()) > -1
         );
       });
-      if (data.length > 0) setBookmarks({ ...bookmarks, data: data });
+      if (data.length > 0) setStoredBookmarks({ ...storedBookmarks, data: data });
     } else {
-      setBookmarks(filteredBookmarks(state.navState));
+      setStoredBookmarks(filterBookmarks(state.navState));
     }
   };
 
   // Route to bookmark editor
-  const handleEdit = (e) => {
+  const handleEditButton = (e) => {
     rrNavigate('/edit/' + e.currentTarget.dataset.siteId);
   };
 
@@ -74,13 +76,13 @@ const BookmarksComponent = () => {
   return (
     <Box>
       {!smallScreen && showSearch ? (
-        <form onSubmit={doSearch} noValidate autoComplete="off">
+        <form onSubmit={handleSearchSubmit} noValidate autoComplete="off">
           <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
             <InputBase
               className={classes.searchField}
               placeholder="Search..."
               value={search}
-              onChange={handleSearch}
+              onChange={handleSearchFields}
               inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
             />
             <IconButton
@@ -92,8 +94,8 @@ const BookmarksComponent = () => {
       ) : (null)}
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
-          {bookmarks.statusOK ? (
-            bookmarks.data.map((v, i) => {
+          {storedBookmarks.statusOK ? (
+            storedBookmarks.data.map((v, i) => {
               return (
                 <div key={i}>
                   <ListItem
@@ -118,7 +120,7 @@ const BookmarksComponent = () => {
                       <IconButton
                         // edge="end"
                         data-site-id={v.siteId}
-                        onClick={handleEdit}
+                        onClick={handleEditButton}
                       ><MoreVertIcon /></IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>

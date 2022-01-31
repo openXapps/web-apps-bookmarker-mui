@@ -83,7 +83,7 @@ const Header = () => {
                 onClick={() => navigate('/settings')}
               ><SettingsIcon /></IconButton>
               <IconButton
-                sx={smallScreen && { mr: 0.5 }}
+                sx={{ mr: { sm: 0.5 } }}
                 color="inherit"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"

@@ -104,8 +104,8 @@ const EditorComponent = () => {
   }, [memorizedPath]);
 
   const handleFieldChange = ({ target: { name, value } }) => {
-    // console.log('Edit: on change name........', name);
-    // console.log('Edit: on change value.......', value);
+    // console.log('EditorComponent: on change name........', name);
+    // console.log('EditorComponent: on change value.......', value);
     // console.log('------------------------------------------------');
     if (name === 'categoryValue' && value === null) {
       setFields({

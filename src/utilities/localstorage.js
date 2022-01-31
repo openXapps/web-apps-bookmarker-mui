@@ -243,11 +243,11 @@ export const getSettings = () => {
 //   "activeNav": 0,
 //   "categoryId": "037cf222-887b-11e9-bc42-526af7764f64"
 // }
-export const filteredBookmarks = (filter) => {
+export const filterBookmarks = (filter) => {
   let response = { statusOK: false, data: [] };
   let result = [];
   const { activeNav, categoryId } = filter;
-  // console.log('filteredBookmarks: filter...', activeNav, categoryId);
+  // console.log('filterBookmarks: filter...', activeNav, categoryId);
   try {
     const data = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (data) {
@@ -284,7 +284,7 @@ export const filteredBookmarks = (filter) => {
     // Life goes on ...
     // console.log(err);
   }
-  console.log('filteredBookmarks: response...', response);
+  console.log('filterBookmarks: ' + new Date() + ' response...', response);
   return response;
 };
 
