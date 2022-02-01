@@ -247,7 +247,6 @@ export const filterBookmarks = (filter) => {
   let response = { statusOK: false, data: [] };
   let result = [];
   const { activeNav, categoryId } = filter;
-  // console.log('filterBookmarks: filter...', activeNav, categoryId);
   try {
     const data = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (data) {
@@ -284,7 +283,7 @@ export const filterBookmarks = (filter) => {
     // Life goes on ...
     // console.log(err);
   }
-  console.log('filterBookmarks: ' + new Date() + ' response...', response);
+  // console.log('filterBookmarks: ' + new Date() + ' response...', response);
   return response;
 };
 

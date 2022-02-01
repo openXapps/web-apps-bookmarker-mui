@@ -25,28 +25,37 @@ const BookmarksComponent = () => {
   const classes = useStyles();
   const rrNavigate = useNavigate();
   const [storedBookmarks, setStoredBookmarks] = useState({ statusOK: false, data: [] });
-  // const [filteredBookmarks, setFilteredBookmarks] = useState({ statusOK: false, data: [] });
+  const [filteredBookmarks, setFilteredBookmarks] = useState({ statusOK: false, data: [] });
   const [search, setSearch] = useState('');
   const showSearch = state.navState.activeNav === -1;
 
-  console.log('BookmarksComponent: Rendering...');
+  // console.log('BookmarksComponent: Rendering...');
 
   useEffect(() => {
-    // console.log('BookmarksComponent: State effect ran...');
-    // setFilteredBookmarks(storedBookmarks);
     setStoredBookmarks(filterBookmarks(state.navState));
 
     // Clean-up function
     return () => true;
   }, [state.navState]);
-  // }, [storedBookmarks]);
+
+  useEffect(() => {
+    setFilteredBookmarks(storedBookmarks);
+
+    // Clean-up function
+    return () => true;
+  }, [storedBookmarks]);
 
   // Handle search field persistence
   const handleSearchFields = (e) => {
+    if (!e.currentTarget.value) {
+      if (storedBookmarks.data.length > filteredBookmarks.data.length) {
+        setFilteredBookmarks(storedBookmarks);
+      }
+    }
     setSearch(e.currentTarget.value);
   };
 
-  // Perform search from search field
+  // Perform search event
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     let data = [];
@@ -57,9 +66,9 @@ const BookmarksComponent = () => {
           v.siteURL.toLowerCase().indexOf(search.toLowerCase()) > -1
         );
       });
-      if (data.length > 0) setStoredBookmarks({ ...storedBookmarks, data: data });
+      if (data.length > 0) setFilteredBookmarks({ ...storedBookmarks, data: data });
     } else {
-      setStoredBookmarks(filterBookmarks(state.navState));
+      setFilteredBookmarks(storedBookmarks);
     }
   };
 
@@ -94,8 +103,8 @@ const BookmarksComponent = () => {
       ) : (null)}
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
-          {storedBookmarks.statusOK ? (
-            storedBookmarks.data.map((v, i) => {
+          {filteredBookmarks.statusOK ? (
+            filteredBookmarks.data.map((v, i) => {
               return (
                 <div key={i}>
                   <ListItem

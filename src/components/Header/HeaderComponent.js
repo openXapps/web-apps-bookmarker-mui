@@ -39,9 +39,13 @@ const Header = () => {
     setAnchorEl(null);
   };
 
+  /**
+   * TODO
+   * Fix the home button. Why is it dispatching state?
+   */
   const handleHomeButton = () => {
     if (rrLocation.pathname !== '/') {
-      if (state.activeNav !== 0) dispatch({ type: 'NAV', payload: 0 });
+      if (state.activeNav !== 0) dispatch({ type: 'NAV', payload: localData.navState });
       navigate('/', { replace: true });
     } else {
       window.location.assign('https://www.openapps.co.za');
