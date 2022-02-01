@@ -3,6 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Toolbar from '@mui/material/Toolbar';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
@@ -228,6 +229,7 @@ const EditorComponent = () => {
 
   return (
     <Container maxWidth="sm">
+      <Toolbar disableGutters />
       <Box mt={2} />
       <Typography variant="h6">{sceneText.mode[sceneIndexMode]}</Typography>
       <Box my={{ xs: 1, sm: 2 }} />

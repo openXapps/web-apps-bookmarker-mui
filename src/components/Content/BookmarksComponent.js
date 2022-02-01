@@ -27,6 +27,7 @@ const BookmarksComponent = () => {
   const [storedBookmarks, setStoredBookmarks] = useState({ statusOK: false, data: [] });
   const [filteredBookmarks, setFilteredBookmarks] = useState({ statusOK: false, data: [] });
   const [search, setSearch] = useState('');
+  const [limit, setLimit] = useState(10);
   const showSearch = state.navState.activeNav === -1;
 
   // console.log('BookmarksComponent: Rendering...');
@@ -105,7 +106,7 @@ const BookmarksComponent = () => {
         <List disablePadding>
           {filteredBookmarks.statusOK ? (
             filteredBookmarks.data.map((v, i) => {
-              return (
+              return i < limit && (
                 <div key={i}>
                   <ListItem
                     disableGutters

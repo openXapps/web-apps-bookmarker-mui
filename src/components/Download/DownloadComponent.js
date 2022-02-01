@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Container from '@mui/material/Container';
+import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -49,9 +50,8 @@ const DownloadComponent = () => {
 
   return (
     <Container maxWidth="md">
-      <Box my={2}>
-        <Typography variant="h6">Download</Typography>
-      </Box>
+      <Toolbar disableGutters />
+      <Box my={2}><Typography variant="h6">Download</Typography></Box>
       <Typography>Copy your site data in the text box below</Typography>
       <Box my={2}>
         <TextField

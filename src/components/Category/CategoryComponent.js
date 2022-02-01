@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Typography from '@mui/material/Typography';
+import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -32,9 +33,8 @@ const CategoryComponent = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box my={2}>
-        <Typography variant="h6">Categories</Typography>
-      </Box>
+      <Toolbar disableGutters />
+      <Box my={2}><Typography variant="h6">Categories</Typography></Box>
       <Paper>
         <List>
           {categories.statusOK ? (

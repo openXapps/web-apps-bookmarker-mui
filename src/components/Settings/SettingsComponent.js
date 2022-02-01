@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Toolbar from '@mui/material/Toolbar';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -43,6 +44,7 @@ const Settings = () => {
 
   return (
     <Container maxWidth="sm">
+      <Toolbar disableGutters />
       <Box my={2}><Typography variant="h6">Application settings</Typography></Box>
       <Paper>
         <Box className={classes.fieldContainer}>

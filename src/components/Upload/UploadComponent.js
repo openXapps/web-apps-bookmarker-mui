@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Container from '@mui/material/Container';
+import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -71,6 +72,7 @@ const UploadComponent = () => {
 
   return (
     <Container maxWidth="md">
+      <Toolbar disableGutters />
       <Box my={2}><Typography variant="h6">Upload</Typography></Box>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Typography className={classes.grow}>Paste your site data in the text box below</Typography>
