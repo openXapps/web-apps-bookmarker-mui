@@ -1,133 +1,115 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Hidden from '@material-ui/core/Hidden';
-import Box from '@material-ui/core/Box';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import SearchIcon from '@material-ui/icons/Search';
-import StarIcon from '@material-ui/icons/Star';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import InputBase from '@mui/material/InputBase';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SearchIcon from '@mui/icons-material/Search';
+import StarIcon from '@mui/icons-material/Star';
 
-import {
-  updateLastClicked,
-  getPopular,
-  getByCategory,
-  getFavourites,
-} from '../../utilities/localstorage';
+import { updateLastClicked, filterBookmarks } from '../../utilities/localstorage';
 import { useStyles } from './BookmarksStyles';
+import { context } from '../../context/StoreProvider';
 
-const BookmarksComponent = ({ history, location }) => {
+const BookmarksComponent = () => {
+  const [state,] = useContext(context);
   const theme = useTheme();
-  const breakpointSM = useMediaQuery(theme.breakpoints.down('sm'));
+  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
-  const { id } = useParams();
-  const [bookmarks, setBookmarks] = React.useState({ statusOK: false, data: [] });
-  const [search, setSearch] = React.useState('');
-  const [showSearch, setShowSearch] = React.useState(false);
-  const [reload, setReload] = React.useState(false);
+  const rrNavigate = useNavigate();
+  const [storedBookmarks, setStoredBookmarks] = useState({ statusOK: false, data: [] });
+  const [filteredBookmarks, setFilteredBookmarks] = useState({ statusOK: false, data: [] });
+  const [search, setSearch] = useState('');
+  const [limit, setLimit] = useState(10);
+  const showSearch = state.navState.activeNav === -1;
 
-  React.useEffect(() => {
-    let result = { statusOK: false, data: [] };
-    switch (location.pathname) {
-      case '/':
-        result = getPopular();
-        setShowSearch(true);
-        if (result.statusOK) setBookmarks(result);
-        break;
-      case '/favourites':
-        result = getFavourites();
-        setShowSearch(false);
-        if (result.statusOK) setBookmarks(result);
-        break;
-      default:
-        result = getByCategory(id);
-        setShowSearch(false);
-        if (result.statusOK) setBookmarks(result);
-        break;
-    }
-    setSearch('');
-    // console.log('BookmarksComponent: Reload effect ran...');
+  // console.log('BookmarksComponent: Rendering...');
 
-    // Clean-up function
-    return () => setReload(false);
-  }, [location.pathname, id, reload]);
-
-  // Reset search on empty string
-  React.useEffect(() => {
-    // console.log('BookmarksComponent: Search effect ran...');
-    if (search.length === 0) setReload(true);
+  useEffect(() => {
+    setStoredBookmarks(filterBookmarks(state.navState));
+    setLimit(() => {
+      return state.navState.activeNav === -1 ? 10 : 1000;
+    });
 
     // Clean-up function
     return () => true;
-  }, [search]);
+  }, [state.navState]);
+
+  useEffect(() => {
+    setFilteredBookmarks(storedBookmarks);
+
+    // Clean-up function
+    return () => true;
+  }, [storedBookmarks]);
 
   // Handle search field persistence
-  const handleSearch = (e) => {
+  const handleSearchFields = (e) => {
+    if (!e.currentTarget.value) {
+      if (storedBookmarks.data.length > filteredBookmarks.data.length) {
+        setFilteredBookmarks(storedBookmarks);
+      }
+    }
     setSearch(e.currentTarget.value);
   };
 
-  // Perform search from search field
-  const doSearch = (e) => {
+  // Perform search event
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
     let data = [];
     if (search.length > 0) {
-      data = bookmarks.data.filter((v) => {
+      data = storedBookmarks.data.filter((v) => {
         return (
           v.siteName.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
           v.siteURL.toLowerCase().indexOf(search.toLowerCase()) > -1
         );
       });
-      if (data.length > 0) setBookmarks({ ...bookmarks, data: data });
+      if (data.length > 0) setFilteredBookmarks({ ...storedBookmarks, data: data });
     } else {
-      setReload(true);
+      setFilteredBookmarks(storedBookmarks);
     }
   };
 
   // Route to bookmark editor
-  const handleEdit = (e) => {
-    const siteId = e.currentTarget.dataset.siteId;
-    history.push('/edit/' + siteId);
+  const handleEditButton = (e) => {
+    rrNavigate('/edit/' + e.currentTarget.dataset.siteId);
   };
 
-  // Record last accessed bookmark
+  // Set last accessed bookmark
   const handleLastClicked = (e) => {
-    // console.log(e.currentTarget.dataset.siteId);
     updateLastClicked(e.currentTarget.dataset.siteId);
   };
 
   return (
     <Box>
-      <Hidden smDown>
-        {showSearch ? (
-          <form onSubmit={doSearch} noValidate autoComplete="off">
-            <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
-              <InputBase
-                className={classes.searchField}
-                placeholder="Search..."
-                value={search}
-                onChange={handleSearch}
-                inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
-              />
-              <IconButton
-                type="submit"
-                aria-label="search"
-              ><SearchIcon /></IconButton>
-            </Box>
-          </form>
-        ) : (null)}
-      </Hidden>
+      {!smallScreen && showSearch ? (
+        <form onSubmit={handleSearchSubmit} noValidate autoComplete="off">
+          <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
+            <InputBase
+              className={classes.searchField}
+              placeholder="Search..."
+              value={search}
+              onChange={handleSearchFields}
+              inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
+            />
+            <IconButton
+              type="submit"
+              aria-label="search"
+            ><SearchIcon /></IconButton>
+          </Box>
+        </form>
+      ) : (null)}
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
-          {bookmarks.statusOK ? (
-            bookmarks.data.map((v, i) => {
-              return (
+          {filteredBookmarks.statusOK ? (
+            filteredBookmarks.data.map((v, i) => {
+              return i < limit && (
                 <div key={i}>
                   <ListItem
                     disableGutters
@@ -141,7 +123,7 @@ const BookmarksComponent = ({ history, location }) => {
                     <ListItemText
                       className={classes.bookmarkText}
                       primary={v.siteName}
-                      primaryTypographyProps={breakpointSM ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
+                      primaryTypographyProps={smallScreen ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
                       secondary={v.category ? v.category : null}
                     />
                     {v.favourite ? (
@@ -149,9 +131,9 @@ const BookmarksComponent = ({ history, location }) => {
                     ) : (null)}
                     <ListItemSecondaryAction>
                       <IconButton
-                        edge="end"
+                        // edge="end"
                         data-site-id={v.siteId}
-                        onClick={handleEdit}
+                        onClick={handleEditButton}
                       ><MoreVertIcon /></IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>

@@ -1,29 +1,32 @@
-import React from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
+import Container from '@mui/material/Container';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 // import { useStyles } from './DownloadStyles';
 import { getDownloadableData } from '../../utilities/localstorage';
 
-const DownloadComponent = ({ history }) => {
+const DownloadComponent = () => {
   // const classes = useStyles();
-  const inputRef = React.useRef(null);
-  const [snackState, setSnackState] = React.useState({
+  const rrNavigate = useNavigate();
+  const inputRef = useRef(null);
+  const [snackState, setSnackState] = useState({
     severity: 'success',
     message: 'Copied to clipboard',
     show: false
   });
-  const [isCopied, setIsCopied] = React.useState(false);
-  const [siteData, setSiteData] = React.useState('');
+  const [isCopied, setIsCopied] = useState(false);
+  const [siteData, setSiteData] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     setSiteData(getDownloadableData());
     // Effect clean-up function
     return () => true;
@@ -36,6 +39,8 @@ const DownloadComponent = ({ history }) => {
   // https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
   const handleDataCopy = () => {
     // console.log('Download: inputRef...', inputRef.current.value);
+    // Doesn't work on IP URL, only localhost and HTTPS
+    // stackoverflow.com/questions/51805395/navigator-clipboard-is-undefined
     navigator.clipboard.writeText(inputRef.current.value)
       .then(() => {
         setIsCopied(true);
@@ -45,9 +50,8 @@ const DownloadComponent = ({ history }) => {
 
   return (
     <Container maxWidth="md">
-      <Box my={2}>
-        <Typography variant="h6">Download</Typography>
-      </Box>
+      <Toolbar disableGutters />
+      <Box my={2}><Typography variant="h6">Download</Typography></Box>
       <Typography>Copy your site data in the text box below</Typography>
       <Box my={2}>
         <TextField
@@ -56,8 +60,7 @@ const DownloadComponent = ({ history }) => {
           defaultValue={siteData}
           inputRef={inputRef}
           variant="outlined"
-          rows={15}
-          rowsMax={15}
+          maxRows={15}
           fullWidth={true}
           disabled
         ></TextField></Box>
@@ -78,7 +81,7 @@ const DownloadComponent = ({ history }) => {
           <Button
             variant="outlined"
             fullWidth
-            onClick={() => history.goBack()}
+            onClick={() => rrNavigate(-1)}
           >Back</Button>
         </Grid>
       </Grid>

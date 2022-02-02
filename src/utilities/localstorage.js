@@ -127,7 +127,7 @@ export const updateBookmark = (bookmark) => {
  * Helper function to update a single category object
  * @param {any} category Category object to update
  */
- export const updateCategory = (category) => {
+export const updateCategory = (category) => {
   const categories = getCategories();
 
   if (categories.statusOK) {
@@ -178,7 +178,7 @@ export const deleteBookmark = (id) => {
  * Helper function to delete a single category object
  * @param {string} id Category Id to delete
  */
- export const deleteCategory = (id) => {
+export const deleteCategory = (id) => {
   const categories = getCategories();
   let splicePoint = -1;
 
@@ -236,6 +236,58 @@ export const getSettings = () => {
 };
 
 /**
+ * Get FILTERED BOOKMARKS from local storage
+ * @returns Returns an object {statusOk: boolean, data: any}
+ */
+// {
+//   "activeNav": 0,
+//   "categoryId": "037cf222-887b-11e9-bc42-526af7764f64"
+// }
+export const filterBookmarks = (filter) => {
+  let response = { statusOK: false, data: [] };
+  let result = [];
+  const { activeNav, categoryId } = filter;
+  try {
+    const data = JSON.parse(localStorage.getItem(storageObject.bookmark));
+    if (data) {
+      if (activeNav === -1) {
+        result = data.map((v) => {
+          return { ...v, category: getCategoryById(v.categoryId).data[0].category };
+        });
+        response = {
+          statusOK: true,
+          data: result.sort((a, b) => (a.lastUsed < b.lastUsed) ? 1 : -1)
+        };
+      }
+      if (activeNav === -2) {
+        result = data.filter((v) => v.favourite);
+        result = result.map((v) => {
+          return { ...v, category: getCategoryById(v.categoryId).data[0].category };
+        });
+        response = {
+          statusOK: true,
+          data: result.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
+        };
+      }
+      if (activeNav > -1 && categoryId) {
+        result = data.filter((v) => v.categoryId === categoryId);
+        response = {
+          statusOK: true,
+          data: result.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
+        };
+      }
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (err) {
+    // Life goes on ...
+    // console.log(err);
+  }
+  // console.log('filterBookmarks: ' + new Date() + ' response...', response);
+  return response;
+};
+
+/**
  * Get FAVOURITES from local storage
  * @returns Returns an object {statusOk: boolean, data: any}
  */
@@ -272,12 +324,10 @@ export const getFavourites = () => {
  * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getPopular = () => {
-  let response = {
-    statusOK: false,
-    data: []
-  };
+  let response = { statusOK: false, data: [] };
   try {
     const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
+    console.log('getPopular: bookmarks...', bookmarks);
     if (bookmarks) {
       const newBookmarks = bookmarks.map((v) => {
         return { ...v, category: getCategoryById(v.categoryId).data[0].category };
@@ -302,10 +352,7 @@ export const getPopular = () => {
  * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getByCategory = (categoryId) => {
-  let response = {
-    statusOK: false,
-    data: []
-  };
+  let response = { statusOK: false, data: [] };
   let byCategory = [];
   try {
     const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
@@ -330,10 +377,7 @@ export const getByCategory = (categoryId) => {
  * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getCategories = () => {
-  let response = {
-    statusOK: false,
-    data: []
-  };
+  let response = { statusOK: false, data: [] };
   try {
     const categories = JSON.parse(localStorage.getItem(storageObject.category));
     if (categories) {
@@ -357,10 +401,7 @@ export const getCategories = () => {
  * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getCategoryByName = (value) => {
-  let response = {
-    statusOK: false,
-    data: []
-  };
+  let response = { statusOK: false, data: [] };
   try {
     const categories = JSON.parse(localStorage.getItem(storageObject.category));
     if (categories) {
@@ -384,10 +425,7 @@ export const getCategoryByName = (value) => {
  * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getCategoryById = (id) => {
-  let response = {
-    statusOK: false,
-    data: []
-  };
+  let response = { statusOK: false, data: [] };
   try {
     const categories = JSON.parse(localStorage.getItem(storageObject.category));
     if (categories) {
@@ -410,10 +448,7 @@ export const getCategoryById = (id) => {
  * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getBookmarks = () => {
-  let response = {
-    statusOK: false,
-    data: []
-  };
+  let response = { statusOK: false, data: [] };
   try {
     const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {
@@ -437,10 +472,7 @@ export const getBookmarks = () => {
  * @returns Returns an object {statusOk: boolean, data: any}
  */
 export const getBookmarkById = (id) => {
-  let response = {
-    statusOK: false,
-    data: [],
-  };
+  let response = { statusOK: false, data: [], };
   try {
     const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {

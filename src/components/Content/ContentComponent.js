@@ -1,32 +1,35 @@
-import React from 'react';
-
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
-import Container from '@material-ui/core/Container';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
 
 import NavigationComponent from './NavigationComponent';
 import BookmarksComponent from './BookmarksComponent';
 
 // https://medium.com/swlh/taking-material-ui-for-a-spin-79ec46db72e3
 
-const ContentComponent = ({ history, location }) => {
+const ContentComponent = () => {
+  const smallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
+
+  // console.log('ContentComponent: Rendering...');
 
   return (
-    <Box mt={{ sm: 2 }}>
-      <Container maxWidth="md" disableGutters>
+    <Container maxWidth="md" disableGutters>
+      <Toolbar disableGutters/>
+      <Box mt={{ sm: 2 }}>
         <Grid container>
-          <Grid item xs={false} sm={3}>
-            <Hidden xsDown>
-              <NavigationComponent history={history} location={location} />
-            </Hidden>
-          </Grid>
+          {smallScreen ? null : (
+            <Grid item xs={false} sm={3}>
+              <NavigationComponent />
+            </Grid>
+          )}
           <Grid item xs={12} sm={9}>
-            <BookmarksComponent history={history} location={location} />
+            <BookmarksComponent />
           </Grid>
         </Grid>
-      </Container>
-    </Box >
+      </Box >
+    </Container>
   );
 };
 

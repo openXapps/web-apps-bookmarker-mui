@@ -1,15 +1,13 @@
-import React from 'react';
-
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
+import Typography from '@mui/material/Typography';
+import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 
 const Error404Component = () => {
     return (
         <Container maxWidth="md">
-            <Box mt={2}>
-                <Typography variant="h6">404 - Page not found</Typography>
-            </Box>
+            <Toolbar disableGutters />
+            <Box mt={2}><Typography variant="h6">404 - Page not found</Typography></Box>
         </Container>
     );
 };

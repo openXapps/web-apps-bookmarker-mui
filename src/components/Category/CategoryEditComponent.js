@@ -1,19 +1,21 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Toolbar from '@mui/material/Toolbar';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 // import useStyles from './CategoryStyles';
 import {
@@ -30,22 +32,24 @@ const initialFieldData = {
   category: '',
 };
 
-const CategoryEditComponent = ({ history, match }) => {
-  const [snackState, setSnackState] = React.useState({
+const CategoryEditComponent = () => {
+  const [snackState, setSnackState] = useState({
     severity: 'success',
     message: 'Category saved'
   });
-  const [snackShow, setSnackShow] = React.useState(false);
-  const [dialogDeleteOpen, setDialogDeleteOpen] = React.useState(false);
-  const [fields, setFields] = React.useState(initialFieldData);
-  const [canBeSaved, setCanBeSaved] = React.useState(true);
-  const [canBeDeleted, setCanBeDeleted] = React.useState(true);
+  const rrNavigate = useNavigate();
+  const rrParams = useParams();
+  const [snackShow, setSnackShow] = useState(false);
+  const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
+  const [fields, setFields] = useState(initialFieldData);
+  const [canBeSaved, setCanBeSaved] = useState(true);
+  const [canBeDeleted, setCanBeDeleted] = useState(true);
 
   // Initial effect when component renders
-  React.useEffect(() => {
+  useEffect(() => {
     let _category = [];
     // Route should be /categories/:id
-    _category = getCategoryById(match.params.id).data;
+    _category = getCategoryById(rrParams.id).data;
     if (Array.isArray(_category)) {
       if (_category.length === 1) {
         setFields({
@@ -58,7 +62,7 @@ const CategoryEditComponent = ({ history, match }) => {
 
     // Effect clean-up function
     return () => true;
-  }, [match.params.id]);
+  }, [rrParams.id]);
 
   // Control input fields
   const handleFieldChange = ({ target: { name, value } }) => {
@@ -135,9 +139,8 @@ const CategoryEditComponent = ({ history, match }) => {
 
   return (
     <Container maxWidth="sm">
-      <Box my={2}>
-        <Typography variant="h6">Edit category</Typography>
-      </Box>
+      <Toolbar disableGutters />
+      <Box my={2}><Typography variant="h6">Edit category</Typography></Box>
       <Paper component="form" autoComplete="off">
         <Box p={2}>
           <Box my={2}>
@@ -179,7 +182,7 @@ const CategoryEditComponent = ({ history, match }) => {
           <Button
             variant="outlined"
             fullWidth
-            onClick={() => history.goBack()}
+            onClick={() => rrNavigate(-1)}
           >Back</Button>
         </Grid>
       </Grid>

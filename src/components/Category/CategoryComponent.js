@@ -1,38 +1,40 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Typography from '@mui/material/Typography';
+import Toolbar from '@mui/material/Toolbar';
+import Paper from '@mui/material/Paper';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { getCategories } from '../../utilities/localstorage';
 import { defaultCategory } from '../../utilities/defaultdata';
 
-const CategoryComponent = ({ history }) => {
-  const [categories, setCategories] = React.useState({ statusOK: true, data: [] });
+const CategoryComponent = () => {
+  const rrNavigate = useNavigate();
+  const [categories, setCategories] = useState({ statusOK: true, data: [] });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCategories(getCategories());
     return () => true;
   }, []);
 
   const handleEdit = (e) => {
     const categoryId = e.currentTarget.dataset.categoryId;
-    history.push('/categoryedit/' + categoryId);
+    rrNavigate('/categoryedit/' + categoryId);
   };
 
   return (
     <Container maxWidth="sm">
-      <Box my={2}>
-        <Typography variant="h6">Categories</Typography>
-      </Box>
+      <Toolbar disableGutters />
+      <Box my={2}><Typography variant="h6">Categories</Typography></Box>
       <Paper>
         <List>
           {categories.statusOK ? (
@@ -64,7 +66,7 @@ const CategoryComponent = ({ history }) => {
       <Button
         variant="outlined"
         fullWidth
-        onClick={() => history.goBack()}
+        onClick={() => rrNavigate(-1)}
       >Back</Button>
     </Container>
   );

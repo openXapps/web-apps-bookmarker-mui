@@ -1,29 +1,32 @@
-import React from 'react';
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
+import Container from '@mui/material/Container';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 import { useStyles } from './UploadStyles';
 import { validator } from './UploadValidator';
 import { mergeData, overwriteData } from './UploadLoader';
 
-const UploadComponent = ({ history }) => {
+const UploadComponent = () => {
   const classes = useStyles();
-  const inputRef = React.useRef(null);
-  const [snackState, setSnackState] = React.useState({
+  const inputRef = useRef(null);
+  const rrNavigate = useNavigate();
+  const [snackState, setSnackState] = useState({
     severity: 'success',
     message: 'Validation SUCCESS',
     show: false
   });
-  const [isValid, setIsValid] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
-  const [buttonState, setButtonState] = React.useState({
+  const [isValid, setIsValid] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [buttonState, setButtonState] = useState({
     locked: true,
     merge: 'Merge',
     overwrite: 'Overwrite',
@@ -69,23 +72,17 @@ const UploadComponent = ({ history }) => {
 
   return (
     <Container maxWidth="md">
+      <Toolbar disableGutters />
       <Box my={2}><Typography variant="h6">Upload</Typography></Box>
-      <Grid
-        container
-        alignItems="center"
-        justify="space-between"
-        wrap="nowrap"
-      ><Grid item>
-          <Typography className={classes.grow}>Paste your site data in the text box below</Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="outlined"
-            onClick={handleValidation}
-            disabled={isValid}
-          >{isValid ? 'Done' : 'Validate'}</Button>
-        </Grid>
-      </Grid>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Typography className={classes.grow}>Paste your site data in the text box below</Typography>
+        <Button
+          sx={{ ml: 2 }}
+          variant="outlined"
+          onClick={handleValidation}
+          disabled={isValid}
+        >{isValid ? 'Done' : 'Validate'}</Button>
+      </Box>
       <Box my={2}>
         <TextField
           multiline
@@ -94,7 +91,6 @@ const UploadComponent = ({ history }) => {
           inputProps={{ spellCheck: false }}
           variant="outlined"
           rows={15}
-          rowsMax={15}
           fullWidth={true}
           disabled={isValid}
           error={isError}
@@ -125,7 +121,7 @@ const UploadComponent = ({ history }) => {
           <Button
             variant="outlined"
             fullWidth
-            onClick={() => history.goBack()}
+            onClick={() => rrNavigate(-1)}
           >{buttonState.exit}</Button>
         </Grid>
       </Grid>

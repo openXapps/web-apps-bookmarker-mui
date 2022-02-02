@@ -25,13 +25,21 @@ export const getDefaultData = () => {
   const response = {
     // gd-bm-settings
     settings: {
-      version: '0.3.2',
+      // Remember to update package.json too
+      version: '0.4.0',
+      // version: '0.3.2',
       theme: {
         isDark: false,
         template: 'light'
       },
       confirmOnDelete: true,
       // hideEmptyCategories: false,
+    },
+
+    // Navigator bar defaults
+    navState: {
+      activeNav: -1,
+      categoryId: ''
     },
 
     // gd-bm-categories
