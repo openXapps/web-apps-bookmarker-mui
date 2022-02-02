@@ -2,8 +2,8 @@ const light = {
   palette: {
     mode: 'light',
     background: {
-      default: '#efebe9',
-      paper: '#e6e6e6',
+      default: '#c2cfd4',
+      paper: '#cfd8dc',
     },
   },
 };

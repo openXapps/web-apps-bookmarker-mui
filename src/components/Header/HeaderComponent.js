@@ -20,7 +20,7 @@ import useStyles from './HeaderStyles';
 import { getDefaultData } from '../../utilities/defaultdata';
 import { context } from '../../context/StoreProvider';
 
-const Header = () => {
+const HeaderComponent = () => {
   const [state, dispatch] = useContext(context);
   const smallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -45,7 +45,9 @@ const Header = () => {
    */
   const handleHomeButton = () => {
     if (rrLocation.pathname !== '/') {
-      if (state.activeNav !== 0) dispatch({ type: 'NAV', payload: localData.navState });
+      if (state.activeNav !== localData.navState.activeNav) {
+        dispatch({ type: 'NAV', payload: localData.navState });
+      }
       navigate('/', { replace: true });
     } else {
       window.location.assign('https://www.openapps.co.za');
@@ -115,4 +117,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderComponent;

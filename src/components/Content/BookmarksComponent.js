@@ -34,6 +34,9 @@ const BookmarksComponent = () => {
 
   useEffect(() => {
     setStoredBookmarks(filterBookmarks(state.navState));
+    setLimit(() => {
+      return state.navState.activeNav === -1 ? 10 : 1000;
+    });
 
     // Clean-up function
     return () => true;

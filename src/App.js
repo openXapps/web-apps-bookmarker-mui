@@ -33,8 +33,8 @@ import Error404Component from './components/Error/Error404Component';
 const App = () => {
   const [state] = useContext(context);
   const appTheme = createTheme(state.theme.isDark ? dark : light);
-  const home = '/';
-  // const home = '/apps/bookmarker';
+  // const home = '/';
+  const home = '/apps/bookmarker';
 
   /**
    * Check this video: https://www.youtube.com/watch?v=0cSVuySEB0A
@@ -49,11 +49,7 @@ const App = () => {
         <Routes>
           {/* root shows popular bookamrks */}
           <Route path="/" exact element={<ContentComponent />} />
-          {/* Perhaps add a filter route here and wrap it arounf the next three routes */}
-          {/* <Route path="/favourites" element={<ContentComponent />} />
-          <Route path="/category/:id" element={<ContentComponent />} />
-          <Route path="/search/:name" exact element={<ContentComponent />} /> */}
-          {/* Perhaps add a editor route here and wrap it arounf the next two routes */}
+          {/* Perhaps add an editor route here and wrap it around the next two routes */}
           <Route path="/new" element={<EditorComponent />} />
           <Route path="/edit/:id" element={<EditorComponent />} />
           {/* Perhaps wrap the category route with a parent */}

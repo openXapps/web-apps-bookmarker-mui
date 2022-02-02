@@ -3,10 +3,13 @@ const dark = {
     mode: 'dark',
     primary: {
       main: '#738bbf',
-      // main: '#455a64',
     },
     secondary: {
       main: '#fb8c00',
+    },
+    background: {
+      default: '#303030',
+      paper: '#424242',
     },
   },
 };

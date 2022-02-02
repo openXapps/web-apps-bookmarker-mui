@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Toolbar from '@mui/material/Toolbar';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -138,9 +139,8 @@ const CategoryEditComponent = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box my={2}>
-        <Typography variant="h6">Edit category</Typography>
-      </Box>
+      <Toolbar disableGutters />
+      <Box my={2}><Typography variant="h6">Edit category</Typography></Box>
       <Paper component="form" autoComplete="off">
         <Box p={2}>
           <Box my={2}>
