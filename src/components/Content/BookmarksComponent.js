@@ -25,25 +25,23 @@ const BookmarksComponent = () => {
   const classes = useStyles();
   const rrNavigate = useNavigate();
   const [storedBookmarks, setStoredBookmarks] = useState({ statusOK: false, data: [] });
-  const [filteredBookmarks, setFilteredBookmarks] = useState({ statusOK: false, data: [] });
-  const [search, setSearch] = useState('');
-  const [limit, setLimit] = useState(10);
+  const [filteredBookmarks, setFilteredBookmarks] = useState([]);
+  const [searchField, setSearchField] = useState('');
+  const [listLimit, setListLimit] = useState(10);
   const showSearch = state.navState.activeNav === -1;
 
   // console.log('BookmarksComponent: Rendering...');
 
   useEffect(() => {
     setStoredBookmarks(filterBookmarks(state.navState));
-    setLimit(() => {
-      return state.navState.activeNav === -1 ? 10 : 1000;
-    });
+    setListLimit(state.navState.activeNav === -1 ? 10 : 1000);
 
     // Clean-up function
     return () => true;
   }, [state.navState]);
 
   useEffect(() => {
-    setFilteredBookmarks(storedBookmarks);
+    setFilteredBookmarks(storedBookmarks.data);
 
     // Clean-up function
     return () => true;
@@ -52,27 +50,29 @@ const BookmarksComponent = () => {
   // Handle search field persistence
   const handleSearchFields = (e) => {
     if (!e.currentTarget.value) {
-      if (storedBookmarks.data.length > filteredBookmarks.data.length) {
-        setFilteredBookmarks(storedBookmarks);
+      if (storedBookmarks.data.length > filteredBookmarks.length) {
+        setListLimit(10);
+        setFilteredBookmarks(storedBookmarks.data);
       }
     }
-    setSearch(e.currentTarget.value);
+    setSearchField(e.currentTarget.value);
   };
 
   // Perform search event
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     let data = [];
-    if (search.length > 0) {
+    if (searchField.length > 3) {
       data = storedBookmarks.data.filter((v) => {
         return (
-          v.siteName.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
-          v.siteURL.toLowerCase().indexOf(search.toLowerCase()) > -1
+          v.siteName.toLowerCase().indexOf(searchField.toLowerCase()) > -1 ||
+          v.siteURL.toLowerCase().indexOf(searchField.toLowerCase()) > -1
         );
       });
-      if (data.length > 0) setFilteredBookmarks({ ...storedBookmarks, data: data });
-    } else {
-      setFilteredBookmarks(storedBookmarks);
+      if (data.length > 0) {
+        setListLimit(1000);
+        setFilteredBookmarks(data);
+      }
     }
   };
 
@@ -94,7 +94,7 @@ const BookmarksComponent = () => {
             <InputBase
               className={classes.searchField}
               placeholder="Search..."
-              value={search}
+              value={searchField}
               onChange={handleSearchFields}
               inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
             />
@@ -107,9 +107,9 @@ const BookmarksComponent = () => {
       ) : (null)}
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
-          {filteredBookmarks.statusOK ? (
-            filteredBookmarks.data.map((v, i) => {
-              return i < limit && (
+          {storedBookmarks.statusOK ? (
+            filteredBookmarks.map((v, i) => {
+              return i < listLimit && (
                 <div key={i}>
                   <ListItem
                     disableGutters
