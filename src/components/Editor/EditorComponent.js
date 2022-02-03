@@ -233,7 +233,7 @@ const EditorComponent = () => {
       <Box mt={2} />
       <Typography variant="h6">{sceneText.mode[sceneIndexMode]}</Typography>
       <Box my={{ xs: 1, sm: 2 }} />
-      <Paper component="form" autoComplete="off">
+      <Paper component="form" autoComplete="off" elevation={0}>
         <Box p={2}>
           <Box mt={{ xs: 1, sm: 2 }} />
           <Autocomplete

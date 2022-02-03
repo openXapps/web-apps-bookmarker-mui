@@ -46,7 +46,7 @@ const Settings = () => {
     <Container maxWidth="sm">
       <Toolbar disableGutters />
       <Box my={2}><Typography variant="h6">Application settings</Typography></Box>
-      <Paper>
+      <Paper elevation={0}>
         <Box className={classes.fieldContainer}>
           <Typography>Dark Mode</Typography>
           <Switch

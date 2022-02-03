@@ -35,7 +35,7 @@ const CategoryComponent = () => {
     <Container maxWidth="sm">
       <Toolbar disableGutters />
       <Box my={2}><Typography variant="h6">Categories</Typography></Box>
-      <Paper>
+      <Paper elevation={0}>
         <List>
           {categories.statusOK ? (
             categories.data.map((v, i) => {

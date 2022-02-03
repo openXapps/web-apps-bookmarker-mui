@@ -37,7 +37,7 @@ const NavigationComponent = () => {
   // console.log('NavigationComponent: state.navState.....', state.navState);
 
   return (
-    <Paper>
+    <Paper elevation={5}>
       <List disablePadding>
         <ListItem
           button
