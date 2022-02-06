@@ -1,6 +1,10 @@
 // Utility module to manage HTML5 localStorage
 
-import { storageObject, getDefaultData, defaultCategory } from './defaultdata';
+import {
+  storageObject,
+  getDefaultData,
+  // defaultCategory,
+} from './defaultdata';
 
 /**
  * Check whether localStorage is available.
@@ -34,23 +38,28 @@ export const initialUse = () => {
   const bookmarks = getBookmarks();
 
   // Convert old bookmarks to new version (0.3.0)
-  if (!settings.statusOK && bookmarks.data.length > 0) {
-    // Make sure bookmarks are from older version
-    if (!bookmarks.data[0].categoryId) {
-      const newBookmarks = bookmarks.data.map((v, i) => {
-        return (
-          {
-            categoryId: defaultCategory[0].categoryId,
-            siteId: v.siteId,
-            siteName: v.siteName,
-            siteURL: v.siteURL,
-            favourite: false,
-            lastUsed: new Date()
-          }
-        );
-      });
-      saveLocalStorage(storageObject.bookmark, newBookmarks);
-    }
+  // if (!settings.statusOK && bookmarks.data.length > 0) {
+  // Make sure bookmarks are from older version
+  //   if (!bookmarks.data[0].categoryId) {
+  //     const newBookmarks = bookmarks.data.map((v, i) => {
+  //       return (
+  //         {
+  //           categoryId: defaultCategory[0].categoryId,
+  //           siteId: v.siteId,
+  //           siteName: v.siteName,
+  //           siteURL: v.siteURL,
+  //           favourite: false,
+  //           lastUsed: new Date()
+  //         }
+  //       );
+  //     });
+  //     saveLocalStorage(storageObject.bookmark, newBookmarks);
+  //   }
+  // }
+
+  // Add listLimit to settings if missing
+  if (settings.statusOK && settings.data.listLimit === undefined) {
+    saveLocalStorage(storageObject.setting, { ...settings.data, listLimit: getDefaultData().settings.listLimit });
   }
 
   // Bump version if it exists and is not the latest
@@ -237,16 +246,19 @@ export const getSettings = () => {
 
 /**
  * Get FILTERED BOOKMARKS from local storage
+ * @param {any} filter Context state or current category
+ * @param {number} limit [optional] Number of bookmarks to return
  * @returns Returns an object {statusOk: boolean, data: any}
  */
 // {
 //   "activeNav": 0,
 //   "categoryId": "037cf222-887b-11e9-bc42-526af7764f64"
 // }
-export const filterBookmarks = (filter) => {
+export const filterBookmarks = (filter, limit) => {
   let response = { statusOK: false, data: [] };
   let result = [];
   const { activeNav, categoryId } = filter;
+  const listLimit = limit && limit > 0 ? limit : getSettings().data.listLimit;
   try {
     const data = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (data) {
@@ -276,6 +288,10 @@ export const filterBookmarks = (filter) => {
           data: result.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
         };
       }
+      if (response.data.length > 0 && listLimit > 0) {
+        // console.log('filterBookmarks: slicing response by...', listLimit);
+        response = { ...response, data: response.data.slice(0, listLimit) };
+      }
     } else {
       throw new Error('No items found in localStorage');
     }
@@ -283,7 +299,7 @@ export const filterBookmarks = (filter) => {
     // Life goes on ...
     // console.log(err);
   }
-  // console.log('filterBookmarks: ' + new Date() + ' response...', response);
+  // console.log('filterBookmarks: response..............', response);
   return response;
 };
 

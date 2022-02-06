@@ -27,52 +27,45 @@ const BookmarksComponent = () => {
   const [storedBookmarks, setStoredBookmarks] = useState({ statusOK: false, data: [] });
   const [filteredBookmarks, setFilteredBookmarks] = useState([]);
   const [searchField, setSearchField] = useState('');
-  const [listLimit, setListLimit] = useState(10);
   const showSearch = state.navState.activeNav === -1;
 
-  // console.log('BookmarksComponent: Rendering...');
-
+  // Effect to control storedBookmarks based on activeNav state
   useEffect(() => {
-    setStoredBookmarks(filterBookmarks(state.navState));
-    setListLimit(state.navState.activeNav === -1 ? 10 : 1000);
-
-    // Clean-up function
+    if (state.navState.activeNav >= -2) {
+      setStoredBookmarks(filterBookmarks(
+        state.navState,
+        state.navState.activeNav === -1 ? 0 : 1000)
+      );
+    }
+    // Effect clean-up
     return () => true;
   }, [state.navState]);
 
+  // Effect to control filteredBookmarks based on storedBookamrks
   useEffect(() => {
     setFilteredBookmarks(storedBookmarks.data);
-
-    // Clean-up function
+    // Effect clean-up
     return () => true;
-  }, [storedBookmarks]);
+  }, [storedBookmarks.data]);
 
   // Handle search field persistence
   const handleSearchFields = (e) => {
-    if (!e.currentTarget.value) {
-      if (storedBookmarks.data.length > filteredBookmarks.length) {
-        setListLimit(10);
-        setFilteredBookmarks(storedBookmarks.data);
-      }
-    }
     setSearchField(e.currentTarget.value);
+    if (!e.currentTarget.value) setFilteredBookmarks(storedBookmarks.data);
   };
 
   // Perform search event
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    let data = [];
-    if (searchField.length > 3) {
-      data = storedBookmarks.data.filter((v) => {
+    if (searchField.length > 2) {
+      let searchedBookmarks = [];
+      searchedBookmarks = filterBookmarks(state.navState, 1000).data.filter((v) => {
         return (
           v.siteName.toLowerCase().indexOf(searchField.toLowerCase()) > -1 ||
           v.siteURL.toLowerCase().indexOf(searchField.toLowerCase()) > -1
         );
       });
-      if (data.length > 0) {
-        setListLimit(1000);
-        setFilteredBookmarks(data);
-      }
+      setFilteredBookmarks(searchedBookmarks.length > 0 ? searchedBookmarks : []);
     }
   };
 
@@ -104,12 +97,13 @@ const BookmarksComponent = () => {
             ><SearchIcon /></IconButton>
           </Box>
         </form>
-      ) : (null)}
+      ) : null}
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
           {storedBookmarks.statusOK ? (
             filteredBookmarks.map((v, i) => {
-              return i < listLimit && (
+              // return i < listLimit && (
+              return (
                 <div key={i}>
                   <ListItem
                     disableGutters
@@ -128,7 +122,7 @@ const BookmarksComponent = () => {
                     />
                     {v.favourite ? (
                       <StarIcon className={classes.favIcon} color="primary" fontSize="small" />
-                    ) : (null)}
+                    ) : null}
                     <ListItemSecondaryAction>
                       <IconButton
                         // edge="end"
@@ -140,7 +134,7 @@ const BookmarksComponent = () => {
                 </div>
               );
             })
-          ) : (null)}
+          ) : null}
         </List>
       </Box>
     </Box>
