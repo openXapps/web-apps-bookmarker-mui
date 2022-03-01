@@ -32,14 +32,14 @@ const BookmarksComponent = () => {
   // Effect to control storedBookmarks based on activeNav state
   useEffect(() => {
     if (state.navState.activeNav >= -2) {
-      setStoredBookmarks(filterBookmarks(
-        state.navState,
-        state.navState.activeNav === -1 ? 0 : 1000)
-      );
+      // Set list limit according to screen size and active nav
+      const limit = state.navState.activeNav === -1 ? (
+        smallScreen ? 1000 : 0) : 1000;
+      setStoredBookmarks(filterBookmarks(state.navState, limit));
     }
     // Effect clean-up
     return () => true;
-  }, [state.navState]);
+  }, [state.navState, smallScreen]);
 
   // Effect to control filteredBookmarks based on storedBookamrks
   useEffect(() => {
@@ -101,10 +101,10 @@ const BookmarksComponent = () => {
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
           {storedBookmarks.statusOK ? (
-            filteredBookmarks.map((v, i) => {
+            filteredBookmarks.map((v) => {
               // return i < listLimit && (
               return (
-                <div key={i}>
+                <div key={v.siteId}>
                   <ListItem
                     disableGutters
                     button
