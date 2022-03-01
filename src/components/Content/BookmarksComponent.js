@@ -101,10 +101,10 @@ const BookmarksComponent = () => {
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
           {storedBookmarks.statusOK ? (
-            filteredBookmarks.map((v, i) => {
+            filteredBookmarks.map((v) => {
               // return i < listLimit && (
               return (
-                <div key={i}>
+                <div key={v.siteId}>
                   <ListItem
                     disableGutters
                     button

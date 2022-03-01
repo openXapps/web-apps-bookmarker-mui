@@ -38,9 +38,9 @@ const CategoryComponent = () => {
       <Paper elevation={0}>
         <List>
           {categories.statusOK ? (
-            categories.data.map((v, i) => {
+            categories.data.map((v) => {
               return (
-                <div key={i}>
+                <div key={v.categoryId}>
                   <ListItem data-category-id={v.categoryId}>
                     <ListItemText
                       primary={v.category}
