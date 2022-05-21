@@ -16,7 +16,7 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "dev": "BROWSER=none react-scripts start",
+    "dev": "react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
