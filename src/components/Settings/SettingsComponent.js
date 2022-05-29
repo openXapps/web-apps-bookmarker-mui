@@ -8,10 +8,12 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
+import Slider from '@mui/material/Slider';
+import Stack from '@mui/material/Stack';
 
 import { context } from '../../context/StoreProvider';
 import { saveLocalStorage, getSettings } from '../../utilities/localstorage';
-import { storageObject } from '../../utilities/defaultdata';
+import { storageObject, defaultPopularMarkers } from '../../utilities/defaultdata';
 import { useStyles } from './SettingsStyles';
 
 const Settings = () => {
@@ -34,6 +36,10 @@ const Settings = () => {
   const handleConfirmOnDelete = () => {
     saveLocalStorage(storageObject.setting, { ...settings, confirmOnDelete: !_confirmOnDelete });
     setConfirmOnDelete(!_confirmOnDelete);
+  };
+
+  const handlePopularMarker = (event, value) => {
+    saveLocalStorage(storageObject.setting, { ...settings, listLimit: value });
   };
 
   // Managed by persistence only
@@ -61,6 +67,20 @@ const Settings = () => {
             onChange={handleConfirmOnDelete}
           />
         </Box>
+        <Box p={2} mr={2}>
+          <Stack spacing={2} direction="row" alignItems="center">
+            <Typography sx={{ mr: 3 }}>Popular</Typography>
+            <Slider
+              defaultValue={settings.listLimit}
+              step={5}
+              marks={defaultPopularMarkers}
+              min={defaultPopularMarkers[0].value}
+              max={defaultPopularMarkers[defaultPopularMarkers.length - 1].value}
+              onChangeCommitted={handlePopularMarker}
+            />
+          </Stack>
+        </Box>
+        <Box p={2} />
         {/* <Box className={classes.fieldContainer}>
           <Typography>Hide Empty Categories</Typography>
           <Switch

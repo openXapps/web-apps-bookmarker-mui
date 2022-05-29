@@ -50,11 +50,7 @@ const EditorComponent = () => {
   const rrLocation = useLocation();
   const rrParams = useParams();
   const categories = getCategories().statusOK ? getCategories().data : defaultCategory;
-  const [snackState, setSnackState] = useState({
-    severity: 'success',
-    message: 'Bookmark saved',
-    show: false
-  });
+  const [snackState, setSnackState] = useState({ severity: 'success', message: 'Bookmark saved', show: false });
   const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
   const [fields, setFields] = useState(initialFieldData);
   const [sceneIndexMode, setSceneIndexMode] = useState(0);

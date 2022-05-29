@@ -355,15 +355,15 @@ export const getPopular = () => {
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
+  } catch (error) {
     // Life goes on ...
-    // console.log(err);
+    console.log('getPopular: error...', error);
   }
   return response;
 };
 
 /**
- * Get by CATEGORY from local storage
+ * Get BOOKMARKS by CATEGORY from local storage
  * @param {string} categoryId Category Id to search for
  * @returns Returns an object {statusOk: boolean, data: any}
  */
@@ -374,16 +374,18 @@ export const getByCategory = (categoryId) => {
     const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (bookmarks) {
       byCategory = bookmarks.filter((v) => v.categoryId === categoryId);
-      response = {
-        statusOK: true,
-        data: byCategory.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
-      };
+      if (byCategory.length > 0) {
+        response = {
+          statusOK: true,
+          data: byCategory.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
+        };
+      }
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
+  } catch (error) {
     // Life goes on ...
-    // console.log(err);
+    console.log('getByCategory: error...', error);
   }
   return response;
 };
@@ -404,11 +406,59 @@ export const getCategories = () => {
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
+  } catch (error) {
     // Life goes on ...
-    // console.log(err);
+    console.log('getCategories: error...', error);
   }
   return response;
+};
+
+/**
+ * Get CATEGORIES with bookmark count from local storage
+ * @returns Returns an object {statusOk: boolean, data: any}
+ */
+export const getCategoriesWithCount = () => {
+  let response = { statusOK: false, data: [] };
+  let categoriesWithCount = [{ categoryId: '', category: '', numOfBookmarks: 0 }];
+  const bookmarks = JSON.parse(localStorage.getItem(storageObject.bookmark));
+  try {
+    const categories = JSON.parse(localStorage.getItem(storageObject.category));
+    if (categories.length > 0 && bookmarks.length > 0) {
+      categories.forEach((v) => {
+        categoriesWithCount.push({
+          categoryId: v.categoryId,
+          category: v.category,
+          numOfBookmarks: getBookmarkCount(v.categoryId, bookmarks)
+        });
+      });
+      response = {
+        statusOK: true,
+        data: categoriesWithCount.sort((a, b) => (a.category > b.category) ? 1 : -1)
+      };
+    } else {
+      throw new Error('No items found in localStorage');
+    }
+  } catch (error) {
+    // Life goes on ...
+    console.log('getCategoriesWithCount: error...', error);
+  }
+  return response;
+};
+
+/**
+ * Helper function to count number of bookmarks per category
+ * @param {string} categoryId Category Id to use
+ * @param {any} bookmarks Bookmarks to map
+ * @returns Number of bookmarks per category
+ */
+export const getBookmarkCount = (categoryId, bookmarks) => {
+  let counter = 0;
+  if (bookmarks) {
+    bookmarks.forEach((v) => {
+      if (v.categoryId === categoryId) counter += 1;
+    });
+  }
+  return counter;
 };
 
 /**

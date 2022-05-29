@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Toolbar from '@mui/material/Toolbar';
 import TextField from '@mui/material/TextField';
@@ -16,20 +17,31 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import IconButton from '@mui/material/IconButton';
+import Clear from '@mui/icons-material/Clear';
 
 // import useStyles from './CategoryStyles';
 import {
-  // getCategories,
   getCategoryById,
   updateCategory,
-  getBookmarks,
+  getByCategory,
   deleteCategory,
+  deleteBookmark,
   getSettings,
 } from '../../utilities/localstorage';
 
 const initialFieldData = {
   categoryId: '',
   category: '',
+};
+
+const initialBookmarks = {
+  statusOK: false,
+  data: []
 };
 
 const CategoryEditComponent = () => {
@@ -42,8 +54,8 @@ const CategoryEditComponent = () => {
   const [snackShow, setSnackShow] = useState(false);
   const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
   const [fields, setFields] = useState(initialFieldData);
-  const [canBeSaved, setCanBeSaved] = useState(true);
-  const [canBeDeleted, setCanBeDeleted] = useState(true);
+  const [bookmarks, setBookmarks] = useState(initialBookmarks);
+  const [canBeDeleted, setCanBeDeleted] = useState(initialBookmarks.statusOK);
 
   // Initial effect when component renders
   useEffect(() => {
@@ -52,24 +64,23 @@ const CategoryEditComponent = () => {
     _category = getCategoryById(rrParams.id).data;
     if (Array.isArray(_category)) {
       if (_category.length === 1) {
-        setFields({
-          ...initialFieldData,
-          categoryId: _category[0].categoryId,
-          category: _category[0].category,
-        });
+        setFields({ categoryId: _category[0].categoryId, category: _category[0].category });
+        setBookmarks(getByCategory(_category[0].categoryId));
       }
     }
-
-    // Effect clean-up function
     return () => true;
   }, [rrParams.id]);
 
+  // Set delete button state based on bookmarks state
+  useEffect(() => {
+    if (bookmarks.statusOK) setCanBeDeleted(false);
+    if (!bookmarks.statusOK) setCanBeDeleted(true);
+    return () => true;
+  }, [bookmarks.statusOK]);
+
   // Control input fields
   const handleFieldChange = ({ target: { name, value } }) => {
-    setFields({
-      ...fields,
-      [name]: value,
-    });
+    setFields({ ...fields, [name]: value });
   };
 
   // Save category to storage
@@ -105,32 +116,17 @@ const CategoryEditComponent = () => {
   // Check for any attached bookmarks, then delete category
   // else snack on an error message
   const doDeleteAction = () => {
-    let counter = 0;
-    const bookmarks = getBookmarks();
-    if (snackShow) setSnackShow(!snackShow);
-    if (bookmarks.statusOK) {
-      bookmarks.data.forEach((v) => {
-        // console.log('CategoryEditComponent: bookmark.siteName...', v.siteName);
-        counter += v.categoryId === fields.categoryId ? 1 : 0;
-      });
-      if (counter > 0) {
-        setSnackState({
-          severity: 'error',
-          message: 'Cannot delete category. First remove ' + counter + ' attached bookmark' + (counter > 1 ? 's' : '')
-        });
-      } else {
-        deleteCategory(fields.categoryId);
-        setCanBeSaved(false);
-        setFields(initialFieldData);
-        setSnackState({ severity: 'success', message: 'Category deleted' });
-      }
-      setSnackShow(true);
-      setCanBeDeleted(false);
-    }
+    deleteCategory(fields.categoryId);
+    rrNavigate(-1);
   };
 
   const handleDialogDeleteClose = () => {
     setDialogDeleteOpen(false);
+  };
+
+  const handleDeleteBookamrk = (e) => {
+    deleteBookmark(e.currentTarget.dataset.siteId);
+    setBookmarks(getByCategory(fields.categoryId));
   };
 
   const handleSnackShow = () => {
@@ -155,7 +151,7 @@ const CategoryEditComponent = () => {
           </Box>
         </Box>
       </Paper>
-      <Box mt={3} />
+      <Box mt={2} />
       <Grid
         container
         alignItems="center"
@@ -166,7 +162,6 @@ const CategoryEditComponent = () => {
             variant="outlined"
             fullWidth
             onClick={handleSave}
-            disabled={!canBeSaved}
           >Save</Button>
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -186,6 +181,28 @@ const CategoryEditComponent = () => {
           >Back</Button>
         </Grid>
       </Grid>
+      {bookmarks.statusOK ? (
+        <Box width="100%" mt={2}>
+          <Divider />
+          <List disablePadding>
+            {bookmarks.data.map((v) => {
+              return (
+                <div key={v.siteId}>
+                  <ListItem>
+                    <ListItemText primary={v.siteName} />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        data-site-id={v.siteId}
+                        onClick={handleDeleteBookamrk}
+                      ><Clear /></IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </div>
+              );
+            })}
+          </List>
+        </Box>
+      ) : null}
       <Dialog
         open={dialogDeleteOpen}
         onClose={handleDialogDeleteClose}
@@ -204,10 +221,7 @@ const CategoryEditComponent = () => {
         </DialogActions>
       </Dialog>
       <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackShow}
         autoHideDuration={4000}
         onClose={handleSnackShow}
