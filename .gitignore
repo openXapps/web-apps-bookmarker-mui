@@ -14,6 +14,7 @@ package-lock.json
 ./package-lock.json
 /build
 .~*
+/sandbox
 
 # misc
 .eslintcache

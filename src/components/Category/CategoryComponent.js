@@ -14,15 +14,17 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import { getCategories } from '../../utilities/localstorage';
+import { getCategoriesWithCount } from '../../utilities/localstorage';
 import { defaultCategory } from '../../utilities/defaultdata';
 
 const CategoryComponent = () => {
   const rrNavigate = useNavigate();
   const [categories, setCategories] = useState({ statusOK: true, data: [] });
 
+  // getCategoriesWithCount();
+
   useEffect(() => {
-    setCategories(getCategories());
+    setCategories(getCategoriesWithCount());
     return () => true;
   }, []);
 
@@ -30,6 +32,8 @@ const CategoryComponent = () => {
     const categoryId = e.currentTarget.dataset.categoryId;
     rrNavigate('/categoryedit/' + categoryId);
   };
+
+  // console.log('CategoryComponent: categories...', categories);
 
   return (
     <Container maxWidth="sm">
@@ -39,11 +43,11 @@ const CategoryComponent = () => {
         <List>
           {categories.statusOK ? (
             categories.data.map((v) => {
-              return (
+              return (v.category ? (
                 <div key={v.categoryId}>
                   <ListItem data-category-id={v.categoryId}>
                     <ListItemText
-                      primary={v.category}
+                      primary={v.category + ' (' + v.numOfBookmarks + ')'}
                       primaryTypographyProps={{ variant: 'h6' }}
                     />
                     {v.categoryId !== defaultCategory[0].categoryId ? (
@@ -56,7 +60,7 @@ const CategoryComponent = () => {
                       </ListItemSecondaryAction>
                     ) : (null)}
                   </ListItem>
-                </div>
+                </div>) : (null)
               );
             })
           ) : (null)}
