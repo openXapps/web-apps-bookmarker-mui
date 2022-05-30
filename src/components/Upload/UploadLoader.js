@@ -2,6 +2,8 @@ import { saveLocalStorage } from '../../utilities/localstorage';
 
 /**
  * Helper function to merge site data
+ * @param {any} data Data object to merge
+ * @returns Boolean true if success or false if failed
  */
 export const mergeData = (data) => {
   let objs = {};
@@ -18,6 +20,8 @@ export const mergeData = (data) => {
 
 /**
  * Helper function to overwrite site data
+ * @param {any} data Data object to write
+ * @returns Boolean true if success or false if failed
  */
 export const overwriteData = (data) => {
   let objs = {};

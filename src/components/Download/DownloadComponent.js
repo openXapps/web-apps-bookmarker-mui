@@ -11,11 +11,9 @@ import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
-// import { useStyles } from './DownloadStyles';
 import { getDownloadableData } from '../../utilities/localstorage';
 
 const DownloadComponent = () => {
-  // const classes = useStyles();
   const rrNavigate = useNavigate();
   const inputRef = useRef(null);
   const [snackState, setSnackState] = useState({
@@ -51,7 +49,7 @@ const DownloadComponent = () => {
   return (
     <Container maxWidth="md">
       <Toolbar disableGutters />
-      <Box my={2}><Typography variant="h6">Download</Typography></Box>
+      <Typography sx={{ my: 2 }} variant="h6">Download</Typography>
       <Typography>Copy your site data in the text box below</Typography>
       <Box my={2}>
         <TextField

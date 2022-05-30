@@ -6,16 +6,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 
-import { useStyles } from './NavigationStyles';
 import { getCategories } from '../../utilities/localstorage';
 import { context } from '../../context/StoreProvider';
 
 const NavigationComponent = () => {
   const [state, dispatch] = useContext(context);
-  const classes = useStyles();
   const [categories, setCategories] = useState({ statusOK: true, data: [] });
-
-  // console.log('NavigationComponent: Rendering...');
 
   useEffect(() => {
     setCategories(getCategories());
@@ -27,14 +23,14 @@ const NavigationComponent = () => {
     // console.log('NavigationComponent: menu........', e.currentTarget.innerText);
     // console.log('NavigationComponent: index.......', index);
     // console.log('NavigationComponent: categoryId..', e.currentTarget.dataset.catId);
-    dispatch({ type: 'NAV', payload: {
-      menu: e.currentTarget.innerText,
-      activeNav: index,
-      categoryId: e.currentTarget.dataset.catId
-    } });
+    dispatch({
+      type: 'NAV', payload: {
+        menu: e.currentTarget.innerText,
+        activeNav: index,
+        categoryId: e.currentTarget.dataset.catId
+      }
+    });
   };
-
-  // console.log('NavigationComponent: state.navState.....', state.navState);
 
   return (
     <Paper elevation={5}>
@@ -45,14 +41,14 @@ const NavigationComponent = () => {
           data-cat-id=""
           onClick={(e) => handleNav(e, -1)}
           selected={state.navState.activeNav === -1}
-        ><ListItemText primary="Popular" className={classes.listItemText} /></ListItem>
+        ><ListItemText primary="Popular" sx={{ pl: 1 }} /></ListItem>
         <ListItem
           button
           disableGutters
           data-cat-id=""
           onClick={(e) => handleNav(e, -2)}
           selected={state.navState.activeNav === -2}
-        ><ListItemText primary="Favourites" className={classes.listItemText} /></ListItem>
+        ><ListItemText primary="Favourites" sx={{ pl: 1 }} /></ListItem>
         <Divider />
         {categories.statusOK ? (
           categories.data.map((v, i) => {
@@ -64,7 +60,7 @@ const NavigationComponent = () => {
                   data-cat-id={v.categoryId}
                   onClick={(e) => handleNav(e, i)}
                   selected={state.navState.activeNav === (i)}
-                ><ListItemText primary={v.category} className={classes.listItemText} /></ListItem>
+                ><ListItemText primary={v.category} sx={{ pl: 1 }} /></ListItem>
               </div>
             );
           })

@@ -16,20 +16,16 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Container from '@mui/material/Container';
 
-import useStyles from './HeaderStyles';
 import { getDefaultData } from '../../utilities/defaultdata';
 import { context } from '../../context/StoreProvider';
 
 const HeaderComponent = () => {
+  const rrNavigate = useNavigate();
   const [state, dispatch] = useContext(context);
   const smallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
-  const navigate = useNavigate();
   const rrLocation = useLocation();
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const localData = getDefaultData();
-
-  // console.log('HeaderComponent: Rendering...');
 
   const handleMenuToggle = (e) => {
     setAnchorEl(e.currentTarget);
@@ -48,7 +44,7 @@ const HeaderComponent = () => {
       if (state.activeNav !== localData.navState.activeNav) {
         dispatch({ type: 'NAV', payload: localData.navState });
       }
-      navigate('/', { replace: true });
+      rrNavigate('/', { replace: true });
     } else {
       window.location.assign('https://www.openapps.co.za');
     }
@@ -57,8 +53,8 @@ const HeaderComponent = () => {
   const handleRoute = (e) => {
     handleMenuClose();
     // console.log(e.currentTarget.dataset.name);
-    navigate(`/${e.currentTarget.dataset.name}`);
-    // navigate(`/${e.currentTarget.dataset.name}`, {replace: true});
+    rrNavigate(`/${e.currentTarget.dataset.name}`);
+    // rrNavigate(`/${e.currentTarget.dataset.name}`, {replace: true});
   };
 
   return (
@@ -72,21 +68,21 @@ const HeaderComponent = () => {
               onClick={handleHomeButton}
             >{rrLocation.pathname === '/' ? <HomeIcon /> : <ArrowBackIcon />}</IconButton></Box>
           <Typography
-            className={classes.grow}
+            sx={{ flexGrow: 1 }}
             variant="h6"
           >BookMARKER {smallScreen ? null : (
-            <span className={classes.appVersion}>v{localData.settings.version}</span>
+            <span style={{ fontSize: 12 }}>v{localData.settings.version}</span>
           )}
           </Typography>
           {rrLocation.pathname === '/' ? (
             <Box>
               <IconButton
                 color="inherit"
-                onClick={() => navigate('/new')}
+                onClick={() => rrNavigate('/new')}
               ><AddCircleIcon /></IconButton>
               <IconButton
                 color="inherit"
-                onClick={() => navigate('/settings')}
+                onClick={() => rrNavigate('/settings')}
               ><SettingsIcon /></IconButton>
               <IconButton
                 sx={{ mr: { sm: 0.5 } }}

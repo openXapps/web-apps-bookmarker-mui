@@ -4,17 +4,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Material UI
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
-// import {
-//   createMuiTheme,
-// Fixes forward Ref issue - NOT FOR PRODUCTION USE
-// https://material-ui.com/customization/theming/#unstable-createmuistrictmodetheme-options-args-theme
-// unstable_createMuiStrictModeTheme as createMuiTheme,
-// } from '@material-ui/core/styles';
 import { createTheme } from '@mui/material/styles';
 
 // App assets
 import { context } from './context/StoreProvider';
-// import { themes } from './services/Theme';
 import dark from './themes/dark';
 import light from './themes/light';
 
@@ -69,17 +62,3 @@ const App = () => {
 };
 
 export default App;
-
-/*
-This new structure does NOT work for me. Keeping to the old structure.
-<Route path="/" exact     ><ContentComponent /></Route>
-<Route path="/filter/:id" ><ContentComponent /></Route>
-<Route path="/edit/:id"   ><EditorComponent /></Route>
-<Route path="/copy/:id"   ><EditorComponent /></Route>
-<Route path="/new"        ><EditorComponent /></Route>
-<Route path="/delete/:id" ><DeleteComponent /></Route>
-<Route path="/download"   ><DownloadComponent /></Route>
-<Route path="/upload"     ><UploadComponent /></Route>
-<Route path="/settings"   ><SettingsComponent /></Route>
-<Route                    ><Error404Component /></Route>
-*/

@@ -14,10 +14,8 @@ import Stack from '@mui/material/Stack';
 import { context } from '../../context/StoreProvider';
 import { saveLocalStorage, getSettings } from '../../utilities/localstorage';
 import { storageObject, defaultPopularMarkers } from '../../utilities/defaultdata';
-import { useStyles } from './SettingsStyles';
 
 const Settings = () => {
-  const classes = useStyles();
   const rrNavigate = useNavigate();
   const [state, dispatch] = useContext(context);
   const settings = getSettings().data;
@@ -53,14 +51,14 @@ const Settings = () => {
       <Toolbar disableGutters />
       <Box my={2}><Typography variant="h6">Application settings</Typography></Box>
       <Paper elevation={0}>
-        <Box className={classes.fieldContainer}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap={false} p={2}>
           <Typography>Dark Mode</Typography>
           <Switch
             checked={state.theme.isDark}
             onChange={handleTheme}
           />
         </Box>
-        <Box className={classes.fieldContainer}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap={false} p={2}>
           <Typography>Confirm On Delete</Typography>
           <Switch
             checked={_confirmOnDelete}
@@ -81,7 +79,7 @@ const Settings = () => {
           </Stack>
         </Box>
         <Box p={2} />
-        {/* <Box className={classes.fieldContainer}>
+        {/* <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap={false} p={2}>
           <Typography>Hide Empty Categories</Typography>
           <Switch
             checked={_hideEmptyCategories}

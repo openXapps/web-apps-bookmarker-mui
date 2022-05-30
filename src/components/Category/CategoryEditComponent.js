@@ -24,7 +24,6 @@ import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import IconButton from '@mui/material/IconButton';
 import Clear from '@mui/icons-material/Clear';
 
-// import useStyles from './CategoryStyles';
 import {
   getCategoryById,
   updateCategory,
@@ -45,10 +44,7 @@ const initialBookmarks = {
 };
 
 const CategoryEditComponent = () => {
-  const [snackState, setSnackState] = useState({
-    severity: 'success',
-    message: 'Category saved'
-  });
+  const [snackState, setSnackState] = useState({ severity: 'success', message: 'Category saved' });
   const rrNavigate = useNavigate();
   const rrParams = useParams();
   const [snackShow, setSnackShow] = useState(false);

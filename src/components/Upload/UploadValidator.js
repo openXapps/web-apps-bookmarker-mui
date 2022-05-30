@@ -1,6 +1,7 @@
 /**
  * Helper function to validate an object
- * @param {any} obj Data object to validate
+ * @param {any} data Data object to validate
+ * @returns Validation response object
  */
 export const validator = (data) => {
   let results = { hasError: false, message: '' };

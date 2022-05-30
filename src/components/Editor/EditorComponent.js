@@ -19,7 +19,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import useStyles from './EditorStyles';
 import { validateForm, saveBookmark } from './EditorUtils';
 import { defaultCategory } from '../../utilities/defaultdata';
 import {
@@ -45,7 +44,6 @@ const sceneText = {
 };
 
 const EditorComponent = () => {
-  const classes = useStyles();
   const rrNavigate = useNavigate();
   const rrLocation = useLocation();
   const rrParams = useParams();
@@ -266,7 +264,7 @@ const EditorComponent = () => {
             fullWidth
           />
           <Box mt={2} />
-          <Box className={classes.switchContainer}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" pl={1}>
             <Typography>Favourite</Typography>
             <Switch
               checked={fields.favourite}
@@ -331,10 +329,7 @@ const EditorComponent = () => {
         </DialogActions>
       </Dialog>
       <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackState.show}
         autoHideDuration={4000}
         onClose={handleSnackState}

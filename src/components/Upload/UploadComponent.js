@@ -11,12 +11,10 @@ import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
-import { useStyles } from './UploadStyles';
 import { validator } from './UploadValidator';
 import { mergeData, overwriteData } from './UploadLoader';
 
 const UploadComponent = () => {
-  const classes = useStyles();
   const inputRef = useRef(null);
   const rrNavigate = useNavigate();
   const [snackState, setSnackState] = useState({
@@ -75,7 +73,7 @@ const UploadComponent = () => {
       <Toolbar disableGutters />
       <Box my={2}><Typography variant="h6">Upload</Typography></Box>
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Typography className={classes.grow}>Paste your site data in the text box below</Typography>
+        <Typography sx={{ flexGrow: 1 }}>Paste your site data in the text box below</Typography>
         <Button
           sx={{ ml: 2 }}
           variant="outlined"

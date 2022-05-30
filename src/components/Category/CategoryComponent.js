@@ -21,8 +21,6 @@ const CategoryComponent = () => {
   const rrNavigate = useNavigate();
   const [categories, setCategories] = useState({ statusOK: true, data: [] });
 
-  // getCategoriesWithCount();
-
   useEffect(() => {
     setCategories(getCategoriesWithCount());
     return () => true;
@@ -32,8 +30,6 @@ const CategoryComponent = () => {
     const categoryId = e.currentTarget.dataset.categoryId;
     rrNavigate('/categoryedit/' + categoryId);
   };
-
-  // console.log('CategoryComponent: categories...', categories);
 
   return (
     <Container maxWidth="sm">

@@ -15,14 +15,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import StarIcon from '@mui/icons-material/Star';
 
 import { updateLastClicked, filterBookmarks } from '../../utilities/localstorage';
-import { useStyles } from './BookmarksStyles';
 import { context } from '../../context/StoreProvider';
 
 const BookmarksComponent = () => {
   const [state,] = useContext(context);
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const classes = useStyles();
   const rrNavigate = useNavigate();
   const [storedBookmarks, setStoredBookmarks] = useState({ statusOK: false, data: [] });
   const [filteredBookmarks, setFilteredBookmarks] = useState([]);
@@ -85,7 +83,7 @@ const BookmarksComponent = () => {
         <form onSubmit={handleSearchSubmit} noValidate autoComplete="off">
           <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
             <InputBase
-              className={classes.searchField}
+              sx={{ flexGrow: 1 }}
               placeholder="Search..."
               value={searchField}
               onChange={handleSearchFields}
@@ -115,13 +113,13 @@ const BookmarksComponent = () => {
                     data-site-id={v.siteId}
                     onClick={handleLastClicked}>
                     <ListItemText
-                      className={classes.bookmarkText}
+                      sx={{ pl: 1, fontSize: { sm: 10 } }}
                       primary={v.siteName}
                       primaryTypographyProps={smallScreen ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
                       secondary={v.category ? v.category : null}
                     />
                     {v.favourite ? (
-                      <StarIcon className={classes.favIcon} color="primary" fontSize="small" />
+                      <StarIcon sx={{ mr: 1 }} color="primary" fontSize="small" />
                     ) : null}
                     <ListItemSecondaryAction>
                       <IconButton
