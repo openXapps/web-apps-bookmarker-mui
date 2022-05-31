@@ -1,18 +1,36 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 
 // https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
+// https://usehooks.com/useDebounce/
 
-const useDebounce = (value, delay) => {
-  const [debouncedValue, setDebouncedValue] = React.useState(value);
+/**
+ * React Hook that works well with search fields that needs a delay
+ * @param {string} value String value to return after timeout
+ * @param {number} valueLength Length of value before debouncing
+ * @param {number} delay Number of milliseconds to delay
+ * @returns Debounced string after timeout
+ */
+const useDebounce = (value, valueLength, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
-  React.useEffect(() => {
-    const handler = setTimeout(() => {
-      console.log('useDebounce: effect.timeout.value...', value);
-      setDebouncedValue(value);
-    }, delay);
+  useEffect(() => {
+    let handler = null;
+    if (value && value.length >= valueLength) {
+      // console.log('useDebounce: useEffect start timer');
+      handler = setTimeout(() => {
+        // console.log('useDebounce: useEffect set value...', value);
+        setDebouncedValue(value);
+      }, delay);
+    }
 
-    return () => clearTimeout(handler);
-  }, [value, delay]);
+    // Effect clean-up or setTimeout after unmount
+    return () => {
+      if (handler) {
+        // console.log('useDebounce: useEffect clear timer');
+        clearTimeout(handler);
+      }
+    }
+  }, [value, delay, valueLength]);
 
   return debouncedValue;
 };

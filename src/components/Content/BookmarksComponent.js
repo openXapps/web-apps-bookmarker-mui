@@ -11,20 +11,25 @@ import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import SearchIcon from '@mui/icons-material/Search';
 import StarIcon from '@mui/icons-material/Star';
+// import SearchIcon from '@mui/icons-material/Search';
 
 import { updateLastClicked, filterBookmarks } from '../../utilities/localstorage';
 import { context } from '../../context/StoreProvider';
+import useDebounce from '../../hooks/useDebounce';
+
+// Search field debounce threshold
+const searchFieldThreshold = 3;
 
 const BookmarksComponent = () => {
+  const rrNavigate = useNavigate();
   const [state,] = useContext(context);
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const rrNavigate = useNavigate();
   const [storedBookmarks, setStoredBookmarks] = useState({ statusOK: false, data: [] });
   const [filteredBookmarks, setFilteredBookmarks] = useState([]);
   const [searchField, setSearchField] = useState('');
+  const searchFieldDebounced = useDebounce(searchField, searchFieldThreshold, 1000);
   const showSearch = state.navState.activeNav === -1;
 
   // Effect to control storedBookmarks based on activeNav state
@@ -46,25 +51,30 @@ const BookmarksComponent = () => {
     return () => true;
   }, [storedBookmarks.data]);
 
+  // Effect to manage search
+  useEffect(() => {
+    if (searchFieldDebounced.length >= searchFieldThreshold) {
+      let searchedBookmarks = [];
+      searchedBookmarks = filterBookmarks(state.navState, 1000).data.filter((v) => {
+        return (
+          v.siteName.toLowerCase().indexOf(searchFieldDebounced.toLowerCase()) > -1 ||
+          v.siteURL.toLowerCase().indexOf(searchFieldDebounced.toLowerCase()) > -1
+        );
+      });
+      setFilteredBookmarks(searchedBookmarks.length > 0 ? searchedBookmarks : []);
+    }
+    return () => true;
+  }, [searchFieldDebounced, state.navState]);
+
   // Handle search field persistence
   const handleSearchFields = (e) => {
     setSearchField(e.currentTarget.value);
     if (!e.currentTarget.value) setFilteredBookmarks(storedBookmarks.data);
   };
 
-  // Perform search event
+  // Prevent search default event to trigger
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchField.length > 2) {
-      let searchedBookmarks = [];
-      searchedBookmarks = filterBookmarks(state.navState, 1000).data.filter((v) => {
-        return (
-          v.siteName.toLowerCase().indexOf(searchField.toLowerCase()) > -1 ||
-          v.siteURL.toLowerCase().indexOf(searchField.toLowerCase()) > -1
-        );
-      });
-      setFilteredBookmarks(searchedBookmarks.length > 0 ? searchedBookmarks : []);
-    }
   };
 
   // Route to bookmark editor
@@ -81,7 +91,14 @@ const BookmarksComponent = () => {
     <Box>
       {!smallScreen && showSearch ? (
         <form onSubmit={handleSearchSubmit} noValidate autoComplete="off">
-          <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
+          <InputBase
+            sx={{ ml: 2 }}
+            placeholder="Search..."
+            value={searchField}
+            onChange={handleSearchFields}
+            inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
+          />
+          {/* <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
             <InputBase
               sx={{ flexGrow: 1 }}
               placeholder="Search..."
@@ -93,7 +110,7 @@ const BookmarksComponent = () => {
               type="submit"
               aria-label="search"
             ><SearchIcon /></IconButton>
-          </Box>
+          </Box> */}
         </form>
       ) : null}
       <Box width="100%" pl={{ sm: 1 }}>
