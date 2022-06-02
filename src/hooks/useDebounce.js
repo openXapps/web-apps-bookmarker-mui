@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 // https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
 // https://usehooks.com/useDebounce/
 
+// Although this is an awesome Hook, its been 
+// replaced by React's useDeferredValue
+
 /**
  * React Hook that works well with search fields that needs a delay
  * @param {string} value String value to return after timeout
