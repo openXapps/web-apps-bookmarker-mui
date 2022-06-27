@@ -33,8 +33,8 @@ export const defaultPopularMarkers = [
  * Navigation state enumeration
  */
 export const navState = Object.freeze({
-	POPULAR: -1,
-	FAVOURITES: -2,
+  POPULAR: -1,
+  FAVOURITES: -2,
 })
 
 /**
