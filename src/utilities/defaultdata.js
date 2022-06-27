@@ -30,6 +30,14 @@ export const defaultPopularMarkers = [
 ];
 
 /**
+ * Navigation state enumeration
+ */
+export const navState = Object.freeze({
+	POPULAR: -1,
+	FAVOURITES: -2,
+})
+
+/**
  * DEFAULT DATA FOR INITIAL APP LOAD
  * https://github.com/kelektiv/node-uuid
  */
@@ -53,7 +61,7 @@ export const getDefaultData = () => {
 
     // Navigator bar defaults
     navState: {
-      activeNav: -1,
+      activeNav: navState.POPULAR,
       categoryId: ''
     },
 

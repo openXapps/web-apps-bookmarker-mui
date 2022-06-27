@@ -3,7 +3,7 @@
 import {
   storageObject,
   getDefaultData,
-  // defaultCategory,
+  navState,
 } from './defaultdata';
 
 /**
@@ -262,7 +262,7 @@ export const filterBookmarks = (filter, limit) => {
   try {
     const data = JSON.parse(localStorage.getItem(storageObject.bookmark));
     if (data) {
-      if (activeNav === -1) {
+      if (activeNav === navState.POPULAR) {
         result = data.map((v) => {
           return { ...v, category: getCategoryById(v.categoryId).data[0].category };
         });
@@ -271,7 +271,7 @@ export const filterBookmarks = (filter, limit) => {
           data: result.sort((a, b) => (a.lastUsed < b.lastUsed) ? 1 : -1)
         };
       }
-      if (activeNav === -2) {
+      if (activeNav === navState.FAVOURITES) {
         result = data.filter((v) => v.favourite);
         result = result.map((v) => {
           return { ...v, category: getCategoryById(v.categoryId).data[0].category };
@@ -281,7 +281,7 @@ export const filterBookmarks = (filter, limit) => {
           data: result.sort((a, b) => (a.siteName > b.siteName) ? 1 : -1)
         };
       }
-      if (activeNav > -1 && categoryId) {
+      if (activeNav > navState.POPULAR && categoryId) {
         result = data.filter((v) => v.categoryId === categoryId);
         response = {
           statusOK: true,
