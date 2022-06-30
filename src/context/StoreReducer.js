@@ -2,6 +2,7 @@
  * Reducer function to mutate store state
  * @param {any} state Current state
  * @param {any} action Reducer action type and payload
+ * @returns New or same state
  */
 const StoreReducer = (state, action) => {
   // console.log('reducer: action type......', action.type);
@@ -16,7 +17,6 @@ const StoreReducer = (state, action) => {
       return {
         ...state,
         navState: action.payload
-        // activeNav: action.payload
       };
     default:
       throw new Error(`Reducer action type not defined: ${action.type}`);

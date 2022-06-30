@@ -12,10 +12,10 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StarIcon from '@mui/icons-material/Star';
-// import SearchIcon from '@mui/icons-material/Search';
 
 import { updateLastClicked, filterBookmarks } from '../../utilities/localstorage';
 import { context } from '../../context/StoreProvider';
+import { navState } from '../../utilities/defaultdata';
 // import useDebounce from '../../hooks/useDebounce';
 
 // Search field debounce threshold
@@ -31,13 +31,13 @@ const BookmarksComponent = () => {
   const [searchField, setSearchField] = useState('');
   const searchFieldDeferred = useDeferredValue(searchField);
   // const searchFieldDebounced = useDebounce(searchField, searchFieldThreshold, 1000);
-  const showSearch = state.navState.activeNav === -1;
+  const showSearch = state.navState.activeNav === navState.POPULAR;
 
   // Effect to control storedBookmarks based on activeNav state
   useEffect(() => {
-    if (state.navState.activeNav >= -2) {
+    if (state.navState.activeNav >= navState.FAVOURITES) {
       // Set list limit according to screen size and active nav
-      const limit = state.navState.activeNav === -1 ? (
+      const limit = state.navState.activeNav === navState.POPULAR ? (
         smallScreen ? 1000 : 0) : 1000;
       setStoredBookmarks(filterBookmarks(state.navState, limit));
     }
@@ -101,26 +101,12 @@ const BookmarksComponent = () => {
             onChange={handleSearchFields}
             inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
           />
-          {/* <Box ml={2} display="flex" flexWrap="nowrap" alignItems="center">
-            <InputBase
-              sx={{ flexGrow: 1 }}
-              placeholder="Search..."
-              value={searchField}
-              onChange={handleSearchFields}
-              inputProps={{ 'aria-label': 'search bookmarks', 'type': 'search' }}
-            />
-            <IconButton
-              type="submit"
-              aria-label="search"
-            ><SearchIcon /></IconButton>
-          </Box> */}
         </form>
       ) : null}
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
           {storedBookmarks.statusOK ? (
             filteredBookmarks.map((v) => {
-              // return i < listLimit && (
               return (
                 <div key={v.siteId}>
                   <ListItem

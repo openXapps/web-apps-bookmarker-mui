@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 
 import { getCategories } from '../../utilities/localstorage';
 import { context } from '../../context/StoreProvider';
+import { navState } from '../../utilities/defaultdata';
 
 const NavigationComponent = () => {
   const [state, dispatch] = useContext(context);
@@ -39,15 +40,15 @@ const NavigationComponent = () => {
           button
           disableGutters
           data-cat-id=""
-          onClick={(e) => handleNav(e, -1)}
-          selected={state.navState.activeNav === -1}
+          onClick={(e) => handleNav(e, navState.POPULAR)}
+          selected={state.navState.activeNav === navState.POPULAR}
         ><ListItemText primary="Popular" sx={{ pl: 1 }} /></ListItem>
         <ListItem
           button
           disableGutters
           data-cat-id=""
-          onClick={(e) => handleNav(e, -2)}
-          selected={state.navState.activeNav === -2}
+          onClick={(e) => handleNav(e, navState.FAVOURITES)}
+          selected={state.navState.activeNav === navState.FAVOURITES}
         ><ListItemText primary="Favourites" sx={{ pl: 1 }} /></ListItem>
         <Divider />
         {categories.statusOK ? (
