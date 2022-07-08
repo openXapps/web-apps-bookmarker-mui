@@ -22,8 +22,8 @@ export const isLocalStorage = () => {
     } else {
       throw new Error('localStorage unavailable');
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log('isLocalStorage: error...', error);
     return false;
   }
 };
@@ -237,9 +237,8 @@ export const getSettings = () => {
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
-    // Life goes on ...
-    // console.log(err);
+  } catch (error) {
+    console.log('getSettings:...error', error);
   }
   return response;
 };
@@ -295,9 +294,8 @@ export const filterBookmarks = (filter, limit) => {
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
-    // Life goes on ...
-    // console.log(err);
+  } catch (error) {
+    console.log('filterBookmarks:...error', error);
   }
   // console.log('filterBookmarks: response..............', response);
   return response;
@@ -328,9 +326,8 @@ export const getFavourites = () => {
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
-    // Life goes on ...
-    // console.log(err);
+  } catch (error) {
+    console.log('getFavourites:...error', error);
   }
   return response;
 };
@@ -356,7 +353,6 @@ export const getPopular = () => {
       throw new Error('No items found in localStorage');
     }
   } catch (error) {
-    // Life goes on ...
     console.log('getPopular: error...', error);
   }
   return response;
@@ -384,7 +380,6 @@ export const getByCategory = (categoryId) => {
       throw new Error('No items found in localStorage');
     }
   } catch (error) {
-    // Life goes on ...
     console.log('getByCategory: error...', error);
   }
   return response;
@@ -407,7 +402,6 @@ export const getCategories = () => {
       throw new Error('No items found in localStorage');
     }
   } catch (error) {
-    // Life goes on ...
     console.log('getCategories: error...', error);
   }
   return response;
@@ -439,7 +433,6 @@ export const getCategoriesWithCount = () => {
       throw new Error('No items found in localStorage');
     }
   } catch (error) {
-    // Life goes on ...
     console.log('getCategoriesWithCount: error...', error);
   }
   return response;
@@ -478,9 +471,8 @@ export const getCategoryByName = (value) => {
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
-    // Life goes on ...
-    // console.log(err);
+  } catch (error) {
+    console.log('getCategoryByName:...error', error);
   }
   return response;
 };
@@ -502,9 +494,8 @@ export const getCategoryById = (id) => {
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
-    // Life goes on ...
-    // console.log(err);
+  } catch (error) {
+    console.log('getCategoryById:...error', error);
   }
   return response;
 };
@@ -525,9 +516,8 @@ export const getBookmarks = () => {
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
-    // Life goes on ...
-    // console.log(err);
+  } catch (error) {
+    console.log('getBookmarks:...error', error);
   }
   return response;
 };
@@ -549,9 +539,8 @@ export const getBookmarkById = (id) => {
     } else {
       throw new Error('No items found in localStorage');
     }
-  } catch (err) {
-    // Life goes on ...
-    // console.log(err);
+  } catch (error) {
+    console.log('getBookmarkById:...error', error);
   }
   return response;
 };

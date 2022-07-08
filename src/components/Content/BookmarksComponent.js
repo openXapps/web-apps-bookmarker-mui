@@ -26,36 +26,16 @@ const BookmarksComponent = () => {
   const [state,] = useContext(context);
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [storedBookmarks, setStoredBookmarks] = useState({ statusOK: false, data: [] });
   const [filteredBookmarks, setFilteredBookmarks] = useState([]);
   const [searchField, setSearchField] = useState('');
   const searchFieldDeferred = useDeferredValue(searchField);
   // const searchFieldDebounced = useDebounce(searchField, searchFieldThreshold, 1000);
   const showSearch = state.navState.activeNav === navState.POPULAR;
 
-  // Effect to control storedBookmarks based on activeNav state
+  // Effect to manage bookmark navigation and filtering
   useEffect(() => {
-    if (state.navState.activeNav >= navState.FAVOURITES) {
-      // Set list limit according to screen size and active nav
-      const limit = state.navState.activeNav === navState.POPULAR ? (
-        smallScreen ? 1000 : 0) : 1000;
-      setStoredBookmarks(filterBookmarks(state.navState, limit));
-    }
-    // Effect clean-up
-    return () => true;
-  }, [state.navState, smallScreen]);
-
-  // Effect to control filteredBookmarks based on storedBookamrks
-  useEffect(() => {
-    setFilteredBookmarks(storedBookmarks.data);
-    // Effect clean-up
-    return () => true;
-  }, [storedBookmarks.data]);
-
-  // Effect to manage search
-  useEffect(() => {
-    // console.log('searchFieldDeferred...', searchFieldDeferred);
-    if (searchFieldDeferred.length >= searchFieldThreshold) {
+    if (searchFieldDeferred.length >= searchFieldThreshold && state.navState.activeNav === navState.POPULAR) {
+      // Search filtering active
       let searchedBookmarks = [];
       searchedBookmarks = filterBookmarks(state.navState, 1000).data.filter((v) => {
         return (
@@ -64,20 +44,20 @@ const BookmarksComponent = () => {
         );
       });
       setFilteredBookmarks(searchedBookmarks.length > 0 ? searchedBookmarks : []);
+    } else {
+      // Navigate filtering active
+      // Set list limit according to screen size and active nav
+      const limit = state.navState.activeNav === navState.POPULAR ? (
+        smallScreen ? 1000 : 0) : 1000;
+      setFilteredBookmarks(filterBookmarks(state.navState, limit).data);
     }
     return () => true;
-  }, [searchFieldDeferred, state.navState]);
+  }, [searchFieldDeferred, state.navState, smallScreen]);
 
   // Handle search field persistence
   const handleSearchFields = (e) => {
-    // console.log('e.currentTarget.value...', e.currentTarget.value);
     setSearchField(e.currentTarget.value);
-    if (!e.currentTarget.value) setFilteredBookmarks(storedBookmarks.data);
-  };
-
-  // Prevent search default event to trigger
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
+    if (!e.currentTarget.value) setFilteredBookmarks(filterBookmarks(state.navState, 0).data);
   };
 
   // Route to bookmark editor
@@ -93,7 +73,7 @@ const BookmarksComponent = () => {
   return (
     <Box>
       {!smallScreen && showSearch ? (
-        <form onSubmit={handleSearchSubmit} noValidate autoComplete="off">
+        <form onSubmit={e => e.preventDefault()} noValidate autoComplete="off">
           <InputBase
             sx={{ ml: 2 }}
             placeholder="Search..."
@@ -105,40 +85,38 @@ const BookmarksComponent = () => {
       ) : null}
       <Box width="100%" pl={{ sm: 1 }}>
         <List disablePadding>
-          {storedBookmarks.statusOK ? (
-            filteredBookmarks.map((v) => {
-              return (
-                <div key={v.siteId}>
-                  <ListItem
-                    disableGutters
-                    button
-                    component="a"
-                    href={v.siteURL}
-                    target="_blank"
-                    rel="noopener"
-                    data-site-id={v.siteId}
-                    onClick={handleLastClicked}>
-                    <ListItemText
-                      sx={{ pl: 1, fontSize: { sm: 10 } }}
-                      primary={v.siteName}
-                      primaryTypographyProps={smallScreen ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
-                      secondary={v.category ? v.category : null}
-                    />
-                    {v.favourite ? (
-                      <StarIcon sx={{ mr: 1 }} color="primary" fontSize="small" />
-                    ) : null}
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        // edge="end"
-                        data-site-id={v.siteId}
-                        onClick={handleEditButton}
-                      ><MoreVertIcon /></IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                </div>
-              );
-            })
-          ) : null}
+          {filteredBookmarks.map((v) => {
+            return (
+              <div key={v.siteId}>
+                <ListItem
+                  disableGutters
+                  button
+                  component="a"
+                  href={v.siteURL}
+                  target="_blank"
+                  rel="noopener"
+                  data-site-id={v.siteId}
+                  onClick={handleLastClicked}>
+                  <ListItemText
+                    sx={{ pl: 1, fontSize: { sm: 10 } }}
+                    primary={v.siteName}
+                    primaryTypographyProps={smallScreen ? ({ variant: 'body1' }) : ({ variant: 'h5' })}
+                    secondary={v.category ? v.category : null}
+                  />
+                  {v.favourite ? (
+                    <StarIcon sx={{ mr: 1 }} color="primary" fontSize="small" />
+                  ) : null}
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      // edge="end"
+                      data-site-id={v.siteId}
+                      onClick={handleEditButton}
+                    ><MoreVertIcon /></IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </div>
+            );
+          })}
         </List>
       </Box>
     </Box>
