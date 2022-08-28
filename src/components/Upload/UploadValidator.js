@@ -4,8 +4,8 @@
  * @returns Validation response object
  */
 export const validator = (data) => {
-  let results = { hasError: false, message: '' };
   let obj = {};
+  let response = { ok: true, result: obj };
 
   try {
     if (!data) throw new Error('Nothing to validate');
@@ -16,8 +16,9 @@ export const validator = (data) => {
     if (!Array.isArray(obj.bookmarks)) throw new Error('Bookmarks not an array');
   } catch (error) {
     // console.log(error);
-    results = { hasError: true, message: error };
+    response = { ...response, ok: false };
   }
 
-  return results;
+  console.log('validator: response...', response);
+  return response;
 };

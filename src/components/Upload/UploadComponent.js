@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Container from '@mui/material/Container';
@@ -11,66 +11,71 @@ import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
+import useFileReader from '../../hooks/useFileReader';
+import UploadFileButton from './UploadFileButton';
 import { validator } from './UploadValidator';
-import { mergeData, overwriteData } from './UploadLoader';
+import { overwriteData } from './UploadLoader';
+import { storageObject } from '../../utilities/defaultdata';
 
 const UploadComponent = () => {
-  const inputRef = useRef(null);
   const rrNavigate = useNavigate();
-  const [snackState, setSnackState] = useState({
-    severity: 'success',
-    message: 'Validation SUCCESS',
-    show: false
-  });
+  // const inputRef = useRef(null);
+  const [{ frResult, frError, frLoading, frLoaded }, setFrFile] = useFileReader('readAsText');
+  const [snackState, setSnackState] = useState({ severity: 'success', message: 'x', show: false });
+  const [bookmarksString, setBookmarksString] = useState('');
+  const [bookmarksObject, setBookmarksObject] = useState({});
   const [isValid, setIsValid] = useState(false);
+  const [isSaved, setIsSaved] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [buttonState, setButtonState] = useState({
-    locked: true,
-    merge: 'Merge',
-    overwrite: 'Overwrite',
-    exit: 'Cancel'
-  });
+
+  // Effect to set bookamrks from file
+  useEffect(() => {
+    setBookmarksString(frResult);
+    return () => true;
+  }, [frResult]);
+
+  const handleValidation = () => {
+    console.log('Upload: bookmarksString...', bookmarksString);
+    const validation = validator(bookmarksString);
+    if (validation.ok) {
+      !isValid && setIsValid(true);
+      isError && setIsError(false);
+      isSaved && setIsSaved(false);
+      setBookmarksObject(validation.result)
+      setSnackState({ severity: 'success', message: 'Validation SUCCESS', show: true });
+    } else {
+      isValid && setIsValid(false);
+      !isError && setIsError(true);
+      setSnackState({ severity: 'error', message: 'Validation FAILED', show: true });
+    }
+  };
+
+  const handleOverwriteData = () => {
+    console.log('handleOverwriteData: bookmarksObject...', bookmarksObject);
+    // saveLocalStorage(storageObject.category, bookmarksObject.categories);
+    // saveLocalStorage(storageObject.bookmark, bookmarksObject.bookmarks);
+    !isSaved && setIsSaved(true);
+    setSnackState({ severity: 'success', message: 'Data overwrite SUCCESS', show: true });
+  };
+
+  const handleLoadFileInput = (e) => {
+    setFrFile(e.currentTarget.files[0]);
+  };
+
+  const handleLoadFileReset = () => {
+    setBookmarksString('');
+    if (isError) setIsError(!isError);
+    if (isValid) setIsValid(!isValid);
+    if (!isSaved) setIsSaved(!isSaved);
+  }
 
   const handleSnackState = () => {
     setSnackState({ ...snackState, show: false });
   };
 
-  const handleValidation = () => {
-    // console.log('Upload: inputRef...', inputRef.current.value);
-    if (!validator(inputRef.current.value).hasError) {
-      setSnackState({ severity: 'success', message: 'Validation SUCCESS', show: true });
-      setIsValid(true);
-      setIsError(false);
-      setButtonState({ ...buttonState, locked: false });
-    } else {
-      setIsError(true);
-      setSnackState({ severity: 'error', message: 'Validation FAILED', show: true });
-    }
-  };
-
-  const handleMergeData = () => {
-    if (mergeData(inputRef.current.value)) {
-      setButtonState({ ...buttonState, locked: true, merge: 'Merge Done', exit: 'Back' });
-      setSnackState({ severity: 'success', message: 'Data merge SUCCESS', show: true });
-    } else {
-      setButtonState({ ...buttonState, locked: false, merge: 'Merge Error' });
-      setSnackState({ severity: 'error', message: 'Data merge FAILED', show: true });
-    }
-  };
-
-  const handleOverwriteData = () => {
-    if (overwriteData(inputRef.current.value)) {
-      setButtonState({ ...buttonState, locked: true, overwrite: 'Overwrite Done', exit: 'Back' });
-      setSnackState({ severity: 'success', message: 'Data overwrite SUCCESS', show: true });
-    } else {
-      setButtonState({ ...buttonState, locked: false, overwrite: 'Overwrite Error' });
-      setSnackState({ severity: 'error', message: 'Data overwrite FAILED', show: true });
-    }
-  };
-
   return (
     <Container maxWidth="md">
-      <Toolbar disableGutters />
+      <Toolbar />
       <Box my={2}><Typography variant="h6">Upload</Typography></Box>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Typography sx={{ flexGrow: 1 }}>Paste your site data in the text box below</Typography>
@@ -79,19 +84,22 @@ const UploadComponent = () => {
           variant="outlined"
           onClick={handleValidation}
           disabled={isValid}
-        >{isValid ? 'Done' : 'Validate'}</Button>
+          color={isError ? 'error' : 'primary'}
+        >{isValid ? 'Validated' : 'Validate'}</Button>
       </Box>
       <Box my={2}>
         <TextField
           multiline
           id="bm-site-data-upload"
-          inputRef={inputRef}
+          // inputRef={inputRef}
           inputProps={{ spellCheck: false }}
           variant="outlined"
           rows={15}
           fullWidth={true}
           disabled={isValid}
           error={isError}
+          value={bookmarksString}
+          onChange={(e) => setBookmarksString(e.currentTarget.value)}
         ></TextField></Box>
       <Grid
         container
@@ -99,28 +107,29 @@ const UploadComponent = () => {
         justify="space-between"
         spacing={1}
       ><Grid item xs={12} sm={4}>
-          <Button
-            variant="outlined"
-            fullWidth
-            // Merge option not implemented yet
-            disabled={true}
-            onClick={handleMergeData}
-          >{buttonState.merge}</Button>
+          <UploadFileButton
+            handleLoadFileInput={handleLoadFileInput}
+            handleLoadFileReset={handleLoadFileReset}
+            buttonLabel={frLoading ? 'Loading' : 'Open File'}
+            isLoading={frLoading}
+            color={frError ? 'error' : 'primary'}
+            disabled={frLoaded}
+          />
         </Grid>
         <Grid item xs={12} sm={4}>
           <Button
             variant="outlined"
             fullWidth
-            disabled={buttonState.locked}
+            disabled={isValid}
             onClick={handleOverwriteData}
-          >{buttonState.overwrite}</Button>
+          >{isSaved ? 'Saved' : 'Save'}</Button>
         </Grid>
         <Grid item xs={12} sm={4}>
           <Button
             variant="outlined"
             fullWidth
             onClick={() => rrNavigate(-1)}
-          >{buttonState.exit}</Button>
+          >Back</Button>
         </Grid>
       </Grid>
       <Snackbar
