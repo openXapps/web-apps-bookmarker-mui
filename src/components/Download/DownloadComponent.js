@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { saveAs } from 'file-saver';
 
 import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
@@ -22,6 +22,7 @@ const DownloadComponent = () => {
     show: false
   });
   const [isCopied, setIsCopied] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const [siteData, setSiteData] = useState('');
 
   useEffect(() => {
@@ -46,28 +47,33 @@ const DownloadComponent = () => {
       });
   };
 
+  const handleSaveAsButton = () => {
+    var blob = new Blob([inputRef.current.value], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, 'BookMARKER.json', { autoBom: false });
+    setIsSaved(true);
+  };
+
   return (
     <Container maxWidth="md">
-      <Toolbar disableGutters />
-      <Typography sx={{ my: 2 }} variant="h6">Download</Typography>
-      <Typography>Copy your site data in the text box below</Typography>
-      <Box my={2}>
-        <TextField
-          multiline
-          id="bm-site-data-download"
-          defaultValue={siteData}
-          inputRef={inputRef}
-          variant="outlined"
-          maxRows={15}
-          fullWidth={true}
-          disabled
-        ></TextField></Box>
+      <Toolbar />
+      <Typography sx={{ my: 2 }} variant="h6">Backup Bookmarks</Typography>
+      <TextField
+        sx={{ mb: 2 }}
+        multiline
+        id="bm-site-data-download"
+        defaultValue={siteData}
+        inputRef={inputRef}
+        variant="outlined"
+        maxRows={15}
+        fullWidth
+        disabled
+      ></TextField>
       <Grid
         container
         alignItems="center"
         spacing={1}
         justify="space-between"
-      ><Grid item xs={12} sm={6}>
+      ><Grid item xs={12} sm={4}>
           <Button
             variant="outlined"
             fullWidth
@@ -75,7 +81,15 @@ const DownloadComponent = () => {
             disabled={isCopied}
           >{isCopied ? 'Copied' : 'Copy'}</Button>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={handleSaveAsButton}
+            disabled={isSaved}
+          >{isSaved ? 'Saved' : 'Save As'}</Button>
+        </Grid>
+        <Grid item xs={12} sm={4}>
           <Button
             variant="outlined"
             fullWidth
@@ -84,10 +98,7 @@ const DownloadComponent = () => {
         </Grid>
       </Grid>
       <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackState.show}
         autoHideDuration={4000}
         onClose={handleSnackState}
