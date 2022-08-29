@@ -7,7 +7,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
@@ -57,7 +56,7 @@ const DownloadComponent = () => {
   return (
     <Container maxWidth="md">
       <Toolbar />
-      <Typography sx={{ my: 2 }} variant="h6">Backup My Bookamrks</Typography>
+      <Typography sx={{ my: 2 }} variant="h6">Backup Bookmarks</Typography>
       <TextField
         sx={{ mb: 2 }}
         multiline

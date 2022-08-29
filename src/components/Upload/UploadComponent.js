@@ -14,12 +14,11 @@ import Alert from '@mui/material/Alert';
 import useFileReader from '../../hooks/useFileReader';
 import UploadFileButton from './UploadFileButton';
 import { validator } from './UploadValidator';
-import { overwriteData } from './UploadLoader';
+import { saveLocalStorage } from '../../utilities/localstorage';
 import { storageObject } from '../../utilities/defaultdata';
 
 const UploadComponent = () => {
   const rrNavigate = useNavigate();
-  // const inputRef = useRef(null);
   const [{ frResult, frError, frLoading, frLoaded }, setFrFile] = useFileReader('readAsText');
   const [snackState, setSnackState] = useState({ severity: 'success', message: 'x', show: false });
   const [bookmarksString, setBookmarksString] = useState('');
@@ -35,7 +34,7 @@ const UploadComponent = () => {
   }, [frResult]);
 
   const handleValidation = () => {
-    console.log('Upload: bookmarksString...', bookmarksString);
+    // console.log('Upload: bookmarksString...', bookmarksString);
     const validation = validator(bookmarksString);
     if (validation.ok) {
       !isValid && setIsValid(true);
@@ -51,9 +50,9 @@ const UploadComponent = () => {
   };
 
   const handleOverwriteData = () => {
-    console.log('handleOverwriteData: bookmarksObject...', bookmarksObject);
-    // saveLocalStorage(storageObject.category, bookmarksObject.categories);
-    // saveLocalStorage(storageObject.bookmark, bookmarksObject.bookmarks);
+    // console.log('handleOverwriteData: bookmarksObject...', bookmarksObject);
+    saveLocalStorage(storageObject.category, bookmarksObject.categories);
+    saveLocalStorage(storageObject.bookmark, bookmarksObject.bookmarks);
     !isSaved && setIsSaved(true);
     setSnackState({ severity: 'success', message: 'Data overwrite SUCCESS', show: true });
   };
@@ -64,9 +63,9 @@ const UploadComponent = () => {
 
   const handleLoadFileReset = () => {
     setBookmarksString('');
-    if (isError) setIsError(!isError);
-    if (isValid) setIsValid(!isValid);
-    if (!isSaved) setIsSaved(!isSaved);
+    isError && setIsError(false);
+    isValid && setIsValid(false);
+    !isSaved && setIsSaved(true);
   }
 
   const handleSnackState = () => {
@@ -76,22 +75,10 @@ const UploadComponent = () => {
   return (
     <Container maxWidth="md">
       <Toolbar />
-      <Box my={2}><Typography variant="h6">Upload</Typography></Box>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Typography sx={{ flexGrow: 1 }}>Paste your site data in the text box below</Typography>
-        <Button
-          sx={{ ml: 2 }}
-          variant="outlined"
-          onClick={handleValidation}
-          disabled={isValid}
-          color={isError ? 'error' : 'primary'}
-        >{isValid ? 'Validated' : 'Validate'}</Button>
-      </Box>
-      <Box my={2}>
+      <Typography sx={{ my: 2 }} variant="h6">Restore Bookmarks</Typography>
+      <Box mb={2}>
         <TextField
           multiline
-          id="bm-site-data-upload"
-          // inputRef={inputRef}
           inputProps={{ spellCheck: false }}
           variant="outlined"
           rows={15}
@@ -106,7 +93,7 @@ const UploadComponent = () => {
         alignItems="center"
         justify="space-between"
         spacing={1}
-      ><Grid item xs={12} sm={4}>
+      ><Grid item xs={12} sm={3}>
           <UploadFileButton
             handleLoadFileInput={handleLoadFileInput}
             handleLoadFileReset={handleLoadFileReset}
@@ -116,15 +103,24 @@ const UploadComponent = () => {
             disabled={frLoaded}
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <Button
             variant="outlined"
             fullWidth
+            onClick={handleValidation}
             disabled={isValid}
+            color={isError ? 'error' : 'primary'}
+          >{isValid ? 'Validated' : 'Validate'}</Button>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Button
+            variant="outlined"
+            fullWidth
+            disabled={isSaved}
             onClick={handleOverwriteData}
           >{isSaved ? 'Saved' : 'Save'}</Button>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <Button
             variant="outlined"
             fullWidth
@@ -133,10 +129,7 @@ const UploadComponent = () => {
         </Grid>
       </Grid>
       <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackState.show}
         autoHideDuration={2500}
         onClose={handleSnackState}
